@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MenuBar VBox.vgrow="NEVER">
+        <menus>
+          <Menu text="_Automat">
+            <items>
+              <MenuItem text="_Neu...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem text="_Laden...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem text="_Editor">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem text="_Beenden">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+            </items>
+          </Menu>
+          <Menu text="_Population">
+            <items>
+              <MenuItem text="Größe _ändern...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem text="L_öschen">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem text="_Erzeugen">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <CheckMenuItem text="_Torus">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                     </accelerator>
+                  </CheckMenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem text="Ver_größern">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem text="Ver_kleinern">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu text="Spei_chern">
+                    <items>
+                        <MenuItem text="_XML">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                        <MenuItem text="Ser_ialisieren">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                    </items>
+                  </Menu>
+                  <Menu text="_Laden">
+                    <items>
+                      <MenuItem text="_XML" />
+                        <MenuItem text="_Deserialisieren" />
+                    </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem text="_Drucken">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+            </items>
+          </Menu>
+          <Menu text="_Simulation">
+            <items>
+              <MenuItem text="S_chritt">
+                     <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem text="Sta_rt">
+                     <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem disable="true" text="S_topp">
+                     <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <ToolBar prefHeight="30.0" prefWidth="600.0" VBox.vgrow="NEVER">
+         <items>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="780.0" spacing="3.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/New24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/Load24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Separator orientation="VERTICAL" prefHeight="50.0" prefWidth="0.0">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="3.0" top="5.0" />
+                     </HBox.margin>
+                  </Separator>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/Size24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/Delete24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/Random24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/Torus24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/Print24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Separator orientation="VERTICAL" prefHeight="200.0">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="3.0" top="5.0" />
+                     </HBox.margin>
+                  </Separator>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/ZoomIn24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/ZoomOut24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Separator orientation="VERTICAL" prefHeight="200.0">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="3.0" top="5.0" />
+                     </HBox.margin>
+                  </Separator>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/Step24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/Play24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="/icons/Stop24.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Separator orientation="VERTICAL" prefHeight="50.0">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="3.0" top="5.0" />
+                     </HBox.margin>
+                  </Separator>
+                  <Slider majorTickUnit="50.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" value="90.0" />
+               </children>
+            </HBox>
+         </items>
+      </ToolBar>
+      <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox prefHeight="173.0" prefWidth="39.0" spacing="13.0">
+                     <children>
+                        <RadioButton mnemonicParsing="false" text="0">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin></RadioButton>
+                        <RadioButton mnemonicParsing="false" text="1" />
+                        <RadioButton mnemonicParsing="false" text="2" />
+                        <RadioButton mnemonicParsing="false" text="3" />
+                        <RadioButton mnemonicParsing="false" selected="true" text="4" />
+                        <RadioButton mnemonicParsing="false" text="5" />
+                        <RadioButton mnemonicParsing="false" text="6" />
+                        <RadioButton mnemonicParsing="false" text="7" />
+                        <RadioButton mnemonicParsing="false" text="8" />
+                        <RadioButton mnemonicParsing="false" text="9" />
+                     </children>
+                     <HBox.margin>
+                        <Insets top="9.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox prefHeight="173.0" prefWidth="131.0" spacing="5.0">
+                     <children>
+                        <ColorPicker>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin></ColorPicker>
+                        <ColorPicker>
+                           <value>
+                              <Color />
+                           </value>
+                        </ColorPicker>
+                        <ColorPicker>
+                           <value>
+                              <Color red="0.05882352963089943" green="0.48235294222831726" blue="0.30588236451148987" />
+                           </value>
+                        </ColorPicker>
+                        <ColorPicker>
+                           <value>
+                              <Color red="0.7137255072593689" green="0.8313725590705872" blue="0.8823529481887817" />
+                           </value>
+                        </ColorPicker>
+                        <ColorPicker>
+                           <value>
+                              <Color red="0.9764705896377563" green="0.9333333373069763" blue="0.239215686917305" />
+                           </value>
+                        </ColorPicker>
+                        <ColorPicker>
+                           <value>
+                              <Color red="0.37254902720451355" green="0.5215686559677124" blue="0.7686274647712708" />
+                           </value>
+                        </ColorPicker>
+                        <ColorPicker>
+                           <value>
+                              <Color red="0.9176470637321472" green="0.658823549747467" blue="0.9960784316062927" />
+                           </value>
+                        </ColorPicker>
+                        <ColorPicker>
+                           <value>
+                              <Color red="0.18431372940540314" green="0.529411792755127" blue="0.5372549295425415" />
+                           </value>
+                        </ColorPicker>
+                        <ColorPicker>
+                           <value>
+                              <Color red="0.12941177189350128" green="0.2235294133424759" blue="0.5254902243614197" />
+                           </value>
+                        </ColorPicker>
+                        <ColorPicker>
+                           <value>
+                              <Color red="0.32549020648002625" green="0.3607843220233917" blue="0.4745098054409027" />
+                           </value>
+                        </ColorPicker>
+                     </children>
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </HBox>
+            <Region prefHeight="100.0" prefWidth="462.0" HBox.hgrow="ALWAYS" />
+            <ScrollBar orientation="VERTICAL" />
+         </children>
+      </HBox>
+      <Label prefHeight="25.0" prefWidth="780.0" text="Herzlich Willkommen!" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="5.0" />
+         </VBox.margin></Label>
+   </children>
+</VBox>
