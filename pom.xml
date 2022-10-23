@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.nachname</groupId>
-    <artifactId>VornameNachnameSimulatorIJMVN19</artifactId>
+    <artifactId>BenediktDittelIJMVN19</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -42,7 +42,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>de.nachname.Main</mainClass>
+                    <mainClass>de.dittel.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,4 +1,4 @@
-package de.nachname;
+package de.dittel;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +18,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
+        scene.getStylesheets().add("css/style.css");
         stage.setScene(scene);
         stage.setTitle("KruemelmonsterAutomaton");
         stage.show();

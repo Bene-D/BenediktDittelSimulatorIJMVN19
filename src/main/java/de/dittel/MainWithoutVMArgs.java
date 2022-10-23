@@ -1,4 +1,4 @@
-package de.nachname;
+package de.dittel;
 
 public class MainWithoutVMArgs {
     public static void main(String[] args) {
