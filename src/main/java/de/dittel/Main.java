@@ -21,6 +21,8 @@ public class Main extends Application {
         scene.getStylesheets().add("css/style.css");
         stage.setScene(scene);
         stage.setTitle("KruemelmonsterAutomaton");
+      //  stage.setMinWidth(600);
+        //stage.setMinHeight(450);
         stage.show();
     }
 }

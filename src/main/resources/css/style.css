@@ -1,25 +1,25 @@
 .newAutomaton > .label {
-    -fx-graphic: url("../icons/New16.gif");
+    -fx-graphic: url("/icons/New16.gif");
 }
 
 .loadAutomaton > .label {
-    -fx-graphic: url("../icons/Load16.gif");
+    -fx-graphic: url("/icons/Load16.gif");
 }
 
 .print > .label {
-    -fx-graphic: url("../icons/Print16.gif");
+    -fx-graphic: url("/icons/Print16.gif");
 }
 
 .save > .label {
-    -fx-graphic: url("../icons/Save16.gif");
+    -fx-graphic: url("/icons/Save16.gif");
 }
 
 .start > .label {
-    -fx-graphic: url("../icons/Start16.gif");
+    -fx-graphic: url("/icons/Start16.gif");
 }
 
 .stop > .label {
-    -fx-graphic: url("../icons/Stop16.gif");
+    -fx-graphic: url("/icons/Stop16.gif");
 }
 .context-menu .accelerator-text {
     -fx-graphic: none;
