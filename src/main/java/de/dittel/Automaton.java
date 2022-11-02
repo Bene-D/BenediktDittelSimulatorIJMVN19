@@ -5,19 +5,20 @@ package de.dittel;
  */
 public abstract class Automaton {
 
-    private final int rows;
-    private final int columns;
+    private int rows;
+    private int columns;
     private final int numberOfStates;
     private boolean isMooreNeighborHood;
     private boolean isTorus;
+
+    private Cell[][] population;
 
     /**
      * Konstruktor
      *
      * @param rows Anzahl an Reihen
      * @param columns Anzahl an Spalten
-     * @param numberOfStates Anzahl an Zuständen; die Zustände
-     * des Automaten sind dann die Werte 0 bis numberOfStates -1
+     * @param numberOfStates Anzahl an Zuständen; die Zustände des Automaten sind dann die Werte 0 bis numberOfStates -1
      * @param isMooreNeighborHood true, falls der Automat die Moore-Nachbarschaft benutzt;
      *                            false, falls der Automat die von-Neumann-Nachbarschaft benutzt
      * @param isTorus true, falls die Zellen als Torus betrachtet werden
@@ -29,6 +30,12 @@ public abstract class Automaton {
         this.numberOfStates = numberOfStates;
         this.isMooreNeighborHood = isMooreNeighborHood;
         this.isTorus = isTorus;
+        population = new Cell[rows][columns];
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                population[r][c] = new Cell();
+            }
+        }
     }
 
     /**
@@ -48,7 +55,7 @@ public abstract class Automaton {
      * @return die Anzahl an Zuständen des Automaten
      */
     public int getNumberOfStates() {
-        return 0;
+        return numberOfStates;
     }
 
     /**
@@ -57,7 +64,7 @@ public abstract class Automaton {
      * @return die Anzahl an Reihen
      */
     public int getNumberOfRows() {
-        return 0;
+        return rows;
     }
 
     /**
@@ -66,7 +73,7 @@ public abstract class Automaton {
      * @return die Anzahl an Spalten
      */
     public int getNumberOfColumns() {
-        return 0;
+        return columns;
     }
 
     /**
@@ -76,7 +83,31 @@ public abstract class Automaton {
      * @param rows die neue Anzahl an Reihen
      * @param columns die neue Anzahl an Spalten
      */
-    public void changeSize(int rows, int columns) {}
+    public void changeSize(int rows, int columns) {
+        Cell[][] newPopulation = new Cell[rows][columns];
+
+        if (rows > this.rows || columns > this.columns) {
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++)
+                    newPopulation[r][c] = population[r][c];
+            }
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++) {
+                    if (newPopulation[r][c] == null) {
+                        newPopulation[r][c] = new Cell();
+                    }
+                }
+            }
+        } else {
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++)
+                    newPopulation[r][c] = population[r][c];
+            }
+        }
+        population = newPopulation;
+        this.rows = rows;
+        this.columns = columns;
+    }
 
     /**
      * Liefert Informationen, ob der Automat als Torus betrachtet wird
@@ -84,7 +115,7 @@ public abstract class Automaton {
      * @return true, falls der Automat als Torus betrachtet wird; false sonst
      */
     public boolean isTorus() {
-        return true;
+        return isTorus;
     }
 
     /**
@@ -92,7 +123,9 @@ public abstract class Automaton {
      *
      * @param isTorus true, falls der Automat als Torus betrachtet wird; false sonst
      */
-    public void setTorus(boolean isTorus) {}
+    public void setTorus(boolean isTorus) {
+        this.isTorus = isTorus;
+    }
 
     /**
      * Liefert Informationen über die Nachbarschaft-Eigenschaft des Automaten
@@ -102,7 +135,7 @@ public abstract class Automaton {
      * false, falls er die von-Neumann-Nachbarschaft berücksichtigt
      */
     public boolean isMooreNeighborHood() {
-        return true;
+        return isMooreNeighborHood;
     }
 
     /**
