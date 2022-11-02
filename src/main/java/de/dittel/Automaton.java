@@ -1,17 +1,19 @@
 package de.dittel;
 
+import java.util.Random;
+
 /**
  * Abstrakte Klasse zur Repräsentation eines zellulären Automaten
  */
 public abstract class Automaton {
 
-    private int rows;
-    private int columns;
-    private final int numberOfStates;
-    private boolean isMooreNeighborHood;
-    private boolean isTorus;
+    protected int rows;
+    protected int columns;
+    protected final int numberOfStates;
+    protected final boolean isMooreNeighborHood;
+    protected boolean isTorus;
 
-    private Cell[][] population;
+    protected Cell[][] population;
 
     /**
      * Konstruktor
@@ -86,11 +88,11 @@ public abstract class Automaton {
     public void changeSize(int rows, int columns) {
         Cell[][] newPopulation = new Cell[rows][columns];
 
+        for (int r = 0; r < rows; r++) {
+            System.arraycopy(population[r], 0, newPopulation[r], 0, columns);
+        }
+
         if (rows > this.rows || columns > this.columns) {
-            for (int r = 0; r < rows; r++) {
-                for (int c = 0; c < columns; c++)
-                    newPopulation[r][c] = population[r][c];
-            }
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < columns; c++) {
                     if (newPopulation[r][c] == null) {
@@ -98,12 +100,8 @@ public abstract class Automaton {
                     }
                 }
             }
-        } else {
-            for (int r = 0; r < rows; r++) {
-                for (int c = 0; c < columns; c++)
-                    newPopulation[r][c] = population[r][c];
-            }
         }
+
         population = newPopulation;
         this.rows = rows;
         this.columns = columns;
@@ -139,14 +137,27 @@ public abstract class Automaton {
     }
 
     /**
-     * setzt alle Zellen in den Zustand 0
+     * Setzt alle Zellen in den Zustand 0
      */
-    public void clearPopulation() {}
+    public void clearPopulation() {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                population[r][c].setState(0);
+            }
+        }
+    }
 
     /**
-     * setzt für jede Zelle einen zufällig erzeugten Zustand
+     * Setzt für jede Zelle einen zufällig erzeugten Zustand
      */
-    public void randomPopulation() {}
+    public void randomPopulation() {
+        Random random = new Random();
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                population[r][c].setState(random.nextInt(numberOfStates + 1));
+            }
+        }
+    }
 
     /**
      * Liefert eine Zelle des Automaten
@@ -156,7 +167,7 @@ public abstract class Automaton {
      * @return Cell-Objekt an Position row/column
      */
     public Cell getCell(int row, int column) {
-        return new Cell();
+        return population[row][column];
     }
 
     /**
@@ -166,7 +177,9 @@ public abstract class Automaton {
      * @param column Spalte der Zelle
      * @param state neuer Zustand der Zelle
      */
-    public void setState(int row, int column, int state) {}
+    public void setState(int row, int column, int state) {
+        population[row][column].setState(state);
+    }
 
     /**
      * Aendert den Zustand eines ganzen Bereichs von Zellen
@@ -178,7 +191,13 @@ public abstract class Automaton {
      * @param state neuer Zustand der Zellen
      */
     public void setState(int fromRow, int fromColumn, int toRow,
-                         int toColumn, int state) {}
+                         int toColumn, int state) {
+        for (;fromRow <= toRow; fromRow++) {
+            for (;fromColumn <= toColumn; fromColumn++) {
+                population[fromRow][fromColumn].setState(state);
+            }
+        }
+    }
 
     /**
      * überführt den Automaten in die nächste Generation;
@@ -187,6 +206,7 @@ public abstract class Automaton {
      *
      * @throws Throwable Exceptions der transform-Methode werden weitergeleitet
      */
-    public void nextGeneration() throws Throwable {}
+    public void nextGeneration() throws Throwable {
+    }
 }
 

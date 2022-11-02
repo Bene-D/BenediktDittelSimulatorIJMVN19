@@ -15,14 +15,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main2.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         scene.getStylesheets().add("css/style.css");
         stage.setScene(scene);
         stage.setTitle("KruemelmonsterAutomaton");
-      //  stage.setMinWidth(600);
-        //stage.setMinHeight(450);
+        stage.setMinWidth(600);
+        stage.setMinHeight(450);
         stage.show();
     }
 }
