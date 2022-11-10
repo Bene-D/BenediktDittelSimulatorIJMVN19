@@ -1,5 +1,7 @@
 package de.dittel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -14,19 +16,20 @@ public abstract class Automaton {
     protected boolean isTorus;
 
     protected Cell[][] population;
+    Random random = new Random();
 
     /**
      * Konstruktor
      *
-     * @param rows Anzahl an Reihen
-     * @param columns Anzahl an Spalten
-     * @param numberOfStates Anzahl an Zuständen; die Zustände des Automaten sind dann die Werte 0 bis numberOfStates -1
+     * @param rows                Anzahl an Reihen
+     * @param columns             Anzahl an Spalten
+     * @param numberOfStates      Anzahl an Zuständen; die Zustände des Automaten sind dann die Werte 0 bis numberOfStates -1
      * @param isMooreNeighborHood true, falls der Automat die Moore-Nachbarschaft benutzt;
      *                            false, falls der Automat die von-Neumann-Nachbarschaft benutzt
-     * @param isTorus true, falls die Zellen als Torus betrachtet werden
+     * @param isTorus             true, falls die Zellen als Torus betrachtet werden
      */
-    public Automaton(int rows, int columns, int numberOfStates,
-                     boolean isMooreNeighborHood, boolean isTorus) {
+    protected Automaton(int rows, int columns, int numberOfStates,
+                        boolean isMooreNeighborHood, boolean isTorus) {
         this.rows = rows;
         this.columns = columns;
         this.numberOfStates = numberOfStates;
@@ -43,12 +46,12 @@ public abstract class Automaton {
     /**
      * Implementierung der Transformationsregel
      *
-     * @param cell die betroffene Zelle (darf nicht verändert werden!!!)
+     * @param cell      die betroffene Zelle (darf nicht verändert werden!!!)
      * @param neighbors die Nachbarn der betroffenen Zelle (dürfen nicht verändert werden!!!)
      * @return eine neu erzeugte Zelle, die gemäß der Transformationsregel aus der betroffenen Zelle hervorgeht
      * @throws Throwable moeglicherweise wirft die Methode eine Exception
      */
-    protected abstract Cell transform(Cell cell, Cell[] neighbors)
+    protected abstract Cell transform(Cell cell, List<Cell> neighbors)
             throws Throwable;
 
     /**
@@ -82,7 +85,7 @@ public abstract class Automaton {
      * Ändert die Größe des Automaten; Achtung: aktuelle Belegungen nicht gelöschter Zellen sollen beibehalten werden;
      * neue Zellen sollen im Zustand 0 erzeugt werden
      *
-     * @param rows die neue Anzahl an Reihen
+     * @param rows    die neue Anzahl an Reihen
      * @param columns die neue Anzahl an Spalten
      */
     public void changeSize(int rows, int columns) {
@@ -151,10 +154,9 @@ public abstract class Automaton {
      * Setzt für jede Zelle einen zufällig erzeugten Zustand
      */
     public void randomPopulation() {
-        Random random = new Random();
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < columns; c++) {
-                population[r][c].setState(random.nextInt(numberOfStates + 1));
+                population[r][c].setState(random.nextInt(numberOfStates));
             }
         }
     }
@@ -162,7 +164,7 @@ public abstract class Automaton {
     /**
      * Liefert eine Zelle des Automaten
      *
-     * @param row Reihe der Zelle
+     * @param row    Reihe der Zelle
      * @param column Spalte der Zelle
      * @return Cell-Objekt an Position row/column
      */
@@ -173,9 +175,9 @@ public abstract class Automaton {
     /**
      * Aendert den Zustand einer Zelle
      *
-     * @param row Reihe der Zelle
+     * @param row    Reihe der Zelle
      * @param column Spalte der Zelle
-     * @param state neuer Zustand der Zelle
+     * @param state  neuer Zustand der Zelle
      */
     public void setState(int row, int column, int state) {
         population[row][column].setState(state);
@@ -184,16 +186,16 @@ public abstract class Automaton {
     /**
      * Aendert den Zustand eines ganzen Bereichs von Zellen
      *
-     * @param fromRow Reihe der obersten Zelle
+     * @param fromRow    Reihe der obersten Zelle
      * @param fromColumn Spalte der obersten Zelle
-     * @param toRow Reihe der untersten Zelle
-     * @param toColumn Spalte der untersten Zelle
-     * @param state neuer Zustand der Zellen
+     * @param toRow      Reihe der untersten Zelle
+     * @param toColumn   Spalte der untersten Zelle
+     * @param state      neuer Zustand der Zellen
      */
     public void setState(int fromRow, int fromColumn, int toRow,
                          int toColumn, int state) {
-        for (;fromRow <= toRow; fromRow++) {
-            for (;fromColumn <= toColumn; fromColumn++) {
+        for (; fromRow <= toRow; fromRow++) {
+            for (; fromColumn <= toColumn; fromColumn++) {
                 population[fromRow][fromColumn].setState(state);
             }
         }
@@ -207,6 +209,97 @@ public abstract class Automaton {
      * @throws Throwable Exceptions der transform-Methode werden weitergeleitet
      */
     public void nextGeneration() throws Throwable {
+        Cell[][] nextGeneration = new Cell[rows][columns];
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                nextGeneration[r][c] = transform(population[r][c], getNeighbors(r, c));
+            }
+        }
+        population = nextGeneration;
+    }
+
+    /**
+     * Erstellt eine Liste von Nachbarn für eine Zelle
+     *
+     * @param row Reihe/x-Koordinate der Zelle
+     * @param column Spalte/y-Koordinate der Zelle
+     * @return Liste von allen Nachbarn entsprechend der ausgewöhlten Einstellungen
+     */
+    private List<Cell> getNeighbors(int row, int column) {
+        int[][] vonNeumannNeighbors =                  {{row-1, column},
+                                         {row, column-1},               {row, column+1},
+                                                        {row+1, column}};
+
+        int[][] mooreNeighbors = {  {row-1, column-1}, {row-1, column}, {row-1, column+1},
+                                    {row, column-1},                    {row, column+1},
+                                    {row+1, column-1}, {row+1, column}, {row+1, column+1}};
+
+        if (isTorus) {
+            if (isMooreNeighborHood)
+                return torusOnNeighbors(mooreNeighbors);
+            else return torusOnNeighbors(vonNeumannNeighbors);
+        } else {
+            if (isMooreNeighborHood)
+                return torusOffNeighbors(mooreNeighbors);
+            else return torusOffNeighbors(vonNeumannNeighbors);
+        }
+    }
+
+    /**
+     * Gibt die Nachbarn einer Zelle zurück, wenn isTorus true ist
+     *
+     * @param neighborCoords Array mit den Koordinaten der Nachbarschaft
+     * @return Liste der Nachbarn die betroffen sind
+     */
+    private List<Cell> torusOnNeighbors(int[][] neighborCoords) {
+        ArrayList<Cell> neighbors = new ArrayList<>();
+
+        for (int[] neighborCoord : neighborCoords) {
+            if (neighborCoord[0] < 0 && neighborCoord[1] < 0)
+                neighbors.add(getCell(rows-1, columns-1));
+
+            else if (neighborCoord[0] < 0 && neighborCoord[1] >= columns)
+                neighbors.add(getCell(rows-1, 0));
+
+            else if (neighborCoord[0] < 0)
+                neighbors.add(getCell(rows-1, neighborCoord[1]));
+
+            else if (neighborCoord[1] < 0 && neighborCoord[0] >= rows)
+                neighbors.add(getCell(0, columns-1));
+
+            else if (neighborCoord[1] < 0)
+                neighbors.add(getCell(neighborCoord[0], columns-1));
+
+            else if (neighborCoord[0] >= rows && neighborCoord[1] >= columns)
+                neighbors.add(getCell(0, 0));
+
+            else if (neighborCoord[0] >= rows)
+                neighbors.add(getCell(0, neighborCoord[1]));
+
+            else if (neighborCoord[1] >= columns)
+                neighbors.add(getCell(neighborCoord[0], 0));
+
+            else neighbors.add(getCell(neighborCoord[0], neighborCoord[1]));
+        }
+
+        return neighbors;
+    }
+
+    /**
+     * Gibt die Nachbarn einer Zelle zurück, wenn isTorus false ist
+     *
+     * @param neighborCoords Array mit den Koordinaten der Nachbarschaft
+     * @return Liste der Nachbarn die betroffen sind
+     */
+    private List<Cell> torusOffNeighbors(int[][] neighborCoords) {
+        ArrayList<Cell> neighbors = new ArrayList<>();
+
+        for (int[] neighborCoord : neighborCoords) {
+            if (neighborCoord[0] >= 0 && neighborCoord[1] >= 0 && neighborCoord[0] < rows && neighborCoord[1] < columns)
+                neighbors.add(getCell(neighborCoord[0], neighborCoord[1]));
+        }
+
+        return neighbors;
     }
 }
-
