@@ -9,13 +9,13 @@ import java.util.Random;
  */
 public abstract class Automaton {
 
-    protected int rows;
-    protected int columns;
-    protected final int numberOfStates;
-    protected final boolean isMooreNeighborHood;
-    protected boolean isTorus;
+    private int rows;
+    private int columns;
+    private final int numberOfStates;
+    private final boolean isMooreNeighborHood;
+    private boolean isTorus;
 
-    protected Cell[][] population;
+    private Cell[][] population;
     Random random = new Random();
 
     /**
@@ -173,7 +173,7 @@ public abstract class Automaton {
     }
 
     /**
-     * Aendert den Zustand einer Zelle
+     * Ändert den Zustand einer Zelle
      *
      * @param row    Reihe der Zelle
      * @param column Spalte der Zelle
@@ -184,7 +184,7 @@ public abstract class Automaton {
     }
 
     /**
-     * Aendert den Zustand eines ganzen Bereichs von Zellen
+     * Ändert den Zustand eines ganzen Bereichs von Zellen
      *
      * @param fromRow    Reihe der obersten Zelle
      * @param fromColumn Spalte der obersten Zelle
@@ -224,7 +224,7 @@ public abstract class Automaton {
      *
      * @param row Reihe/x-Koordinate der Zelle
      * @param column Spalte/y-Koordinate der Zelle
-     * @return Liste von allen Nachbarn entsprechend der ausgewöhlten Einstellungen
+     * @return Liste von allen Nachbarn entsprechend der ausgewählten Einstellungen
      */
     private List<Cell> getNeighbors(int row, int column) {
         int[][] vonNeumannNeighbors =                  {{row-1, column},
@@ -250,7 +250,7 @@ public abstract class Automaton {
      * Gibt die Nachbarn einer Zelle zurück, wenn isTorus true ist
      *
      * @param neighborCoords Array mit den Koordinaten der Nachbarschaft
-     * @return Liste der Nachbarn die betroffen sind
+     * @return Liste der ausgewählten Nachbarn
      */
     private List<Cell> torusOnNeighbors(int[][] neighborCoords) {
         ArrayList<Cell> neighbors = new ArrayList<>();
@@ -290,7 +290,7 @@ public abstract class Automaton {
      * Gibt die Nachbarn einer Zelle zurück, wenn isTorus false ist
      *
      * @param neighborCoords Array mit den Koordinaten der Nachbarschaft
-     * @return Liste der Nachbarn die betroffen sind
+     * @return Liste der ausgewählten Nachbarn
      */
     private List<Cell> torusOffNeighbors(int[][] neighborCoords) {
         ArrayList<Cell> neighbors = new ArrayList<>();
