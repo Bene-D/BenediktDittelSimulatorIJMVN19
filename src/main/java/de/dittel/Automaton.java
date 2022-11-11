@@ -195,8 +195,8 @@ public abstract class Automaton {
     public void setState(int fromRow, int fromColumn, int toRow,
                          int toColumn, int state) {
         for (; fromRow <= toRow; fromRow++) {
-            for (; fromColumn <= toColumn; fromColumn++) {
-                population[fromRow][fromColumn].setState(state);
+            for (int i = fromColumn; i <= toColumn; i++) {
+                population[fromRow][i].setState(state);
             }
         }
     }

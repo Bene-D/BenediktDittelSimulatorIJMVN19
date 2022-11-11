@@ -33,15 +33,15 @@ public class GameOfLifeAutomaton extends Automaton {
     public static void main(String[] args) {
         int i = 100;
         try (Scanner scanner = new Scanner(System.in)) {
-            GameOfLifeAutomaton gameOfLifeAutomaton = new GameOfLifeAutomaton(5, 5, false);
-            gameOfLifeAutomaton.setState(1, 2, 1);
-            gameOfLifeAutomaton.setState(3, 1, 1);
-            gameOfLifeAutomaton.setState(3, 2, 1);
-            gameOfLifeAutomaton.setState(3, 3, 1);
-            gameOfLifeAutomaton.setState(2, 3, 1);
-//            gameOfLifeAutomaton.setState(0, 0, 1);
-//            gameOfLifeAutomaton.setState(0, 1, 1);
-//            gameOfLifeAutomaton.setState(0, 4, 1);
+            GameOfLifeAutomaton gameOfLifeAutomaton = new GameOfLifeAutomaton(5, 5, true);
+//            gameOfLifeAutomaton.setState(1, 2, 1);
+//            gameOfLifeAutomaton.setState(3, 1, 1);
+//            gameOfLifeAutomaton.setState(3, 2, 1);
+//            gameOfLifeAutomaton.setState(3, 3, 1);
+//            gameOfLifeAutomaton.setState(2, 3, 1);
+            gameOfLifeAutomaton.setState(0, 1, 1);
+            gameOfLifeAutomaton.setState(0, 2, 1);
+            gameOfLifeAutomaton.setState(0, 3, 1);
             gameOfLifeAutomaton.print();
             while (i>0) {
                 System.out.println("Drücke eine Taste für die nächste Generation!");
