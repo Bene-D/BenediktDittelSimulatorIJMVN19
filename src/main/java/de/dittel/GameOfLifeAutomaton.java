@@ -17,12 +17,12 @@ public class GameOfLifeAutomaton extends Automaton {
      */
     public GameOfLifeAutomaton(int rows, int columns, boolean isTorus) {
         super(rows, columns, 2, true, isTorus);
-        //        automaton.setState(0, 1, 0, 3, 1);
-        setState(1, 3, 1);
-        setState(3, 2, 1);
-        setState(3, 3, 1);
-        setState(3, 4, 1);
-        setState(2, 4, 1);
+        setState(0, 1, 0, 3, 1);
+       // setState(1, 3, 1);
+        //setState(3, 2, 1);
+        //setState(3, 3, 1);
+        //setState(3, 4, 1);
+        //setState(2, 4, 1);
     }
 
     /**

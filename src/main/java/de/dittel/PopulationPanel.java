@@ -6,7 +6,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
-
 /**
  * Klasse zur Darstellung eines Automaten in der View
  */
@@ -63,36 +62,16 @@ public class PopulationPanel extends Region {
         for (int r = 0; r < automaton.getNumberOfRows(); r++) {
             for (int c = 0; c < automaton.getNumberOfColumns(); c++) {
                 switch (automaton.getCell(r, c).getState()) {
-                    case 0:
-                        gc.setFill(Color.WHITE);
-                        break;
-                    case 1:
-                        gc.setFill(Color.BLACK);
-                        break;
-                    case 2:
-                        gc.setFill(Color.valueOf("#0f7b4e"));
-                        break;
-                    case 3:
-                        gc.setFill(Color.valueOf("#b6d4e1"));
-                        break;
-                    case 4:
-                        gc.setFill(Color.valueOf("#f9ee3d"));
-                        break;
-                    case 5:
-                        gc.setFill(Color.valueOf("#5f85c4"));
-                        break;
-                    case 6:
-                        gc.setFill(Color.valueOf("eaa8fe"));
-                        break;
-                    case 7:
-                        gc.setFill(Color.valueOf("2f8789"));
-                        break;
-                    case 8:
-                        gc.setFill(Color.valueOf("213986"));
-                        break;
-                    case 9:
-                        gc.setFill(Color.valueOf("535c79"));
-                        break;
+                    case 1 -> gc.setFill(Color.BLACK);
+                    case 2 -> gc.setFill(Color.valueOf("#0f7b4e"));
+                    case 3 -> gc.setFill(Color.valueOf("#b6d4e1"));
+                    case 4 -> gc.setFill(Color.valueOf("#f9ee3d"));
+                    case 5 -> gc.setFill(Color.valueOf("#5f85c4"));
+                    case 6 -> gc.setFill(Color.valueOf("eaa8fe"));
+                    case 7 -> gc.setFill(Color.valueOf("2f8789"));
+                    case 8 -> gc.setFill(Color.valueOf("213986"));
+                    case 9 -> gc.setFill(Color.valueOf("535c79"));
+                    default -> gc.setFill(Color.WHITE);
                 }
                 gc.fillRect(BORDER_WIDTH + c * POPULATION_WIDTH, BORDER_HEIGHT + r * POPULATION_HEIGHT,
                         POPULATION_WIDTH, POPULATION_HEIGHT);

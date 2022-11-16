@@ -133,19 +133,19 @@
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
-        <Button mnemonicParsing="false" style="-fx-graphic: url(/icons/Size24.gif)">
+        <Button onAction="#changePopulationSize" mnemonicParsing="false" style="-fx-graphic: url(/icons/Size24.gif)">
             <tooltip>
                 <Tooltip text="Größe der Population ändern" />
             </tooltip></Button>
-        <Button mnemonicParsing="false" style="-fx-graphic: url(/icons/Delete24.gif)">
+        <Button onAction="#resetPopulation" mnemonicParsing="false" style="-fx-graphic: url(/icons/Delete24.gif)">
             <tooltip>
                 <Tooltip text="Alle Zellen in Zustand 0 versetzen" />
             </tooltip></Button>
-        <Button mnemonicParsing="false" style="-fx-graphic: url(/icons/Random24.gif)">
+        <Button onAction="#randomPopulation" mnemonicParsing="false" style="-fx-graphic: url(/icons/Random24.gif)">
             <tooltip>
                 <Tooltip text="Zufällige Population erzeugen" />
             </tooltip></Button>
-        <Button mnemonicParsing="false" style="-fx-graphic: url(/icons/Torus24.gif)">
+        <Button fx:id="changeTorusButton" onAction="#changeTorus" mnemonicParsing="false" style="-fx-graphic: url(/icons/Torus24.gif)">
             <tooltip>
                 <Tooltip text="Population als Torus betrachten (an/aus)" />
             </tooltip></Button>
