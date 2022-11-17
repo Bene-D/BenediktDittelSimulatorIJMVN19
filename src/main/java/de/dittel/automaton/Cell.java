@@ -1,4 +1,4 @@
-package de.dittel;
+package de.dittel.automaton;
 
 /**
  * Klasse zur Repräsentation einer Zelle eines zellulären Automaten

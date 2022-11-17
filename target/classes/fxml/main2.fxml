@@ -19,10 +19,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.control.ToggleButton?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
       prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.dittel.Controller">
+      fx:controller="de.dittel.controller.Controller">
     <MenuBar VBox.vgrow="NEVER">
         <Menu text="_Automat">
             <MenuItem styleClass="newAutomaton" text="_Neu...">
@@ -49,22 +50,22 @@
             </MenuItem>
         </Menu>
         <Menu text="_Population">
-            <MenuItem text="Größe _ändern...">
+            <MenuItem onAction="#changePopulationSize" text="Größe _ändern...">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem text="L_öschen">
+            <MenuItem onAction="#resetPopulation" text="L_öschen">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem text="_Erzeugen">
+            <MenuItem onAction="#randomPopulation" text="_Erzeugen">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <CheckMenuItem text="_Torus">
+            <CheckMenuItem fx:id="torusCheckMenuItem" onAction="#changeTorus" text="_Torus">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
@@ -105,7 +106,7 @@
             </MenuItem>
         </Menu>
         <Menu text="_Simulation">
-            <MenuItem text="S_chritt">
+            <MenuItem onAction="#singleStep" text="S_chritt">
                 <accelerator>
                     <KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -145,10 +146,10 @@
             <tooltip>
                 <Tooltip text="Zufällige Population erzeugen" />
             </tooltip></Button>
-        <Button onAction="#changeTorus" mnemonicParsing="false" style="-fx-graphic: url(/icons/Torus24.gif)">
+        <ToggleButton fx:id="changeTorusButton" onAction="#changeTorus" mnemonicParsing="false" style="-fx-graphic: url(/icons/Torus24.gif)">
             <tooltip>
                 <Tooltip text="Population als Torus betrachten (an/aus)" />
-            </tooltip></Button>
+            </tooltip></ToggleButton>
         <Button mnemonicParsing="false" style="-fx-graphic: url(/icons/Print24.gif)">
             <tooltip>
                 <Tooltip text="Population drucken" />

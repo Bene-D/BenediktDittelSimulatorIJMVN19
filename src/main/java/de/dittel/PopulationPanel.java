@@ -1,5 +1,6 @@
 package de.dittel;
 
+import de.dittel.automaton.Automaton;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -56,6 +57,7 @@ public class PopulationPanel extends Region {
      */
     public void paintCanvas() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setLineWidth(1);
         gc.setStroke(Color.BLACK);
 

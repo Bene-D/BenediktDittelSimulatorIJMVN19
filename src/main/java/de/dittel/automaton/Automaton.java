@@ -1,4 +1,4 @@
-package de.dittel;
+package de.dittel.automaton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,15 +92,11 @@ public abstract class Automaton {
         Cell[][] newPopulation = new Cell[rows][columns];
 
         for (int r = 0; r < rows; r++) {
-            System.arraycopy(population[r], 0, newPopulation[r], 0, columns);
-        }
-
-        if (rows > this.rows || columns > this.columns) {
-            for (int r = 0; r < rows; r++) {
-                for (int c = 0; c < columns; c++) {
-                    if (newPopulation[r][c] == null) {
-                        newPopulation[r][c] = new Cell();
-                    }
+            for (int c = 0; c < columns; c++) {
+                if (r < this.rows && c < this.columns) {
+                    newPopulation[r][c] = population[r][c];
+                } else {
+                    newPopulation[r][c] = new Cell();
                 }
             }
         }
