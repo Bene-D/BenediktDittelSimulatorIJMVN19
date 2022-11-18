@@ -4,8 +4,11 @@ import de.dittel.automaton.Automaton;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+
+import java.util.List;
 
 /**
  * Klasse zur Darstellung eines Automaten in der View
@@ -22,14 +25,16 @@ public class PopulationPanel extends Region {
     private double populationHeight = 15;
     private final Canvas canvas;
     private final Automaton automaton;
+    private final List<ColorPicker> colorPickers;
 
     /**
      * Konstruktor
      *
      * @param automaton Automat der abgebildet werden soll
      */
-    public PopulationPanel(Automaton automaton) {
+    public PopulationPanel(Automaton automaton, List<ColorPicker> colorPickers) {
         this.automaton = automaton;
+        this.colorPickers = colorPickers;
         this.canvas = new Canvas(calcCanvasWidth(), calcCanvasHeight());
         paintCanvas();
         this.getChildren().add(canvas);
@@ -68,18 +73,8 @@ public class PopulationPanel extends Region {
 
         for (int r = 0; r < automaton.getNumberOfRows(); r++) {
             for (int c = 0; c < automaton.getNumberOfColumns(); c++) {
-                switch (automaton.getCell(r, c).getState()) {
-                    case 1 -> gc.setFill(Color.BLACK);
-                    case 2 -> gc.setFill(Color.valueOf("#0f7b4e"));
-                    case 3 -> gc.setFill(Color.valueOf("#b6d4e1"));
-                    case 4 -> gc.setFill(Color.valueOf("#f9ee3d"));
-                    case 5 -> gc.setFill(Color.valueOf("#5f85c4"));
-                    case 6 -> gc.setFill(Color.valueOf("eaa8fe"));
-                    case 7 -> gc.setFill(Color.valueOf("2f8789"));
-                    case 8 -> gc.setFill(Color.valueOf("213986"));
-                    case 9 -> gc.setFill(Color.valueOf("535c79"));
-                    default -> gc.setFill(Color.WHITE);
-                }
+                gc.setFill(colorPickers.get(automaton.getCell(r, c).getState()).getValue());
+
                 gc.fillRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,
                         populationWidth, populationHeight);
                 gc.strokeRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,

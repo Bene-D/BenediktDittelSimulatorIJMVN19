@@ -2,14 +2,17 @@ package de.dittel.controller;
 
 import de.dittel.PopulationPanel;
 import de.dittel.automaton.Automaton;
-import de.dittel.automaton.GameOfLifeAutomaton;
+import de.dittel.automaton.KruemelmonsterAutomaton;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Controller-Klasse zur Steuerung der GUI
@@ -17,9 +20,15 @@ import java.util.Optional;
 public class Controller {
 
     private Automaton automaton;
+    Random random = new Random();
+    private List<ColorPicker> colorPickers;
 
     @FXML
-    private ScrollPane scrollPane;
+    private VBox colorPickersVBox;
+    @FXML
+    private VBox radioButtonsVBox;
+    @FXML
+    private ScrollPane populationScrollPane;
     @FXML
     private PopulationPanel populationPanel;
     @FXML
@@ -32,14 +41,50 @@ public class Controller {
     private Button zoomOutButton;
 
     public void initialize() {
-        automaton = new GameOfLifeAutomaton(10, 10, true);
+        automaton = new KruemelmonsterAutomaton(10, 10, 10, true);
+        colorPickers = new ArrayList<>(Arrays.asList(new ColorPicker(), new ColorPicker(Color.BLACK)));
+        colorPickers.get(1).setId(String.valueOf(1));
+        setUpColorPickers();
+        setUpRadioButtons();
         torusCheckMenuItem.setSelected(automaton.isTorus());
         changeTorusToggleButton.setSelected(automaton.isTorus());
-        populationPanel = new PopulationPanel(automaton);
+        populationPanel = new PopulationPanel(automaton, colorPickers);
         populationPanel.setOnScroll(this::zoom);
-        scrollPane.setContent(populationPanel);
-        scrollPane.viewportBoundsProperty()
+        populationScrollPane.setContent(populationPanel);
+        populationScrollPane.viewportBoundsProperty()
                 .addListener((observable, oldValue, newValue) -> populationPanel.center(newValue));
+    }
+
+    /**
+     * Helfermethode zum Erstellen von RadioButtons
+     *
+     * Erzeugt für jeden Zustand eines Automaten einen RadioButton und fügt diesen der RadioButtonVBox der View hinzu.
+     * Die Nummerierung der RadioButtons ist fortlaufend.
+     */
+    private void setUpRadioButtons() {
+        for (int i=2; i<automaton.getNumberOfStates(); i++) {
+            radioButtonsVBox.getChildren().add(new RadioButton(String.valueOf(i)));
+        }
+    }
+
+    /**
+     * Helfermethode zum Erstellen von ColorPickern
+     *
+     * Erzeugt für jeden Zustand eines Automaten einen ColorPicker und fügt diesen der ColorPickerVBox der View hinzu.
+     * Die Farben werden dabei zufällig erzeugt.
+     * Jeder ColorPicker bekommt eine fortlaufende id-Nummer.
+     */
+    private void setUpColorPickers() {
+        for (int i=2; i<automaton.getNumberOfStates(); i++) {
+            double red = random.nextDouble();
+            double green = random.nextDouble();
+            double blue = random.nextDouble();
+            ColorPicker colorPicker = new ColorPicker(Color.color(red, green, blue));
+            colorPicker.setId(String.valueOf(i));
+            colorPicker.setOnAction(this::changeColor);
+            colorPickersVBox.getChildren().add(colorPicker);
+            colorPickers.add(colorPicker);
+        }
     }
 
     /**
@@ -99,7 +144,7 @@ public class Controller {
                     automaton.changeSize(Integer.parseInt(dialogController.getRowTextField().getText()),
                             Integer.parseInt(dialogController.getColumnTextField().getText()));
                 populationPanel.paintCanvas();
-                populationPanel.center(scrollPane.getViewportBounds());
+                populationPanel.center(populationScrollPane.getViewportBounds());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -117,7 +162,7 @@ public class Controller {
             zoomInButton.setDisable(true);
         }
         populationPanel.paintCanvas();
-        populationPanel.center(scrollPane.getViewportBounds());
+        populationPanel.center(populationScrollPane.getViewportBounds());
     }
 
     /**
@@ -131,7 +176,7 @@ public class Controller {
             zoomOutButton.setDisable(true);
         }
         populationPanel.paintCanvas();
-        populationPanel.center(scrollPane.getViewportBounds());
+        populationPanel.center(populationScrollPane.getViewportBounds());
 
     }
 
@@ -152,5 +197,28 @@ public class Controller {
                 zoomIn();
             }
         }
+    }
+
+    /**
+     * Ändert die Farbe eines Zustands des Automaten
+     *
+     * Es ändert sich die Farbe aller Zellen, die sich in diesem Zustand befinden.
+     * Das Canvas des PopulationsPanels wird deshalb neu gezeichnet.
+     *
+     * @param actionEvent wird benötigt, um den ColorPicker zu wählen, der das Event ausgelöst hat
+     */
+    public void changeColor(ActionEvent actionEvent) {
+        ColorPicker colorPicker = (ColorPicker) actionEvent.getSource();
+        int id;
+
+        if (colorPicker.getId() == null) {
+            id = 0;
+        } else {
+            id = Integer.parseInt(colorPicker.getId());
+        }
+
+        Color color = colorPicker.getValue();
+        colorPickers.get(id).setValue(color);
+        populationPanel.paintCanvas();
     }
 }

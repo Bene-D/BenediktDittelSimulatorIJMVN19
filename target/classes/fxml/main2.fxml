@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dittel.controller.Controller">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dittel.controller.Controller">
     <MenuBar VBox.vgrow="NEVER">
         <Menu text="_Automat">
             <MenuItem styleClass="newAutomaton" text="_Neu...">
@@ -185,26 +185,25 @@
 
     </ToolBar>
     <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-      <ScrollPane hbarPolicy="NEVER" style="-fx-border-color: transparent;">
-         <HBox.margin>
-            <Insets />
-         </HBox.margin>
-         <content>
-              <HBox prefWidth="175.0">
-                  <VBox prefWidth="39.0" spacing="13.0">
-                      <HBox.margin>
-                          <Insets top="9.0" />
-                      </HBox.margin>
-                      <RadioButton mnemonicParsing="false" text="0">
-                          <VBox.margin>
-                              <Insets />
-                          </VBox.margin>
-                      </RadioButton>
-                      <RadioButton mnemonicParsing="false" text="1" />
-                  <padding>
-                     <Insets left="5.0" />
-                  </padding>
-                      <!--<RadioButton mnemonicParsing="false" text="2" />
+        <ScrollPane hbarPolicy="NEVER" minWidth="185.0">
+            <HBox.margin>
+                <Insets />
+            </HBox.margin>
+            <HBox prefWidth="175.0">
+                <VBox fx:id="radioButtonsVBox" prefWidth="39.0" spacing="13.0">
+                    <HBox.margin>
+                        <Insets top="9.0" />
+                    </HBox.margin>
+                    <RadioButton mnemonicParsing="false" text="0">
+                        <VBox.margin>
+                            <Insets />
+                        </VBox.margin>
+                    </RadioButton>
+                    <RadioButton mnemonicParsing="false" text="1" />
+                    <padding>
+                        <Insets left="5.0" />
+                    </padding>
+                    <!--<RadioButton mnemonicParsing="false" text="2" />
                       <RadioButton mnemonicParsing="false" text="3" />
                       <RadioButton mnemonicParsing="false" selected="true" text="4" />
                       <RadioButton mnemonicParsing="false" text="5" />
@@ -212,22 +211,22 @@
                       <RadioButton mnemonicParsing="false" text="7" />
                       <RadioButton mnemonicParsing="false" text="8" />
                       <RadioButton mnemonicParsing="false" text="9" />-->
-                  </VBox>
-                  <VBox minWidth="50.0" prefWidth="131.0" spacing="5.0">
-                      <HBox.margin>
-                          <Insets top="5.0" />
-                      </HBox.margin>
-                      <ColorPicker>
-                          <VBox.margin>
-                              <Insets />
-                          </VBox.margin>
-                      </ColorPicker>
-                      <ColorPicker>
-                          <value>
-                              <Color />
-                          </value>
-                      </ColorPicker>
-                      <!--<ColorPicker>
+                </VBox>
+                <VBox fx:id="colorPickersVBox" minWidth="50.0" prefWidth="125.0" spacing="5.0" HBox.hgrow="NEVER">
+                    <HBox.margin>
+                        <Insets top="5.0" />
+                    </HBox.margin>
+                    <ColorPicker onAction="#changeColor">
+                        <VBox.margin>
+                            <Insets />
+                        </VBox.margin>
+                    </ColorPicker>
+                    <ColorPicker onAction="#changeColor">
+                        <value>
+                            <Color />
+                        </value>
+                    </ColorPicker>
+                    <!--<ColorPicker>
                           <value>
                               <Color red="0.05882352963089943" green="0.48235294222831726" blue="0.30588236451148987" />
                           </value>
@@ -267,14 +266,16 @@
                               <Color red="0.32549020648002625" green="0.3607843220233917" blue="0.4745098054409027" />
                           </value>
                       </ColorPicker>-->
-                  <padding>
-                     <Insets right="2.0" />
-                  </padding>
-                  </VBox>
-              </HBox>
-         </content>
-      </ScrollPane>
-        <ScrollPane fx:id="scrollPane" onScroll="#zoom" pannable="true" prefHeight="303.0" prefWidth="330.0" style="-fx-border-color: null;" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets left="4.0" />
+                    </padding>
+                </VBox>
+            <opaqueInsets>
+               <Insets right="5.0" />
+            </opaqueInsets>
+            </HBox>
+        </ScrollPane>
+        <ScrollPane fx:id="populationScrollPane" onScroll="#zoom" pannable="true" prefHeight="303.0" prefWidth="330.0" style="-fx-border-color: null;" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets left="10.0" />
          </HBox.margin></ScrollPane>

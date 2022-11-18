@@ -25,7 +25,6 @@ public class KruemelmonsterAutomaton extends Automaton {
         setState(9, 9, 8);
         setState(1, 1, 1);
         setState(0, 0, 6);
-
     }
 
     /**
