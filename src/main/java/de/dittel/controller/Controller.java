@@ -1,11 +1,12 @@
 package de.dittel.controller;
 
+import de.dittel.PopulationPanel;
 import de.dittel.automaton.Automaton;
 import de.dittel.automaton.GameOfLifeAutomaton;
-import de.dittel.PopulationPanel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.ScrollEvent;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -25,13 +26,17 @@ public class Controller {
     private ToggleButton changeTorusToggleButton;
     @FXML
     private CheckMenuItem torusCheckMenuItem;
+    @FXML
+    private Button zoomInButton;
+    @FXML
+    private Button zoomOutButton;
 
     public void initialize() {
         automaton = new GameOfLifeAutomaton(10, 10, true);
         torusCheckMenuItem.setSelected(automaton.isTorus());
         changeTorusToggleButton.setSelected(automaton.isTorus());
         populationPanel = new PopulationPanel(automaton);
-        scrollPane.setPannable(true);
+        populationPanel.setOnScroll(this::zoom);
         scrollPane.setContent(populationPanel);
         scrollPane.viewportBoundsProperty()
                 .addListener((observable, oldValue, newValue) -> populationPanel.center(newValue));
@@ -72,6 +77,13 @@ public class Controller {
         populationPanel.paintCanvas();
     }
 
+    /**
+     * Ändert die Größe der Population
+     *
+     * Es wird ein DialogPane erstellt und angezeigt, welches die neue Anzahl der Reihen und Spalten abfragt.
+     * Die Eingaben werden benutzt, um die Attribute des Automaten zu aktualisieren.
+     * Anschließend wird das Canvas neu gezeichnet, um die Änderungen anzuzeigen.
+     */
     public void changePopulationSize() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dialog.fxml"));
@@ -91,6 +103,54 @@ public class Controller {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Vergrößert mit Hilfe der zoomIn-Methode des PopulationPanels die Population
+     *
+     * Das neugezeichnete Canvas ist somit größer und suggeriert einen optischen Zoom.
+     */
+    public void zoomIn() {
+        zoomOutButton.setDisable(false);
+        if (populationPanel.zoomIn()) {
+            zoomInButton.setDisable(true);
+        }
+        populationPanel.paintCanvas();
+        populationPanel.center(scrollPane.getViewportBounds());
+    }
+
+    /**
+     * Verkleinert mit Hilfe der zoomOut-Methode des PopulationPanels die Population
+     *
+     * Das neugezeichnete Canvas ist somit kleiner und suggeriert einen optischen Zoom.
+     */
+    public void zoomOut() {
+        zoomInButton.setDisable(false);
+        if (populationPanel.zoomOut()) {
+            zoomOutButton.setDisable(true);
+        }
+        populationPanel.paintCanvas();
+        populationPanel.center(scrollPane.getViewportBounds());
+
+    }
+
+    /**
+     * Methode zum Zoomen mit dem Scrollrad er Maus
+     *
+     * Verwendet dabei die zoomIn- und zoomOut-Methode dieser Klasse
+     *
+     * @param scrollEvent wird benötigt, um die Scrollrichtung zu bestimmen
+     */
+    public void zoom(ScrollEvent scrollEvent) {
+        double deltaY = scrollEvent.getDeltaY();
+
+        if (scrollEvent.isControlDown()) {
+            if (deltaY < 0) {
+                zoomOut();
+            } else {
+                zoomIn();
+            }
         }
     }
 }

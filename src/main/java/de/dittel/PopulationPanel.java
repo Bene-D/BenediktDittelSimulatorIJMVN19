@@ -12,11 +12,14 @@ import javafx.scene.paint.Color;
  */
 public class PopulationPanel extends Region {
 
-    private static final double POPULATION_WIDTH = 20;
-    private static final double POPULATION_HEIGHT = 20;
     private static final double BORDER_WIDTH = 2;
     private static final double BORDER_HEIGHT = 2;
-
+    private static final double MAX_POPULATION_WIDTH = 40;
+    private static final double MAX_POPULATION_HEIGHT = 40;
+    private static final double MIN_POPULATION_WIDTH = 8;
+    private static final double MIN_POPULATION_HEIGHT = 8;
+    private double populationWidth = 15;
+    private double populationHeight = 15;
     private final Canvas canvas;
     private final Automaton automaton;
 
@@ -38,7 +41,7 @@ public class PopulationPanel extends Region {
      * @return Breite, die der Automat benötigt (inkl. Kanten)
      */
     private double calcCanvasWidth() {
-        return 2 * BORDER_WIDTH + POPULATION_WIDTH * automaton.getNumberOfColumns();
+        return 2 * BORDER_WIDTH + populationWidth * automaton.getNumberOfColumns();
     }
 
     /**
@@ -47,7 +50,7 @@ public class PopulationPanel extends Region {
      * @return Höhe, die der Automat benötigt (inkl. Kanten)
      */
     private double calcCanvasHeight() {
-        return 2 * BORDER_HEIGHT + POPULATION_HEIGHT * automaton.getNumberOfRows();
+        return 2 * BORDER_HEIGHT + populationHeight * automaton.getNumberOfRows();
     }
 
     /**
@@ -77,10 +80,10 @@ public class PopulationPanel extends Region {
                     case 9 -> gc.setFill(Color.valueOf("535c79"));
                     default -> gc.setFill(Color.WHITE);
                 }
-                gc.fillRect(BORDER_WIDTH + c * POPULATION_WIDTH, BORDER_HEIGHT + r * POPULATION_HEIGHT,
-                        POPULATION_WIDTH, POPULATION_HEIGHT);
-                gc.strokeRect(BORDER_WIDTH + c * POPULATION_WIDTH, BORDER_HEIGHT + r * POPULATION_HEIGHT,
-                        POPULATION_WIDTH, POPULATION_HEIGHT);
+                gc.fillRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,
+                        populationWidth, populationHeight);
+                gc.strokeRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,
+                        populationWidth, populationHeight);
             }
         }
     }
@@ -103,5 +106,31 @@ public class PopulationPanel extends Region {
         } else {
             this.canvas.setTranslateY(0);
         }
+    }
+
+    /**
+     * Vergrößert die Breite und Höhe der Population
+     *
+     * @return boolean, ob die maximalen Werte erreicht wurden.
+     */
+    public boolean zoomIn() {
+        if (populationWidth < MAX_POPULATION_WIDTH && populationHeight < MAX_POPULATION_HEIGHT) {
+            populationWidth += 2;
+            populationHeight += 2;
+        }
+        return populationHeight >= MAX_POPULATION_HEIGHT && populationWidth >= MAX_POPULATION_WIDTH;
+    }
+
+    /**
+     * Verkleinert die Breite und Höhe der Population
+     *
+     * @return boolean, ob die minimalen Werte erreicht wurden.
+     */
+    public boolean zoomOut() {
+        if (populationWidth > MIN_POPULATION_WIDTH && populationHeight > MIN_POPULATION_HEIGHT) {
+            populationWidth -= 2;
+            populationHeight -= 2;
+        }
+        return populationHeight <= MIN_POPULATION_HEIGHT && populationWidth <= MIN_POPULATION_WIDTH;
     }
 }

@@ -15,8 +15,8 @@ public class KruemelmonsterAutomaton extends Automaton {
      * @param columns             Anzahl an Spalten
      * @param isTorus             true, falls die Zellen als Torus betrachtet werden
      */
-    public KruemelmonsterAutomaton(int rows, int columns, boolean isTorus) {
-        super(rows, columns, 10, false, isTorus);
+    public KruemelmonsterAutomaton(int rows, int columns, int numberOfStates, boolean isTorus) {
+        super(rows, columns, numberOfStates, false, isTorus);
         setState(7, 6, 7);
         setState(0, 6, 3);
         setState(8, 7, 5);
@@ -32,7 +32,7 @@ public class KruemelmonsterAutomaton extends Automaton {
      * Default-Konstruktor
      */
     public KruemelmonsterAutomaton() {
-        this(100, 100, true);
+        this(100, 100, 10, true);
     }
 
     /**
@@ -61,7 +61,7 @@ public class KruemelmonsterAutomaton extends Automaton {
     public static void main(String[] args) {
         int i = 10;
         try (Scanner scanner = new Scanner(System.in)) {
-            KruemelmonsterAutomaton kruemelmonsterAutomaton = new KruemelmonsterAutomaton(9, 13, false);
+            KruemelmonsterAutomaton kruemelmonsterAutomaton = new KruemelmonsterAutomaton(9, 13, 8, false);
             kruemelmonsterAutomaton.print();
             while (i>0) {
                 System.out.println("Drücke eine Taste für die nächste Generation!");

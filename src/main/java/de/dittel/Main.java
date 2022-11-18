@@ -19,7 +19,7 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setTitle("Zellulaerer Automat");
         stage.setMinWidth(600);
-        stage.setMinHeight(450);
+        stage.setMinHeight(400);
         stage.show();
     }
 
