@@ -146,7 +146,7 @@
             <tooltip>
                 <Tooltip text="Zufällige Population erzeugen" />
             </tooltip></Button>
-        <ToggleButton fx:id="changeTorusButton" onAction="#changeTorus" mnemonicParsing="false" style="-fx-graphic: url(/icons/Torus24.gif)">
+        <ToggleButton fx:id="changeTorusToggleButton" onAction="#changeTorus" mnemonicParsing="false" style="-fx-graphic: url(/icons/Torus24.gif)">
             <tooltip>
                 <Tooltip text="Population als Torus betrachten (an/aus)" />
             </tooltip></ToggleButton>

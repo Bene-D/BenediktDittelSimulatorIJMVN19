@@ -22,14 +22,14 @@ public class Controller {
     @FXML
     private PopulationPanel populationPanel;
     @FXML
-    private ToggleButton changeTorusButton;
+    private ToggleButton changeTorusToggleButton;
     @FXML
     private CheckMenuItem torusCheckMenuItem;
 
     public void initialize() {
-        automaton = new GameOfLifeAutomaton(15, 15, true);
+        automaton = new GameOfLifeAutomaton(10, 10, true);
         torusCheckMenuItem.setSelected(automaton.isTorus());
-        changeTorusButton.setSelected(automaton.isTorus());
+        changeTorusToggleButton.setSelected(automaton.isTorus());
         populationPanel = new PopulationPanel(automaton);
         scrollPane.setPannable(true);
         scrollPane.setContent(populationPanel);
@@ -52,7 +52,7 @@ public class Controller {
      */
     public void changeTorus() {
         automaton.setTorus(!automaton.isTorus());
-        changeTorusButton.setSelected(automaton.isTorus());
+        changeTorusToggleButton.setSelected(automaton.isTorus());
         torusCheckMenuItem.setSelected(automaton.isTorus());
     }
 

@@ -56,10 +56,12 @@ public class PopulationPanel extends Region {
      * Je nach Zustand der einzelnen Zellen werden diese unterschiedlich gefärbt
      */
     public void paintCanvas() {
+        canvas.setWidth(calcCanvasWidth());
+        canvas.setHeight(calcCanvasHeight());
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setLineWidth(1);
-        gc.setStroke(Color.BLACK);
+        gc.setStroke(Color.GRAY);
 
         for (int r = 0; r < automaton.getNumberOfRows(); r++) {
             for (int c = 0; c < automaton.getNumberOfColumns(); c++) {
