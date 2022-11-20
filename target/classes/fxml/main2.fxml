@@ -64,7 +64,7 @@
                     <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <CheckMenuItem fx:id="torusCheckMenuItem" onAction="#changeTorus" text="_Torus">
+            <CheckMenuItem fx:id="changeTorusCheckMenuItem" onAction="#changeTorus" text="_Torus">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
@@ -225,7 +225,7 @@
                             <Insets />
                         </VBox.margin>
                     </ColorPicker>
-                    <ColorPicker onAction="#changeColor">
+                    <ColorPicker fx:id="1" onAction="#changeColor">
                         <value>
                             <Color />
                         </value>
@@ -279,7 +279,7 @@
             </opaqueInsets>
             </HBox>
         </ScrollPane>
-        <ScrollPane fx:id="populationScrollPane" onScroll="#zoom" pannable="true" prefHeight="303.0" prefWidth="330.0" style="-fx-border-color: null;" HBox.hgrow="ALWAYS">
+        <ScrollPane fx:id="populationScrollPane" onScroll="#zoom" prefHeight="303.0" prefWidth="330.0" style="-fx-border-color: null;" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets left="10.0" />
          </HBox.margin></ScrollPane>

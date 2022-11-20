@@ -22,9 +22,9 @@ public class Controller {
 
     private Automaton automaton;
     Random random = new Random();
-    private List<ColorPicker> colorPickers;
-    private double xDragDetected;
-    private double yDragDetected;
+    private List<ColorPicker> colorPickerList;
+    private double xCoordinateMousePressed;
+    private double yCoordinateMousePressed;
 
     @FXML
     private VBox colorPickersVBox;
@@ -37,7 +37,7 @@ public class Controller {
     @FXML
     private ToggleButton changeTorusToggleButton;
     @FXML
-    private CheckMenuItem torusCheckMenuItem;
+    private CheckMenuItem changeTorusCheckMenuItem;
     @FXML
     private Button zoomInButton;
     @FXML
@@ -49,20 +49,18 @@ public class Controller {
     @FXML
     private RadioButton radioButtonOne;
 
-
     public void initialize() {
         automaton = new KruemelmonsterAutomaton(10, 10, 10, true);
-        colorPickers = new ArrayList<>(Arrays.asList(new ColorPicker(), new ColorPicker(Color.BLACK)));
-        colorPickers.get(1).setId(String.valueOf(1));
+        colorPickerList = new ArrayList<>(Arrays.asList(new ColorPicker(), new ColorPicker(Color.BLACK)));
+        colorPickerList.get(1).setId(String.valueOf(1));
         setUpColorPickers();
         setUpRadioButtons();
-        torusCheckMenuItem.setSelected(automaton.isTorus());
+        changeTorusCheckMenuItem.setSelected(automaton.isTorus());
         changeTorusToggleButton.setSelected(automaton.isTorus());
-        populationPanel = new PopulationPanel(automaton, colorPickers);
+        populationPanel = new PopulationPanel(automaton, colorPickerList);
         populationPanel.setOnScroll(this::zoom);
         populationPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_PRESSED, this::canvasPressed);
-        populationPanel.getCanvas().addEventHandler(MouseEvent.DRAG_DETECTED, this::canvasDragDetected);
-        populationPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_RELEASED, this::canvasMouseReleased);
+        populationPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_DRAGGED, this::canvasMouseDragged);
         populationScrollPane.setContent(populationPanel);
         populationScrollPane.viewportBoundsProperty()
                 .addListener((observable, oldValue, newValue) -> populationPanel.center(newValue));
@@ -100,7 +98,7 @@ public class Controller {
             colorPicker.setId(String.valueOf(i));
             colorPicker.setOnAction(this::changeColor);
             colorPickersVBox.getChildren().add(colorPicker);
-            colorPickers.add(colorPicker);
+            colorPickerList.add(colorPicker);
         }
     }
 
@@ -120,7 +118,7 @@ public class Controller {
     public void changeTorus() {
         automaton.setTorus(!automaton.isTorus());
         changeTorusToggleButton.setSelected(automaton.isTorus());
-        torusCheckMenuItem.setSelected(automaton.isTorus());
+        changeTorusCheckMenuItem.setSelected(automaton.isTorus());
     }
 
     /**
@@ -235,28 +233,22 @@ public class Controller {
         }
 
         Color color = colorPicker.getValue();
-        colorPickers.get(id).setValue(color);
+        colorPickerList.get(id).setValue(color);
         populationPanel.paintCanvas();
-    }
-    /**
-     * Ändert den Zustand der Zelle der Population, auf die geklickt wurde
-     * <p>
-     * Verwendet dabei den aktuell ausgewählten RadioButton, um den neuen Zustand/Farbe zu bestimmen
-     * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
-     */
-    public void canvasPressed(MouseEvent mouseEvent) {
-        int state = getActiveRadioButton();
-        populationPanel.canvasPaintPressed(mouseEvent, state);
     }
 
     /**
-     * Bestimmt die Anfangskoordinaten eines Bereichs beim Ziehen mit der Maus auf dem Canvas
-     *
+     * Ändert den Zustand/Farbe der Zelle, auf die geklickt wurde
+     * <p>
+     * Verwendet dabei den aktuell ausgewählten RadioButton, um den neuen Zustand/Farbe zu bestimmen.
+     * Speichert zusätzlich die Koordinaten der Zelle als Anfangspunkt für einen möglichen MouseDrag.
      * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
      */
-    public void canvasDragDetected(MouseEvent mouseEvent) {
-        xDragDetected = mouseEvent.getX();
-        yDragDetected = mouseEvent.getY();
+    public void canvasPressed(MouseEvent mouseEvent) {
+        xCoordinateMousePressed = mouseEvent.getX();
+        yCoordinateMousePressed = mouseEvent.getY();
+        int state = getActiveRadioButton();
+        populationPanel.canvasPaintSingleCell(xCoordinateMousePressed, yCoordinateMousePressed, state);
     }
 
     /**
@@ -264,12 +256,13 @@ public class Controller {
      *
      * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
      */
-    public void canvasMouseReleased(MouseEvent mouseEvent) {
-        double xMouseReleased = mouseEvent.getX();
-        double yMouseReleased = mouseEvent.getY();
+    public void canvasMouseDragged(MouseEvent mouseEvent) {
+        double xCoordinateDragReleased = mouseEvent.getX();
+        double yCoordinateDragReleased = mouseEvent.getY();
         int state = getActiveRadioButton();
 
-        populationPanel.canvasPaintDragAndRelease(xDragDetected, yDragDetected, xMouseReleased, yMouseReleased, state);
+        populationPanel.canvasPaintDragAndRelease(xCoordinateMousePressed, yCoordinateMousePressed,
+                xCoordinateDragReleased, yCoordinateDragReleased, state);
     }
 
     /**
