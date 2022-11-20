@@ -152,6 +152,10 @@ public class Controller {
             Dialog<ButtonType> dialog = new Dialog<>();
             dialogController.initialize(automaton);
             dialog.setDialogPane(dialogPane);
+            dialogController.getColumnTextField().textProperty().addListener(observable ->
+                    dialogPane.lookupButton(ButtonType.OK).setDisable(dialogController.validate()));
+            dialogController.getRowTextField().textProperty().addListener(observable2 ->
+                    dialogPane.lookupButton(ButtonType.OK).setDisable(dialogController.validate()));
             dialog.setTitle("Größe der Population ändern");
             Optional<ButtonType> clickedButton = dialog.showAndWait();
 
