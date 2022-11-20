@@ -11,3 +11,5 @@ R
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
 9
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+[
++src/main/java/de/dittel/automaton/Cell.java,5\2\526a4c61bce5d38f086899aac114475d59339cc6

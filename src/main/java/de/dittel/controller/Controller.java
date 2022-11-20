@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,6 +23,8 @@ public class Controller {
     private Automaton automaton;
     Random random = new Random();
     private List<ColorPicker> colorPickers;
+    private double xDragDetected;
+    private double yDragDetected;
 
     @FXML
     private VBox colorPickersVBox;
@@ -39,6 +42,13 @@ public class Controller {
     private Button zoomInButton;
     @FXML
     private Button zoomOutButton;
+    @FXML
+    private ToggleGroup radioButtonToggleGroup;
+    @FXML
+    private RadioButton radioButtonZero;
+    @FXML
+    private RadioButton radioButtonOne;
+
 
     public void initialize() {
         automaton = new KruemelmonsterAutomaton(10, 10, 10, true);
@@ -50,26 +60,33 @@ public class Controller {
         changeTorusToggleButton.setSelected(automaton.isTorus());
         populationPanel = new PopulationPanel(automaton, colorPickers);
         populationPanel.setOnScroll(this::zoom);
+        populationPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_PRESSED, this::canvasPressed);
+        populationPanel.getCanvas().addEventHandler(MouseEvent.DRAG_DETECTED, this::canvasDragDetected);
+        populationPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_RELEASED, this::canvasMouseReleased);
         populationScrollPane.setContent(populationPanel);
         populationScrollPane.viewportBoundsProperty()
                 .addListener((observable, oldValue, newValue) -> populationPanel.center(newValue));
+        radioButtonZero.setToggleGroup(radioButtonToggleGroup);
+        radioButtonOne.setToggleGroup(radioButtonToggleGroup);
     }
 
     /**
      * Helfermethode zum Erstellen von RadioButtons
-     *
+     * <p>
      * Erzeugt für jeden Zustand eines Automaten einen RadioButton und fügt diesen der RadioButtonVBox der View hinzu.
      * Die Nummerierung der RadioButtons ist fortlaufend.
      */
     private void setUpRadioButtons() {
         for (int i=2; i<automaton.getNumberOfStates(); i++) {
-            radioButtonsVBox.getChildren().add(new RadioButton(String.valueOf(i)));
+            RadioButton radioButton = new RadioButton(String.valueOf(i));
+            radioButton.setToggleGroup(radioButtonToggleGroup);
+            radioButtonsVBox.getChildren().add(radioButton);
         }
     }
 
     /**
      * Helfermethode zum Erstellen von ColorPickern
-     *
+     * <p>
      * Erzeugt für jeden Zustand eines Automaten einen ColorPicker und fügt diesen der ColorPickerVBox der View hinzu.
      * Die Farben werden dabei zufällig erzeugt.
      * Jeder ColorPicker bekommt eine fortlaufende id-Nummer.
@@ -124,7 +141,7 @@ public class Controller {
 
     /**
      * Ändert die Größe der Population
-     *
+     * <p>
      * Es wird ein DialogPane erstellt und angezeigt, welches die neue Anzahl der Reihen und Spalten abfragt.
      * Die Eingaben werden benutzt, um die Attribute des Automaten zu aktualisieren.
      * Anschließend wird das Canvas neu gezeichnet, um die Änderungen anzuzeigen.
@@ -153,7 +170,7 @@ public class Controller {
 
     /**
      * Vergrößert mit Hilfe der zoomIn-Methode des PopulationPanels die Population
-     *
+     * <p>
      * Das neugezeichnete Canvas ist somit größer und suggeriert einen optischen Zoom.
      */
     public void zoomIn() {
@@ -167,7 +184,7 @@ public class Controller {
 
     /**
      * Verkleinert mit Hilfe der zoomOut-Methode des PopulationPanels die Population
-     *
+     * <p>
      * Das neugezeichnete Canvas ist somit kleiner und suggeriert einen optischen Zoom.
      */
     public void zoomOut() {
@@ -182,7 +199,7 @@ public class Controller {
 
     /**
      * Methode zum Zoomen mit dem Scrollrad er Maus
-     *
+     * <p>
      * Verwendet dabei die zoomIn- und zoomOut-Methode dieser Klasse
      *
      * @param scrollEvent wird benötigt, um die Scrollrichtung zu bestimmen
@@ -201,7 +218,7 @@ public class Controller {
 
     /**
      * Ändert die Farbe eines Zustands des Automaten
-     *
+     * <p>
      * Es ändert sich die Farbe aller Zellen, die sich in diesem Zustand befinden.
      * Das Canvas des PopulationsPanels wird deshalb neu gezeichnet.
      *
@@ -220,5 +237,54 @@ public class Controller {
         Color color = colorPicker.getValue();
         colorPickers.get(id).setValue(color);
         populationPanel.paintCanvas();
+    }
+    /**
+     * Ändert den Zustand der Zelle der Population, auf die geklickt wurde
+     * <p>
+     * Verwendet dabei den aktuell ausgewählten RadioButton, um den neuen Zustand/Farbe zu bestimmen
+     * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
+     */
+    public void canvasPressed(MouseEvent mouseEvent) {
+        int state = getActiveRadioButton();
+        populationPanel.canvasPaintPressed(mouseEvent, state);
+    }
+
+    /**
+     * Bestimmt die Anfangskoordinaten eines Bereichs beim Ziehen mit der Maus auf dem Canvas
+     *
+     * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
+     */
+    public void canvasDragDetected(MouseEvent mouseEvent) {
+        xDragDetected = mouseEvent.getX();
+        yDragDetected = mouseEvent.getY();
+    }
+
+    /**
+     * Bestimmt die Endkoordinaten eines Bereichs beim Loslassen der Maus auf dem Canvas
+     *
+     * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
+     */
+    public void canvasMouseReleased(MouseEvent mouseEvent) {
+        double xMouseReleased = mouseEvent.getX();
+        double yMouseReleased = mouseEvent.getY();
+        int state = getActiveRadioButton();
+
+        populationPanel.canvasPaintDragAndRelease(xDragDetected, yDragDetected, xMouseReleased, yMouseReleased, state);
+    }
+
+    /**
+     * Helfermethode zum Bestimmen des aktuell ausgewählten RadioButtons
+     *
+     * @return Zustand des aktuell ausgewählten RadioButtons
+     */
+    private int getActiveRadioButton() {
+        RadioButton radioButton = (RadioButton) radioButtonToggleGroup.getSelectedToggle();
+        int state;
+        if (radioButton.getText().equals("0")) {
+            state = 0;
+        } else {
+            state = Integer.parseInt(radioButton.getText());
+        }
+        return state;
     }
 }

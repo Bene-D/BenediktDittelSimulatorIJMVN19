@@ -5,6 +5,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
@@ -23,10 +24,11 @@ public class PopulationPanel extends Region {
     private static final double MIN_POPULATION_HEIGHT = 8;
     private double populationWidth = 15;
     private double populationHeight = 15;
+
     private final Canvas canvas;
+
     private final Automaton automaton;
     private final List<ColorPicker> colorPickers;
-
     /**
      * Konstruktor
      *
@@ -36,8 +38,15 @@ public class PopulationPanel extends Region {
         this.automaton = automaton;
         this.colorPickers = colorPickers;
         this.canvas = new Canvas(calcCanvasWidth(), calcCanvasHeight());
-        paintCanvas();
         this.getChildren().add(canvas);
+        paintCanvas();
+    }
+
+    /**
+     * Getter für das Canvas
+     */
+    public Canvas getCanvas() {
+        return canvas;
     }
 
     /**
@@ -60,7 +69,7 @@ public class PopulationPanel extends Region {
 
     /**
      * Zeichnet den aktuellen Zustand des Automaten in das Canvas (inkl. Kanten)
-     *
+     * <p>
      * Je nach Zustand der einzelnen Zellen werden diese unterschiedlich gefärbt
      */
     public void paintCanvas() {
@@ -74,7 +83,6 @@ public class PopulationPanel extends Region {
         for (int r = 0; r < automaton.getNumberOfRows(); r++) {
             for (int c = 0; c < automaton.getNumberOfColumns(); c++) {
                 gc.setFill(colorPickers.get(automaton.getCell(r, c).getState()).getValue());
-
                 gc.fillRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,
                         populationWidth, populationHeight);
                 gc.strokeRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,
@@ -128,4 +136,37 @@ public class PopulationPanel extends Region {
         }
         return populationHeight <= MIN_POPULATION_HEIGHT && populationWidth <= MIN_POPULATION_WIDTH;
     }
+
+    public void canvasPaintPressed(MouseEvent event, int state) {
+        double x = event.getX();
+        double y = event.getY();
+        if (x < BORDER_WIDTH || y < BORDER_HEIGHT || x > BORDER_WIDTH + automaton.getNumberOfColumns() * populationWidth
+                || y > BORDER_HEIGHT + automaton.getNumberOfRows() * populationHeight) {
+            return;
+        }
+        int row = (int) ((y - BORDER_HEIGHT) / populationHeight);
+        int col = (int) ((x - BORDER_WIDTH) / populationWidth);
+        automaton.setState(row, col, state);
+        paintCanvas();
+    }
+
+    public void canvasPaintDragAndRelease(double xStart, double yStart, double xExit, double yExit, int state) {
+        int fromRow = (int) ((yStart - BORDER_HEIGHT) / populationHeight);
+        int fromColumn = (int) ((xStart - BORDER_WIDTH) / populationWidth);
+        int toRow = (int) ((yExit - BORDER_WIDTH) / populationWidth);
+        int toColumn = (int) ((xExit - BORDER_WIDTH) / populationWidth);
+        if (toRow < 0) {
+            toRow = 0;
+        } else if (toRow > automaton.getNumberOfRows()) {
+            toRow = automaton.getNumberOfRows()-1;
+        }
+        if (toColumn < 0) {
+            toColumn = 0;
+        } else if (toColumn > automaton.getNumberOfColumns()) {
+            toColumn = automaton.getNumberOfColumns()-1;
+        }
+        automaton.setState(fromRow, fromColumn, toRow, toColumn, state);
+        paintCanvas();
+    }
+
 }

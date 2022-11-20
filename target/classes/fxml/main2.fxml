@@ -20,6 +20,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.control.ToggleGroup?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dittel.controller.Controller">
     <MenuBar VBox.vgrow="NEVER">
@@ -194,12 +195,15 @@
                     <HBox.margin>
                         <Insets top="9.0" />
                     </HBox.margin>
-                    <RadioButton mnemonicParsing="false" text="0">
+                    <fx:define>
+                        <ToggleGroup fx:id="radioButtonToggleGroup" />
+                    </fx:define>
+                    <RadioButton fx:id="radioButtonZero" selected="true" mnemonicParsing="false" text="0">
                         <VBox.margin>
                             <Insets />
                         </VBox.margin>
                     </RadioButton>
-                    <RadioButton mnemonicParsing="false" text="1" />
+                    <RadioButton fx:id="radioButtonOne" mnemonicParsing="false" text="1" />
                     <padding>
                         <Insets left="5.0" />
                     </padding>
