@@ -1,14 +1,11 @@
 package de.dittel.controller;
 
-import de.dittel.PopulationPanel;
-import de.dittel.automaton.Automaton;
-import de.dittel.automaton.KruemelmonsterAutomaton;
+import de.dittel.model.Automaton;
+import de.dittel.view.PopulationPanel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -16,15 +13,13 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Controller-Klasse zur Steuerung der GUI
+ * Presenter-Klasse für die Verbindung zwischen mainView und Automaton
  */
-public class Controller {
+public class MainController {
 
     private Automaton automaton;
     Random random = new Random();
     private List<ColorPicker> colorPickerList;
-    private double xCoordinateMousePressed;
-    private double yCoordinateMousePressed;
 
     @FXML
     private VBox colorPickersVBox;
@@ -49,23 +44,46 @@ public class Controller {
     @FXML
     private RadioButton radioButtonOne;
 
-    public void initialize() {
-        automaton = new KruemelmonsterAutomaton(10, 10, 10, true);
+    public Automaton getAutomaton() {
+        return automaton;
+    }
+
+    public List<ColorPicker> getColorPickerList() {
+        return colorPickerList;
+    }
+
+    public ScrollPane getPopulationScrollPane() {
+        return populationScrollPane;
+    }
+
+    public Button getZoomInButton() {
+        return zoomInButton;
+    }
+
+    public Button getZoomOutButton() {
+        return zoomOutButton;
+    }
+
+    public ToggleGroup getRadioButtonToggleGroup() {
+        return radioButtonToggleGroup;
+    }
+
+    public void setPopulationPanel(PopulationPanel populationPanel) {
+        this.populationPanel = populationPanel;
+    }
+
+    public void initialize(Automaton automaton) {
+        this.automaton = automaton;
         colorPickerList = new ArrayList<>(Arrays.asList(new ColorPicker(), new ColorPicker(Color.BLACK)));
         colorPickerList.get(1).setId(String.valueOf(1));
         setUpColorPickers();
         setUpRadioButtons();
-        changeTorusCheckMenuItem.setSelected(automaton.isTorus());
-        changeTorusToggleButton.setSelected(automaton.isTorus());
-        populationPanel = new PopulationPanel(automaton, colorPickerList);
-        populationPanel.setOnScroll(this::zoom);
-        populationPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_PRESSED, this::canvasPressed);
-        populationPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_DRAGGED, this::canvasMouseDragged);
-        populationScrollPane.setContent(populationPanel);
-        populationScrollPane.viewportBoundsProperty()
-                .addListener((observable, oldValue, newValue) -> populationPanel.center(newValue));
+        radioButtonZero.setUserData(0);
+        radioButtonOne.setUserData(1);
         radioButtonZero.setToggleGroup(radioButtonToggleGroup);
         radioButtonOne.setToggleGroup(radioButtonToggleGroup);
+        changeTorusCheckMenuItem.setSelected(automaton.isTorus());
+        changeTorusToggleButton.setSelected(automaton.isTorus());
     }
 
     /**
@@ -77,6 +95,7 @@ public class Controller {
     private void setUpRadioButtons() {
         for (int i=2; i<automaton.getNumberOfStates(); i++) {
             RadioButton radioButton = new RadioButton(String.valueOf(i));
+            radioButton.setUserData(i);
             radioButton.setToggleGroup(radioButtonToggleGroup);
             radioButtonsVBox.getChildren().add(radioButton);
         }
@@ -109,7 +128,6 @@ public class Controller {
      */
     public void singleStep() throws Throwable {
         automaton.nextGeneration();
-        populationPanel.paintCanvas();
     }
 
     /**
@@ -126,7 +144,6 @@ public class Controller {
      */
     public void randomPopulation() {
         automaton.randomPopulation();
-        populationPanel.paintCanvas();
     }
 
     /**
@@ -134,7 +151,6 @@ public class Controller {
      */
     public void resetPopulation() {
         automaton.clearPopulation();
-        populationPanel.paintCanvas();
     }
 
     /**
@@ -152,69 +168,16 @@ public class Controller {
             Dialog<ButtonType> dialog = new Dialog<>();
             dialogController.initialize(automaton);
             dialog.setDialogPane(dialogPane);
-            dialogController.getColumnTextField().textProperty().addListener(observable ->
-                    dialogPane.lookupButton(ButtonType.OK).setDisable(dialogController.validate()));
-            dialogController.getRowTextField().textProperty().addListener(observable2 ->
-                    dialogPane.lookupButton(ButtonType.OK).setDisable(dialogController.validate()));
             dialog.setTitle("Größe der Population ändern");
             Optional<ButtonType> clickedButton = dialog.showAndWait();
 
             if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
-                    automaton.changeSize(Integer.parseInt(dialogController.getRowTextField().getText()),
-                            Integer.parseInt(dialogController.getColumnTextField().getText()));
-                populationPanel.paintCanvas();
+                automaton.changeSize(Integer.parseInt(dialogController.getRowTextField().getText()),
+                        Integer.parseInt(dialogController.getColumnTextField().getText()));
                 populationPanel.center(populationScrollPane.getViewportBounds());
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Vergrößert mit Hilfe der zoomIn-Methode des PopulationPanels die Population
-     * <p>
-     * Das neugezeichnete Canvas ist somit größer und suggeriert einen optischen Zoom.
-     */
-    public void zoomIn() {
-        zoomOutButton.setDisable(false);
-        if (populationPanel.zoomIn()) {
-            zoomInButton.setDisable(true);
-        }
-        populationPanel.paintCanvas();
-        populationPanel.center(populationScrollPane.getViewportBounds());
-    }
-
-    /**
-     * Verkleinert mit Hilfe der zoomOut-Methode des PopulationPanels die Population
-     * <p>
-     * Das neugezeichnete Canvas ist somit kleiner und suggeriert einen optischen Zoom.
-     */
-    public void zoomOut() {
-        zoomInButton.setDisable(false);
-        if (populationPanel.zoomOut()) {
-            zoomOutButton.setDisable(true);
-        }
-        populationPanel.paintCanvas();
-        populationPanel.center(populationScrollPane.getViewportBounds());
-
-    }
-
-    /**
-     * Methode zum Zoomen mit dem Scrollrad er Maus
-     * <p>
-     * Verwendet dabei die zoomIn- und zoomOut-Methode dieser Klasse
-     *
-     * @param scrollEvent wird benötigt, um die Scrollrichtung zu bestimmen
-     */
-    public void zoom(ScrollEvent scrollEvent) {
-        double deltaY = scrollEvent.getDeltaY();
-
-        if (scrollEvent.isControlDown()) {
-            if (deltaY < 0) {
-                zoomOut();
-            } else {
-                zoomIn();
-            }
         }
     }
 
@@ -235,53 +198,8 @@ public class Controller {
         } else {
             id = Integer.parseInt(colorPicker.getId());
         }
-
         Color color = colorPicker.getValue();
         colorPickerList.get(id).setValue(color);
-        populationPanel.paintCanvas();
-    }
-
-    /**
-     * Ändert den Zustand/Farbe der Zelle, auf die geklickt wurde
-     * <p>
-     * Verwendet dabei den aktuell ausgewählten RadioButton, um den neuen Zustand/Farbe zu bestimmen.
-     * Speichert zusätzlich die Koordinaten der Zelle als Anfangspunkt für einen möglichen MouseDrag.
-     * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
-     */
-    public void canvasPressed(MouseEvent mouseEvent) {
-        xCoordinateMousePressed = mouseEvent.getX();
-        yCoordinateMousePressed = mouseEvent.getY();
-        int state = getActiveRadioButton();
-        populationPanel.canvasPaintSingleCell(xCoordinateMousePressed, yCoordinateMousePressed, state);
-    }
-
-    /**
-     * Bestimmt die Endkoordinaten eines Bereichs beim Loslassen der Maus auf dem Canvas
-     *
-     * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
-     */
-    public void canvasMouseDragged(MouseEvent mouseEvent) {
-        double xCoordinateDragReleased = mouseEvent.getX();
-        double yCoordinateDragReleased = mouseEvent.getY();
-        int state = getActiveRadioButton();
-
-        populationPanel.canvasPaintDragAndRelease(xCoordinateMousePressed, yCoordinateMousePressed,
-                xCoordinateDragReleased, yCoordinateDragReleased, state);
-    }
-
-    /**
-     * Helfermethode zum Bestimmen des aktuell ausgewählten RadioButtons
-     *
-     * @return Zustand des aktuell ausgewählten RadioButtons
-     */
-    private int getActiveRadioButton() {
-        RadioButton radioButton = (RadioButton) radioButtonToggleGroup.getSelectedToggle();
-        int state;
-        if (radioButton.getText().equals("0")) {
-            state = 0;
-        } else {
-            state = Integer.parseInt(radioButton.getText());
-        }
-        return state;
+        automaton.notifyObserver();
     }
 }

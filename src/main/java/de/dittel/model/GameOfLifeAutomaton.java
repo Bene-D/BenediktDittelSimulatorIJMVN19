@@ -1,4 +1,4 @@
-package de.dittel.automaton;
+package de.dittel.model;
 
 import java.util.List;
 import java.util.Scanner;

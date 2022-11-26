@@ -1,13 +1,13 @@
-package de.dittel.automaton;
+package de.dittel.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import de.dittel.util.Observable;
+
+import java.util.*;
 
 /**
  * Abstrakte Klasse zur Repräsentation eines zellulären Automaten
  */
-public abstract class Automaton {
+public abstract class Automaton extends Observable {
 
     private int rows;
     private int columns;
@@ -104,6 +104,7 @@ public abstract class Automaton {
         population = newPopulation;
         this.rows = rows;
         this.columns = columns;
+        notifyObserver();
     }
 
     /**
@@ -122,6 +123,7 @@ public abstract class Automaton {
      */
     public void setTorus(boolean isTorus) {
         this.isTorus = isTorus;
+        notifyObserver();
     }
 
     /**
@@ -144,6 +146,7 @@ public abstract class Automaton {
                 population[r][c].setState(0);
             }
         }
+        notifyObserver();
     }
 
     /**
@@ -155,6 +158,7 @@ public abstract class Automaton {
                 population[r][c].setState(random.nextInt(numberOfStates));
             }
         }
+        notifyObserver();
     }
 
     /**
@@ -177,6 +181,7 @@ public abstract class Automaton {
      */
     public void setState(int row, int column, int state) {
         population[row][column].setState(state);
+        notifyObserver();
     }
 
     /**
@@ -195,6 +200,7 @@ public abstract class Automaton {
                 population[fromRow][i].setState(state);
             }
         }
+        notifyObserver();
     }
 
     /**
@@ -213,6 +219,7 @@ public abstract class Automaton {
             }
         }
         population = nextGeneration;
+        notifyObserver();
     }
 
     /**
@@ -278,7 +285,6 @@ public abstract class Automaton {
 
             else neighbors.add(getCell(neighborCoord[0], neighborCoord[1]));
         }
-
         return neighbors;
     }
 
@@ -295,7 +301,24 @@ public abstract class Automaton {
             if (neighborCoord[0] >= 0 && neighborCoord[1] >= 0 && neighborCoord[0] < rows && neighborCoord[1] < columns)
                 neighbors.add(getCell(neighborCoord[0], neighborCoord[1]));
         }
-
         return neighbors;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Automaton automaton = (Automaton) o;
+        return rows == automaton.rows && columns == automaton.columns && numberOfStates == automaton.numberOfStates
+                && isMooreNeighborHood == automaton.isMooreNeighborHood && isTorus == automaton.isTorus
+                && Arrays.deepEquals(population, automaton.population) && Objects.equals(random, automaton.random);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(super.hashCode(), rows, columns, numberOfStates, isMooreNeighborHood, isTorus, random);
+        result = 31 * result + Arrays.deepHashCode(population);
+        return result;
     }
 }

@@ -1,6 +1,8 @@
-package de.dittel;
+package de.dittel.view;
 
-import de.dittel.automaton.Automaton;
+import de.dittel.model.Automaton;
+import de.dittel.util.Observer;
+import de.dittel.util.Pair;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,11 +11,12 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Klasse zur Darstellung eines Automaten in der View
  */
-public class PopulationPanel extends Region {
+public class PopulationPanel extends Region implements Observer {
 
     private static final double BORDER_WIDTH = 2;
     private static final double BORDER_HEIGHT = 2;
@@ -35,6 +38,7 @@ public class PopulationPanel extends Region {
      */
     public PopulationPanel(Automaton automaton, List<ColorPicker> colorPickers) {
         this.automaton = automaton;
+        automaton.add(this);
         this.colorPickers = colorPickers;
         this.canvas = new Canvas(calcCanvasWidth(), calcCanvasHeight());
         this.getChildren().add(canvas);
@@ -136,54 +140,18 @@ public class PopulationPanel extends Region {
         return populationHeight <= MIN_POPULATION_HEIGHT && populationWidth <= MIN_POPULATION_WIDTH;
     }
 
-    /**
-     * Ändert den Zustand/Farbe einer Zelle der Population
-     *
-     * @param x X-Koordinate der ausgewählten Zelle
-     * @param y Y-Koordinate der ausgewählten Zelle
-     * @param state Zustand des ausgewählten RadioButtons
-     */
-    public void canvasPaintSingleCell(double x, double y, int state) {
-        if (x < BORDER_WIDTH || y < BORDER_HEIGHT || x > BORDER_WIDTH + automaton.getNumberOfColumns() * populationWidth
+    public Optional<Pair<Integer>> getRowAndCol(double x, double y) {
+        if (x < BORDER_WIDTH || y < BORDER_HEIGHT
+                || x > BORDER_WIDTH + automaton.getNumberOfColumns() * populationWidth
                 || y > BORDER_HEIGHT + automaton.getNumberOfRows() * populationHeight) {
-            return;
+            return Optional.empty();
         }
         int row = (int) ((y - BORDER_HEIGHT) / populationHeight);
         int col = (int) ((x - BORDER_WIDTH) / populationWidth);
-        automaton.setState(row, col, state);
-        paintCanvas();
+        return Optional.of(new Pair<>(row, col));
     }
-
-    /**
-     * Ändert den Zustand/Farbe eines Zellenbereichs der Population
-     *
-     * @param xFrom X-Koordinate der Startzelle des Bereichs
-     * @param yFrom Y-Koordinate der Startzelle des Bereichs
-     * @param xTo X-Koordinate der Endzelle des Bereichs
-     * @param yTo Y-Koordinate der Endzelle des Bereichs
-     * @param state Zustand des ausgewählten RadioButtons
-     */
-    public void canvasPaintDragAndRelease(double xFrom, double yFrom, double xTo, double yTo, int state) {
-        int fromRow = (int) ((yFrom - BORDER_HEIGHT) / populationHeight);
-        int fromColumn = (int) ((xFrom - BORDER_WIDTH) / populationWidth);
-        int toRow = (int) ((yTo - BORDER_WIDTH) / populationWidth);
-        int toColumn = (int) ((xTo - BORDER_WIDTH) / populationWidth);
-        if (toRow < 0) {
-            toRow = 0;
-        } else if (toRow >= automaton.getNumberOfRows()) {
-            toRow = automaton.getNumberOfRows()-1;
-        }
-        if (toColumn < 0) {
-            toColumn = 0;
-        } else if (toColumn >= automaton.getNumberOfColumns()) {
-            toColumn = automaton.getNumberOfColumns()-1;
-        }
-        int lowRowIndex = Math.min(fromRow, toRow);
-        int highRowIndex = Math.max(fromRow, toRow);
-        int lowColumnIndex = Math.min(fromColumn, toColumn);
-        int highColumnIndex = Math.max(fromColumn, toColumn);
-
-        automaton.setState(lowRowIndex, lowColumnIndex, highRowIndex, highColumnIndex, state);
+    @Override
+    public void update() {
         paintCanvas();
     }
 }

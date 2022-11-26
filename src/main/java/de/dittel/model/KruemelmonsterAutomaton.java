@@ -1,4 +1,4 @@
-package de.dittel.automaton;
+package de.dittel.model;
 
 import java.util.List;
 import java.util.Scanner;
@@ -81,38 +81,17 @@ public class KruemelmonsterAutomaton extends Automaton {
         for (int r = 0; r < getNumberOfRows(); r++) {
             for (int c = 0; c < getNumberOfColumns(); c++) {
                 switch (getCell(r, c).getState()) {
-                    case 0:
-                        System.out.print("0");
-                        break;
-                    case 1:
-                        System.out.print("1");
-                        break;
-                    case 2:
-                        System.out.print("2");
-                        break;
-                    case 3:
-                        System.out.print("3");
-                        break;
-                    case 4:
-                        System.out.print("4");
-                        break;
-                    case 5:
-                        System.out.print("5");
-                        break;
-                    case 6:
-                        System.out.print("6");
-                        break;
-                    case 7:
-                        System.out.print("7");
-                        break;
-                    case 8:
-                        System.out.print("8");
-                        break;
-                    case 9:
-                        System.out.print("9");
-                        break;
-                    default:
-                        System.out.print("*");
+                    case 0 -> System.out.print("0");
+                    case 1 -> System.out.print("1");
+                    case 2 -> System.out.print("2");
+                    case 3 -> System.out.print("3");
+                    case 4 -> System.out.print("4");
+                    case 5 -> System.out.print("5");
+                    case 6 -> System.out.print("6");
+                    case 7 -> System.out.print("7");
+                    case 8 -> System.out.print("8");
+                    case 9 -> System.out.print("9");
+                    default -> System.out.print("*");
                 }
             }
             System.out.println();
