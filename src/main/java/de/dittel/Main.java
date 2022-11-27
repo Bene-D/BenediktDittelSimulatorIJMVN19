@@ -1,10 +1,11 @@
 package de.dittel;
 
+import de.dittel.controller.MainController;
 import de.dittel.controller.PopulationPanelController;
 import de.dittel.model.Automaton;
 import de.dittel.model.KruemelmonsterAutomaton;
-import de.dittel.controller.MainController;
 import de.dittel.view.PopulationPanel;
+import de.dittel.view2.KruemelmonsterConsole;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,14 +19,15 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Automaton automaton = new KruemelmonsterAutomaton(10, 10, 10, true);
-        MainController mainController = new MainController();
-        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/fxml/main2.fxml"));
+        MainController mainController = new MainController(automaton);
+        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         mainLoader.setController(mainController);
         Parent root = mainLoader.load();
-        mainController.initialize(automaton);
-        PopulationPanel populationPanel = new PopulationPanel(automaton, mainController.getColorPickerList());
+        mainController.init();
+        PopulationPanel populationPanel = new PopulationPanel(automaton, mainController);
         new PopulationPanelController(populationPanel, mainController);
 
+        new KruemelmonsterConsole(automaton);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("css/style.css");
         stage.setScene(scene);

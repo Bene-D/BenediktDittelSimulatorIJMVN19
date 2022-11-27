@@ -1,7 +1,6 @@
 package de.dittel.model;
 
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Klasse die einen Game-of-Life-Automaten mit seinen Eigenschaften implementiert
@@ -55,42 +54,5 @@ public class GameOfLifeAutomaton extends Automaton {
                 return new Cell(0);
 
         return cell;
-    }
-
-    /**
-     * Methode zum Testen des Automaten in der Konsole
-     */
-    public static void main(String[] args) {
-        int i = 100;
-        try (Scanner scanner = new Scanner(System.in)) {
-            GameOfLifeAutomaton gameOfLifeAutomaton = new GameOfLifeAutomaton(5, 5, true);
-            gameOfLifeAutomaton.print();
-            while (i>0) {
-                System.out.println("Drücke eine Taste für die nächste Generation!");
-                scanner.next();
-                gameOfLifeAutomaton.nextGeneration();
-                gameOfLifeAutomaton.print();
-                i--;
-            }
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Methode zum Testen des Automaten in der Konsole
-     */
-    public void print() {
-        for (int r = 0; r < getNumberOfRows(); r++) {
-            for (int c = 0; c < getNumberOfColumns(); c++) {
-                if (getCell(r, c).getState() == 0) {
-                    System.out.print(".");
-                } else {
-                    System.out.print("*");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println();
     }
 }

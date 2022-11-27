@@ -1,20 +1,19 @@
 package de.dittel.view;
 
+import de.dittel.controller.MainController;
 import de.dittel.model.Automaton;
 import de.dittel.util.Observer;
 import de.dittel.util.Pair;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Klasse zur Darstellung eines Automaten in der View
+ * Klasse zur Darstellung der Population eines Automaten in der View
  */
 public class PopulationPanel extends Region implements Observer {
 
@@ -30,16 +29,18 @@ public class PopulationPanel extends Region implements Observer {
     private final Canvas canvas;
 
     private final Automaton automaton;
-    private final List<ColorPicker> colorPickers;
+    private final MainController mainController;
+
     /**
      * Konstruktor
      *
-     * @param automaton Automat der abgebildet werden soll
+     * @param automaton Automat, der abgebildet werden soll
+     * @param mainController Hauptcontroller der View, zum Verwalten der FXML-Elemente
      */
-    public PopulationPanel(Automaton automaton, List<ColorPicker> colorPickers) {
+    public PopulationPanel(Automaton automaton, MainController mainController) {
         this.automaton = automaton;
         automaton.add(this);
-        this.colorPickers = colorPickers;
+        this.mainController = mainController;
         this.canvas = new Canvas(calcCanvasWidth(), calcCanvasHeight());
         this.getChildren().add(canvas);
         paintCanvas();
@@ -85,7 +86,7 @@ public class PopulationPanel extends Region implements Observer {
 
         for (int r = 0; r < automaton.getNumberOfRows(); r++) {
             for (int c = 0; c < automaton.getNumberOfColumns(); c++) {
-                gc.setFill(colorPickers.get(automaton.getCell(r, c).getState()).getValue());
+                gc.setFill(mainController.getColorPickerList().get(automaton.getCell(r, c).getState()).getValue());
                 gc.fillRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,
                         populationWidth, populationHeight);
                 gc.strokeRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,
@@ -140,6 +141,13 @@ public class PopulationPanel extends Region implements Observer {
         return populationHeight <= MIN_POPULATION_HEIGHT && populationWidth <= MIN_POPULATION_WIDTH;
     }
 
+    /**
+     * Liefert ein Pair, welches die Reihe und Spalte des Events enthält
+     *
+     * @param x Reihe der Population
+     * @param y Spalte der Population
+     * @return Pair, mit Reihe und Spalte des Events
+     */
     public Optional<Pair<Integer>> getRowAndCol(double x, double y) {
         if (x < BORDER_WIDTH || y < BORDER_HEIGHT
                 || x > BORDER_WIDTH + automaton.getNumberOfColumns() * populationWidth
@@ -150,8 +158,13 @@ public class PopulationPanel extends Region implements Observer {
         int col = (int) ((x - BORDER_WIDTH) / populationWidth);
         return Optional.of(new Pair<>(row, col));
     }
+
+    /**
+     * Updated das PopulationPanel nach Benachrichtigung des Observable und zeichnet und zentriert das Canvas neu
+     */
     @Override
     public void update() {
         paintCanvas();
+        center(mainController.getPopulationScrollPane().getViewportBounds());
     }
 }

@@ -1,7 +1,6 @@
 package de.dittel.model;
 
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Klasse die einen Kruemelmonster-Automaten mit seinen Eigenschaften implementiert
@@ -52,50 +51,5 @@ public class KruemelmonsterAutomaton extends Automaton {
                 return new Cell(stateToCheck);
 
         return cell;
-    }
-
-    /**
-     * Methode zum Testen des Automaten in der Konsole
-     */
-    public static void main(String[] args) {
-        int i = 10;
-        try (Scanner scanner = new Scanner(System.in)) {
-            KruemelmonsterAutomaton kruemelmonsterAutomaton = new KruemelmonsterAutomaton(9, 13, 8, false);
-            kruemelmonsterAutomaton.print();
-            while (i>0) {
-                System.out.println("Drücke eine Taste für die nächste Generation!");
-                scanner.next();
-                kruemelmonsterAutomaton.nextGeneration();
-                kruemelmonsterAutomaton.print();
-                i--;
-            }
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Methode zum Testen des Automaten in der Konsole
-     */
-    public void print() {
-        for (int r = 0; r < getNumberOfRows(); r++) {
-            for (int c = 0; c < getNumberOfColumns(); c++) {
-                switch (getCell(r, c).getState()) {
-                    case 0 -> System.out.print("0");
-                    case 1 -> System.out.print("1");
-                    case 2 -> System.out.print("2");
-                    case 3 -> System.out.print("3");
-                    case 4 -> System.out.print("4");
-                    case 5 -> System.out.print("5");
-                    case 6 -> System.out.print("6");
-                    case 7 -> System.out.print("7");
-                    case 8 -> System.out.print("8");
-                    case 9 -> System.out.print("9");
-                    default -> System.out.print("*");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println();
     }
 }

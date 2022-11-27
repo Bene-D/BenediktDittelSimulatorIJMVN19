@@ -7,6 +7,9 @@ import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
+/**
+ * Controller-Klasse für das PopulationPanel
+ */
 public class PopulationPanelController {
 
     private final PopulationPanel populationPanel;
@@ -14,6 +17,12 @@ public class PopulationPanelController {
     private final Automaton automaton;
     private Pair<Integer> rowColStart;
 
+    /**
+     * Konstruktor
+     *
+     * @param populationPanel Model des Controllers
+     * @param mainController Hauptcontroller der View, zum Verwalten der FXML-Elemente
+     */
     public PopulationPanelController(PopulationPanel populationPanel, MainController mainController) {
         this.populationPanel = populationPanel;
         this.mainController = mainController;
@@ -30,7 +39,6 @@ public class PopulationPanelController {
                 .addListener((observable, oldValue, newValue) -> populationPanel.center(newValue));
     }
 
-
     /**
      * Vergrößert mit Hilfe der zoomIn-Methode des PopulationPanels die Population
      * <p>
@@ -41,8 +49,7 @@ public class PopulationPanelController {
         if (populationPanel.zoomIn()) {
             mainController.getZoomInButton().setDisable(true);
         }
-        populationPanel.paintCanvas();
-        populationPanel.center(mainController.getPopulationScrollPane().getViewportBounds());
+        automaton.notifyObserver();
     }
 
     /**
@@ -55,8 +62,7 @@ public class PopulationPanelController {
         if (populationPanel.zoomOut()) {
             mainController.getZoomOutButton().setDisable(true);
         }
-        populationPanel.paintCanvas();
-        populationPanel.center(mainController.getPopulationScrollPane().getViewportBounds());
+        automaton.notifyObserver();
     }
 
     /**
@@ -83,7 +89,8 @@ public class PopulationPanelController {
      * <p>
      * Verwendet dabei den aktuell ausgewählten RadioButton, um den neuen Zustand/Farbe zu bestimmen.
      * Speichert zusätzlich die Koordinaten der Zelle als Anfangspunkt für einen möglichen MouseDrag.
-     * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
+     *
+     * @param mouseEvent zum Bestimmen der X- und Y-Koordinaten
      */
     public void canvasPressed(MouseEvent mouseEvent) {
         populationPanel.getRowAndCol(mouseEvent.getX(), mouseEvent.getY()).ifPresent(rowCol -> {
@@ -96,7 +103,7 @@ public class PopulationPanelController {
     /**
      * Bestimmt die Endkoordinaten eines Bereichs beim Loslassen der Maus auf dem Canvas
      *
-     * @param mouseEvent, zum Bestimmen der X- und Y-Koordinaten
+     * @param mouseEvent zum Bestimmen der X- und Y-Koordinaten
      */
     public void canvasMouseDragged(MouseEvent mouseEvent) {
         populationPanel.getRowAndCol(mouseEvent.getX(), mouseEvent.getY()).ifPresent(rowColEnd -> {

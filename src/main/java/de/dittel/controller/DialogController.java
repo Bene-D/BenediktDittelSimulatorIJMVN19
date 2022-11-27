@@ -6,6 +6,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 
+/**
+ * Controller-Klasse für das changeSize-Dialogfenster
+ */
 public class DialogController {
 
     @FXML
@@ -15,14 +18,24 @@ public class DialogController {
     @FXML
     private DialogPane dialogPane;
 
+    /**
+     * Getter für rowTextField
+     */
     public TextField getRowTextField() {
         return rowTextField;
     }
 
+    /**
+     * Getter für columnTextField
+     */
     public TextField getColumnTextField() {
         return columnTextField;
     }
 
+    /**
+     * Fügt den FXML-Elementen der dialog.fxml die Werte und Listener hinzü
+     * @param automaton wird benötigt, um die aktuelle Reihen- und Spaltenanzahl des Automaten darszustellen
+     */
     public void initialize(Automaton automaton) {
         rowTextField.setText(String.valueOf(automaton.getNumberOfRows()));
         columnTextField.setText(String.valueOf(automaton.getNumberOfColumns()));

@@ -13,13 +13,13 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Presenter-Klasse für die Verbindung zwischen mainView und Automaton
+ * Controller-Klasse für die Verbindung zwischen mainView und Automaton
  */
 public class MainController {
 
-    private Automaton automaton;
+    private final Automaton automaton;
     Random random = new Random();
-    private List<ColorPicker> colorPickerList;
+    private final List<ColorPicker> colorPickerList;
 
     @FXML
     private VBox colorPickersVBox;
@@ -44,38 +44,71 @@ public class MainController {
     @FXML
     private RadioButton radioButtonOne;
 
+    /**
+     * Konstruktor
+     *
+     * @param automaton Model des Controllers
+     */
+    public MainController(Automaton automaton) {
+        this.automaton = automaton;
+        colorPickerList = new ArrayList<>(Arrays.asList(new ColorPicker(), new ColorPicker(Color.BLACK)));
+        colorPickerList.get(1).setId(String.valueOf(1));
+
+    }
+
+    /**
+     * Getter für automaton
+     */
     public Automaton getAutomaton() {
         return automaton;
     }
 
+    /**
+     * Getter für colorPickersList
+     */
     public List<ColorPicker> getColorPickerList() {
         return colorPickerList;
     }
 
+    /**
+     * Getter für populationScrollPane
+     */
     public ScrollPane getPopulationScrollPane() {
         return populationScrollPane;
     }
 
+    /**
+     * Getter für zoomInButton
+     */
     public Button getZoomInButton() {
         return zoomInButton;
     }
 
+    /**
+     * Getter für zoomOutButton
+     */
     public Button getZoomOutButton() {
         return zoomOutButton;
     }
 
+    /**
+     * Getter für radioButtonToggleGroup
+     */
     public ToggleGroup getRadioButtonToggleGroup() {
         return radioButtonToggleGroup;
     }
 
+    /**
+     * Setter für populationPanel
+     */
     public void setPopulationPanel(PopulationPanel populationPanel) {
         this.populationPanel = populationPanel;
     }
 
-    public void initialize(Automaton automaton) {
-        this.automaton = automaton;
-        colorPickerList = new ArrayList<>(Arrays.asList(new ColorPicker(), new ColorPicker(Color.BLACK)));
-        colorPickerList.get(1).setId(String.valueOf(1));
+    /**
+     * Initialisiert die View mit den aktuellen Werten des Automaten
+     */
+    public void init() {
         setUpColorPickers();
         setUpRadioButtons();
         radioButtonZero.setUserData(0);
@@ -122,7 +155,7 @@ public class MainController {
     }
 
     /**
-     * Generiert EINE neue Population und zeichnet diese in das Canvas
+     * Generiert EINE neue Population
      *
      * @throws Throwable möglicherweise wirft die Methode eine Exception
      */
@@ -131,7 +164,7 @@ public class MainController {
     }
 
     /**
-     * Ändert die Torus-Einstellung des Automaten
+     * Ändert die Torus-Einstellung des Automaten und aktualisiert den Button in der View
      */
     public void changeTorus() {
         automaton.setTorus(!automaton.isTorus());
@@ -140,7 +173,7 @@ public class MainController {
     }
 
     /**
-     * Erzeugt eine Random-Population des Automaten und zeichnet diese in das Canvas
+     * Erzeugt eine Random-Population des Automaten
      */
     public void randomPopulation() {
         automaton.randomPopulation();
@@ -156,9 +189,8 @@ public class MainController {
     /**
      * Ändert die Größe der Population
      * <p>
-     * Es wird ein DialogPane erstellt und angezeigt, welches die neue Anzahl der Reihen und Spalten abfragt.
+     * Erstellt ein DialogPane, welches die neue Anzahl der Reihen und Spalten abfragt.
      * Die Eingaben werden benutzt, um die Attribute des Automaten zu aktualisieren.
-     * Anschließend wird das Canvas neu gezeichnet, um die Änderungen anzuzeigen.
      */
     public void changePopulationSize() {
         try {
@@ -174,7 +206,6 @@ public class MainController {
             if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
                 automaton.changeSize(Integer.parseInt(dialogController.getRowTextField().getText()),
                         Integer.parseInt(dialogController.getColumnTextField().getText()));
-                populationPanel.center(populationScrollPane.getViewportBounds());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -185,9 +216,8 @@ public class MainController {
      * Ändert die Farbe eines Zustands des Automaten
      * <p>
      * Es ändert sich die Farbe aller Zellen, die sich in diesem Zustand befinden.
-     * Das Canvas des PopulationsPanels wird deshalb neu gezeichnet.
      *
-     * @param actionEvent wird benötigt, um den ColorPicker zu wählen, der das Event ausgelöst hat
+     * @param actionEvent wird benötigt, um den ColorPicker zu wählen, der das Event ausgelöst hat.
      */
     public void changeColor(ActionEvent actionEvent) {
         ColorPicker colorPicker = (ColorPicker) actionEvent.getSource();

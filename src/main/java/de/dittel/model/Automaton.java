@@ -15,7 +15,7 @@ public abstract class Automaton extends Observable {
     private final boolean isMooreNeighborHood;
     private boolean isTorus;
 
-    private Cell[][] population;
+    private transient Cell[][] population;
     Random random = new Random();
 
     /**
@@ -123,7 +123,6 @@ public abstract class Automaton extends Observable {
      */
     public void setTorus(boolean isTorus) {
         this.isTorus = isTorus;
-        notifyObserver();
     }
 
     /**
