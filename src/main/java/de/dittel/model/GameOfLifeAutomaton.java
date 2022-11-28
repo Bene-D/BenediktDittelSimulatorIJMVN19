@@ -39,7 +39,7 @@ public class GameOfLifeAutomaton extends Automaton {
      * @return eine neu erzeugte Zelle, die gemäß der Transformationsregel aus der betroffenen Zelle hervorgeht
      */
     @Override
-    protected Cell transform(Cell cell, List<Cell> neighbors) {
+    protected synchronized Cell transform(Cell cell, List<Cell> neighbors) {
         int neighborsAlive = 0;
 
         for (Cell neighbor : neighbors)

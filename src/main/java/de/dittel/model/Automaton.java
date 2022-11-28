@@ -59,7 +59,7 @@ public abstract class Automaton extends Observable {
      *
      * @return die Anzahl an Zuständen des Automaten
      */
-    public int getNumberOfStates() {
+    public synchronized int getNumberOfStates() {
         return numberOfStates;
     }
 
@@ -68,7 +68,7 @@ public abstract class Automaton extends Observable {
      *
      * @return die Anzahl an Reihen
      */
-    public int getNumberOfRows() {
+    public synchronized int getNumberOfRows() {
         return rows;
     }
 
@@ -77,7 +77,7 @@ public abstract class Automaton extends Observable {
      *
      * @return die Anzahl an Spalten
      */
-    public int getNumberOfColumns() {
+    public synchronized int getNumberOfColumns() {
         return columns;
     }
 
@@ -89,21 +89,23 @@ public abstract class Automaton extends Observable {
      * @param columns die neue Anzahl an Spalten
      */
     public void changeSize(int rows, int columns) {
-        Cell[][] newPopulation = new Cell[rows][columns];
+        synchronized (this) {
+            Cell[][] newPopulation = new Cell[rows][columns];
 
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < columns; c++) {
-                if (r < this.rows && c < this.columns) {
-                    newPopulation[r][c] = population[r][c];
-                } else {
-                    newPopulation[r][c] = new Cell();
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++) {
+                    if (r < this.rows && c < this.columns) {
+                        newPopulation[r][c] = population[r][c];
+                    } else {
+                        newPopulation[r][c] = new Cell();
+                    }
                 }
             }
-        }
 
-        population = newPopulation;
-        this.rows = rows;
-        this.columns = columns;
+            population = newPopulation;
+            this.rows = rows;
+            this.columns = columns;
+        }
         notifyObserver();
     }
 
@@ -112,7 +114,7 @@ public abstract class Automaton extends Observable {
      *
      * @return true, falls der Automat als Torus betrachtet wird; false sonst
      */
-    public boolean isTorus() {
+    public synchronized boolean isTorus() {
         return isTorus;
     }
 
@@ -121,7 +123,7 @@ public abstract class Automaton extends Observable {
      *
      * @param isTorus true, falls der Automat als Torus betrachtet wird; false sonst
      */
-    public void setTorus(boolean isTorus) {
+    public synchronized void setTorus(boolean isTorus) {
         this.isTorus = isTorus;
     }
 
@@ -132,7 +134,7 @@ public abstract class Automaton extends Observable {
      * @return true, falls der Automat die Moore-Nachbarschaft berücksicht;
      * false, falls er die von-Neumann-Nachbarschaft berücksichtigt
      */
-    public boolean isMooreNeighborHood() {
+    public synchronized boolean isMooreNeighborHood() {
         return isMooreNeighborHood;
     }
 
@@ -140,9 +142,11 @@ public abstract class Automaton extends Observable {
      * Setzt alle Zellen in den Zustand 0
      */
     public void clearPopulation() {
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < columns; c++) {
-                population[r][c].setState(0);
+        synchronized (this) {
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++) {
+                    population[r][c].setState(0);
+                }
             }
         }
         notifyObserver();
@@ -152,9 +156,11 @@ public abstract class Automaton extends Observable {
      * Setzt für jede Zelle einen zufällig erzeugten Zustand
      */
     public void randomPopulation() {
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < columns; c++) {
-                population[r][c].setState(random.nextInt(numberOfStates));
+        synchronized (this) {
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++) {
+                    population[r][c].setState(random.nextInt(numberOfStates));
+                }
             }
         }
         notifyObserver();
@@ -167,7 +173,7 @@ public abstract class Automaton extends Observable {
      * @param column Spalte der Zelle
      * @return Cell-Objekt an Position row/column
      */
-    public Cell getCell(int row, int column) {
+    public synchronized Cell getCell(int row, int column) {
         return population[row][column];
     }
 
@@ -179,7 +185,9 @@ public abstract class Automaton extends Observable {
      * @param state  neuer Zustand der Zelle
      */
     public void setState(int row, int column, int state) {
-        population[row][column].setState(state);
+        synchronized (this) {
+            population[row][column].setState(state);
+        }
         notifyObserver();
     }
 
@@ -194,9 +202,11 @@ public abstract class Automaton extends Observable {
      */
     public void setState(int fromRow, int fromColumn, int toRow,
                          int toColumn, int state) {
-        for (; fromRow <= toRow; fromRow++) {
-            for (int i = fromColumn; i <= toColumn; i++) {
-                population[fromRow][i].setState(state);
+        synchronized (this) {
+            for (; fromRow <= toRow; fromRow++) {
+                for (int i = fromColumn; i <= toColumn; i++) {
+                    population[fromRow][i].setState(state);
+                }
             }
         }
         notifyObserver();
@@ -210,14 +220,16 @@ public abstract class Automaton extends Observable {
      * @throws Throwable Exceptions der transform-Methode werden weitergeleitet
      */
     public void nextGeneration() throws Throwable {
-        Cell[][] nextGeneration = new Cell[rows][columns];
+        synchronized (this) {
+            Cell[][] nextGeneration = new Cell[rows][columns];
 
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < columns; c++) {
-                nextGeneration[r][c] = transform(population[r][c], getNeighbors(r, c));
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < columns; c++) {
+                    nextGeneration[r][c] = transform(population[r][c], getNeighbors(r, c));
+                }
             }
+            population = nextGeneration;
         }
-        population = nextGeneration;
         notifyObserver();
     }
 
@@ -304,7 +316,7 @@ public abstract class Automaton extends Observable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public synchronized boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
@@ -315,7 +327,7 @@ public abstract class Automaton extends Observable {
     }
 
     @Override
-    public int hashCode() {
+    public synchronized int hashCode() {
         int result = Objects.hash(super.hashCode(), rows, columns, numberOfStates, isMooreNeighborHood, isTorus, random);
         result = 31 * result + Arrays.deepHashCode(population);
         return result;

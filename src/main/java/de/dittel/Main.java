@@ -2,10 +2,10 @@ package de.dittel;
 
 import de.dittel.controller.MainController;
 import de.dittel.controller.PopulationPanelController;
+import de.dittel.controller.SimulationController;
 import de.dittel.model.Automaton;
 import de.dittel.model.KruemelmonsterAutomaton;
 import de.dittel.view.PopulationPanel;
-import de.dittel.view2.KruemelmonsterConsole;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,8 +26,9 @@ public class Main extends Application {
         mainController.init();
         PopulationPanel populationPanel = new PopulationPanel(automaton, mainController);
         new PopulationPanelController(populationPanel, mainController);
+        new SimulationController(automaton, mainController);
 
-        new KruemelmonsterConsole(automaton);
+//        new KruemelmonsterConsole(automaton);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("css/style.css");
         stage.setScene(scene);

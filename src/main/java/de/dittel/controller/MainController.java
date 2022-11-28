@@ -34,9 +34,23 @@ public class MainController {
     @FXML
     private CheckMenuItem changeTorusCheckMenuItem;
     @FXML
+    private MenuItem singleStepSimulationMenuItem;
+    @FXML
+    private MenuItem startSimulationMenuItem;
+    @FXML
+    private MenuItem stopSimulationMenuItem;
+    @FXML
     private Button zoomInButton;
     @FXML
     private Button zoomOutButton;
+    @FXML
+    private Button singleStepSimulationButton;
+    @FXML
+    private Button startSimulationButton;
+    @FXML
+    private Button stopSimulationButton;
+    @FXML
+    private Slider simulationSpeedSlider;
     @FXML
     private ToggleGroup radioButtonToggleGroup;
     @FXML
@@ -78,6 +92,27 @@ public class MainController {
     }
 
     /**
+     * Getter für singleStepSimulationMenuItem
+     */
+    public MenuItem getSingleStepSimulationMenuItem() {
+        return singleStepSimulationMenuItem;
+    }
+
+    /**
+     * Getter für startSimulationMenuItem
+     */
+    public MenuItem getStartSimulationMenuItem() {
+        return startSimulationMenuItem;
+    }
+
+    /**
+     * Getter für stopSimulationMenuItem
+     */
+    public MenuItem getStopSimulationMenuItem() {
+        return stopSimulationMenuItem;
+    }
+
+    /**
      * Getter für zoomInButton
      */
     public Button getZoomInButton() {
@@ -89,6 +124,34 @@ public class MainController {
      */
     public Button getZoomOutButton() {
         return zoomOutButton;
+    }
+
+    /**
+     * Getter für singleStepSimulationButton
+     */
+    public Button getSingleStepSimulationButton() {
+        return singleStepSimulationButton;
+    }
+
+    /**
+     * Getter für startSimulationButton
+     */
+    public Button getStartSimulationButton() {
+        return startSimulationButton;
+    }
+
+    /**
+     * Getter für stopSimulationButton
+     */
+    public Button getStopSimulationButton() {
+        return stopSimulationButton;
+    }
+
+    /**
+     * Getter für simulationSpeedSlider
+     */
+    public Slider getSimulationSpeedSlider() {
+        return simulationSpeedSlider;
     }
 
     /**
@@ -230,6 +293,7 @@ public class MainController {
         }
         Color color = colorPicker.getValue();
         colorPickerList.get(id).setValue(color);
-        automaton.notifyObserver();
+        populationPanel.paintCanvas();
+        populationPanel.center(populationScrollPane.getViewportBounds());
     }
 }

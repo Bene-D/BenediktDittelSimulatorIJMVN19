@@ -4,6 +4,7 @@ import de.dittel.controller.MainController;
 import de.dittel.model.Automaton;
 import de.dittel.util.Observer;
 import de.dittel.util.Pair;
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -164,7 +165,14 @@ public class PopulationPanel extends Region implements Observer {
      */
     @Override
     public void update() {
-        paintCanvas();
-        center(mainController.getPopulationScrollPane().getViewportBounds());
+        if(Platform.isFxApplicationThread()) {
+            paintCanvas();
+            center(mainController.getPopulationScrollPane().getViewportBounds());
+        } else {
+            Platform.runLater(() -> {
+                paintCanvas();
+                center(mainController.getPopulationScrollPane().getViewportBounds());
+            } );
+        }
     }
 }

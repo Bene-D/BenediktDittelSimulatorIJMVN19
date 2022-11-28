@@ -41,10 +41,8 @@ public class KruemelmonsterAutomaton extends Automaton {
      * @return eine neu erzeugte Zelle, die gemäß der Transformationsregel aus der betroffenen Zelle hervorgeht
      */
     @Override
-    protected Cell transform(Cell cell, List<Cell> neighbors) {
-        int stateToCheck = cell.getState() + 1;
-        if (stateToCheck == getNumberOfStates())
-            stateToCheck = 0;
+    protected synchronized Cell transform(Cell cell, List<Cell> neighbors) {
+        int stateToCheck = (cell.getState() + 1) % getNumberOfStates();
 
         for (Cell neighbor : neighbors)
             if (neighbor.getState() == stateToCheck)
