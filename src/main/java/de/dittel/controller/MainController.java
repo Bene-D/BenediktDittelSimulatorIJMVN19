@@ -18,7 +18,6 @@ import java.util.*;
 public class MainController {
 
     private final Automaton automaton;
-    Random random = new Random();
     private final List<ColorPicker> colorPickerList;
 
     @FXML
@@ -82,6 +81,20 @@ public class MainController {
      */
     public List<ColorPicker> getColorPickerList() {
         return colorPickerList;
+    }
+
+    /**
+     * Getter für colorPickersVBox
+     */
+    public VBox getColorPickersVBox() {
+        return colorPickersVBox;
+    }
+
+    /**
+     * Getter für radioButtonsVBox
+     */
+    public VBox getRadioButtonsVBox() {
+        return radioButtonsVBox;
     }
 
     /**
@@ -172,48 +185,14 @@ public class MainController {
      * Initialisiert die View mit den aktuellen Werten des Automaten
      */
     public void init() {
-        setUpColorPickers();
-        setUpRadioButtons();
         radioButtonZero.setUserData(0);
         radioButtonOne.setUserData(1);
         radioButtonZero.setToggleGroup(radioButtonToggleGroup);
         radioButtonOne.setToggleGroup(radioButtonToggleGroup);
         changeTorusCheckMenuItem.setSelected(automaton.isTorus());
         changeTorusToggleButton.setSelected(automaton.isTorus());
-    }
-
-    /**
-     * Helfermethode zum Erstellen von RadioButtons
-     * <p>
-     * Erzeugt für jeden Zustand eines Automaten einen RadioButton und fügt diesen der RadioButtonVBox der View hinzu.
-     * Die Nummerierung der RadioButtons ist fortlaufend.
-     */
-    private void setUpRadioButtons() {
-        for (int i=2; i<automaton.getNumberOfStates(); i++) {
-            RadioButton radioButton = new RadioButton(String.valueOf(i));
-            radioButton.setUserData(i);
-            radioButton.setToggleGroup(radioButtonToggleGroup);
-            radioButtonsVBox.getChildren().add(radioButton);
-        }
-    }
-
-    /**
-     * Helfermethode zum Erstellen von ColorPickern
-     * <p>
-     * Erzeugt für jeden Zustand eines Automaten einen ColorPicker und fügt diesen der ColorPickerVBox der View hinzu.
-     * Die Farben werden dabei zufällig erzeugt.
-     * Jeder ColorPicker bekommt eine fortlaufende id-Nummer.
-     */
-    private void setUpColorPickers() {
-        for (int i=2; i<automaton.getNumberOfStates(); i++) {
-            double red = random.nextDouble();
-            double green = random.nextDouble();
-            double blue = random.nextDouble();
-            ColorPicker colorPicker = new ColorPicker(Color.color(red, green, blue));
-            colorPicker.setId(String.valueOf(i));
+        for (ColorPicker colorPicker : colorPickerList) {
             colorPicker.setOnAction(this::changeColor);
-            colorPickersVBox.getChildren().add(colorPicker);
-            colorPickerList.add(colorPicker);
         }
     }
 

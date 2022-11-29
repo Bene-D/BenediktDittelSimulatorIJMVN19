@@ -2,6 +2,9 @@ package de.dittel.controller;
 
 import de.dittel.model.Automaton;
 
+/**
+ * Controller-Klasse für die Simulation eines Automaten
+ */
 public class SimulationController {
 
     static final int DEF_SPEED = 750;
@@ -13,6 +16,12 @@ public class SimulationController {
     private final Automaton automaton;
     private final MainController mainController;
 
+    /**
+     * Konstruktor
+     *
+     * @param automaton Model des Controllers
+     * @param mainController Hauptcontroller der View, zum Verwalten der FXML-Elemente
+     */
     public SimulationController(Automaton automaton, MainController mainController) {
         this.automaton = automaton;
         this.mainController = mainController;
@@ -31,6 +40,9 @@ public class SimulationController {
         simulationThread = null;
     }
 
+    /**
+     * Startet einen neuen Simulationsthread und passt die Sichtbarkeit der Buttons in der View an
+     */
     private void startSimulation() {
         mainController.getStartSimulationButton().setDisable(true);
         mainController.getStopSimulationButton().setDisable(false);
@@ -44,6 +56,9 @@ public class SimulationController {
         }
     }
 
+    /**
+     * Stoppt den aktuellen Simulationsthread und passt die Sichtbarkeit der Buttons in der View an
+     */
     private void stopSimulation() {
         if (simulationThread != null) {
             simulationThread.interrupt();
@@ -51,7 +66,7 @@ public class SimulationController {
         try {
             simulationThread.join();
         } catch (InterruptedException e) {
-            SimulationThread.currentThread().interrupt();
+            Thread.currentThread().interrupt();
         }
         mainController.getStartSimulationButton().setDisable(false);
         mainController.getStopSimulationButton().setDisable(true);
@@ -62,6 +77,12 @@ public class SimulationController {
         simulationThread = null;
     }
 
+    /**
+     * Thread-Klasse, die neue Generationen für die Population des Automaten erzeugt
+     * <p>
+     * Zwischen dem Erzeugen der Generationen wird der Thread schlafen gelegt.
+     * Die Dauer hängt von der Einstellung des SimulationSpeedSliders ab.
+     */
     class SimulationThread extends Thread {
 
         @Override

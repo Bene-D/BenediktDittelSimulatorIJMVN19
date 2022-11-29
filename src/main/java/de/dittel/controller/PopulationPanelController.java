@@ -49,8 +49,7 @@ public class PopulationPanelController {
         if (populationPanel.zoomIn()) {
             mainController.getZoomInButton().setDisable(true);
         }
-        populationPanel.paintCanvas();
-        populationPanel.center(mainController.getPopulationScrollPane().getViewportBounds());
+        populationPanel.update();
 
     }
 
@@ -64,8 +63,7 @@ public class PopulationPanelController {
         if (populationPanel.zoomOut()) {
             mainController.getZoomOutButton().setDisable(true);
         }
-        populationPanel.paintCanvas();
-        populationPanel.center(mainController.getPopulationScrollPane().getViewportBounds());
+        populationPanel.update();
     }
 
     /**

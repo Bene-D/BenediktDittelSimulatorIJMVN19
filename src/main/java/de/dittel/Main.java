@@ -6,6 +6,7 @@ import de.dittel.controller.SimulationController;
 import de.dittel.model.Automaton;
 import de.dittel.model.KruemelmonsterAutomaton;
 import de.dittel.view.PopulationPanel;
+import de.dittel.view.StatePanel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,12 +19,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Automaton automaton = new KruemelmonsterAutomaton(10, 10, 10, true);
+        Automaton automaton = new KruemelmonsterAutomaton(20, 20, 10, true);
+//        Automaton automaton = new GameOfLifeAutomaton(20, 20, true);
         MainController mainController = new MainController(automaton);
         FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         mainLoader.setController(mainController);
         Parent root = mainLoader.load();
         mainController.init();
+        new StatePanel(automaton, mainController);
         PopulationPanel populationPanel = new PopulationPanel(automaton, mainController);
         new PopulationPanelController(populationPanel, mainController);
         new SimulationController(automaton, mainController);
