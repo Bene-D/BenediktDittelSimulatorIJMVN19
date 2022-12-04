@@ -52,6 +52,7 @@ public class SimulationController {
         mainController.getSingleStepSimulationMenuItem().setDisable(true);
         if (simulationThread == null) {
             simulationThread = new SimulationThread();
+            simulationThread.setDaemon(true);
             simulationThread.start();
         }
     }
@@ -66,7 +67,7 @@ public class SimulationController {
         try {
             simulationThread.join();
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            SimulationThread.currentThread().interrupt();
         }
         mainController.getStartSimulationButton().setDisable(false);
         mainController.getStopSimulationButton().setDisable(true);
