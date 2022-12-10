@@ -162,7 +162,7 @@
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
-        <Slider fx:id="simulationSpeedSlider" prefHeight="38.0" prefWidth="180.0">
+        <Slider fx:id="simulationSpeedSlider" majorTickUnit="500" min="250" max="2250" minorTickCount="0" prefHeight="38.0" prefWidth="180.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1250">
             <tooltip>
                 <Tooltip text="Simulationsgeschwindigkeit anpassen" />
             </tooltip></Slider>

@@ -1,17 +1,14 @@
 package de.dittel.controller;
 
 import de.dittel.model.Automaton;
+import javafx.util.StringConverter;
 
 /**
  * Controller-Klasse für die Simulation eines Automaten
  */
 public class SimulationController {
 
-    static final int DEF_SPEED = 750;
-    static final int MIN_SPEED = 100;
-    static final int MAX_SPEED = 2000;
     private volatile int speed;
-
     private SimulationThread simulationThread;
     private final Automaton automaton;
     private final MainController mainController;
@@ -25,16 +22,40 @@ public class SimulationController {
     public SimulationController(Automaton automaton, MainController mainController) {
         this.automaton = automaton;
         this.mainController = mainController;
-        this.speed = DEF_SPEED;
+        this.speed = 1250;
 
         mainController.getStartSimulationButton().setOnAction(e -> startSimulation());
         mainController.getStopSimulationButton().setOnAction(e -> stopSimulation());
         mainController.getStartSimulationMenuItem().setOnAction(e -> startSimulation());
         mainController.getStopSimulationMenuItem().setOnAction(e -> stopSimulation());
 
-        mainController.getSimulationSpeedSlider().setMin(MIN_SPEED);
-        mainController.getSimulationSpeedSlider().setMax(MAX_SPEED);
-        mainController.getSimulationSpeedSlider().setValue(DEF_SPEED);
+        mainController.getSimulationSpeedSlider().setLabelFormatter(new StringConverter<>() {
+            @Override
+            public String toString(Double sliderSpeed) {
+                if (sliderSpeed < 500) {
+                    return "Fast";
+                } else if (sliderSpeed < 1000) {
+                    return "Faster";
+                } else if (sliderSpeed < 1500) {
+                    return "Standard";
+                } else if(sliderSpeed < 2000) {
+                    return "Slower";
+                } else {
+                    return "Slow";
+                }
+            }
+
+            @Override
+            public Double fromString(String sliderOption) {
+                return switch (sliderOption) {
+                    case "Slow" -> 2250d;
+                    case "Slower" -> 1750d;
+                    case "Faster" -> 750d;
+                    case "Fast" -> 250d;
+                    default -> 1250d;
+                };
+            }
+        });
 
         mainController.getSimulationSpeedSlider().valueProperty().addListener((obs, o, n) -> speed = n.intValue());
         simulationThread = null;
@@ -91,7 +112,7 @@ public class SimulationController {
             while (!isInterrupted()) {
                 try {
                     automaton.nextGeneration();
-                    Thread.sleep(Math.abs(speed - MAX_SPEED - MIN_SPEED));
+                    Thread.sleep((long) (speed*0.75));
                 } catch (InterruptedException e) {
                     interrupt();
                 }
