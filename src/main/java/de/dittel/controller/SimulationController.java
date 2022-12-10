@@ -1,6 +1,8 @@
 package de.dittel.controller;
 
 import de.dittel.model.Automaton;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.util.StringConverter;
 
 /**
@@ -22,7 +24,7 @@ public class SimulationController {
     public SimulationController(Automaton automaton, MainController mainController) {
         this.automaton = automaton;
         this.mainController = mainController;
-        this.speed = 1250;
+        this.speed = 1400;
 
         mainController.getStartSimulationButton().setOnAction(e -> startSimulation());
         mainController.getStopSimulationButton().setOnAction(e -> stopSimulation());
@@ -33,26 +35,26 @@ public class SimulationController {
             @Override
             public String toString(Double sliderSpeed) {
                 if (sliderSpeed < 500) {
-                    return "Fast";
-                } else if (sliderSpeed < 1000) {
-                    return "Faster";
-                } else if (sliderSpeed < 1500) {
+                    return "Schnell";
+                } else if (sliderSpeed < 1100) {
+                    return "Schneller";
+                } else if (sliderSpeed < 1700) {
                     return "Standard";
-                } else if(sliderSpeed < 2000) {
-                    return "Slower";
+                } else if(sliderSpeed < 2300) {
+                    return "Langsamer";
                 } else {
-                    return "Slow";
+                    return "Langsam";
                 }
             }
 
             @Override
             public Double fromString(String sliderOption) {
                 return switch (sliderOption) {
-                    case "Slow" -> 2250d;
-                    case "Slower" -> 1750d;
-                    case "Faster" -> 750d;
-                    case "Fast" -> 250d;
-                    default -> 1250d;
+                    case "Langsam" -> 2600d;
+                    case "Langsamer" -> 2000d;
+                    case "Schneller" -> 800d;
+                    case "Schnell" -> 200d;
+                    default -> 1400d;
                 };
             }
         });
@@ -117,7 +119,9 @@ public class SimulationController {
                     interrupt();
                 }
                 catch (Throwable e) {
-                    throw new RuntimeException(e);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Laufzeitfehler in der Transform-Methode: " + e,
+                            ButtonType.OK);
+                    alert.showAndWait();
                 }
             }
         }

@@ -5,7 +5,7 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.Color?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="825.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <MenuBar VBox.vgrow="NEVER">
         <Menu text="_Automat">
             <MenuItem styleClass="newAutomaton" text="_Neu...">
@@ -162,7 +162,7 @@
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
-        <Slider fx:id="simulationSpeedSlider" majorTickUnit="500" min="250" max="2250" minorTickCount="0" prefHeight="38.0" prefWidth="180.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1250">
+        <Slider fx:id="simulationSpeedSlider" majorTickUnit="600" min="200" max="2600" minorTickCount="0" prefHeight="38.0" prefWidth="225.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1400">
             <tooltip>
                 <Tooltip text="Simulationsgeschwindigkeit anpassen" />
             </tooltip></Slider>
