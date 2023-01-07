@@ -6,6 +6,7 @@ import de.dittel.util.Observer;
 /**
  * View-Klasse eines Kruemelmonster-Automaten für die Konsole
  */
+@SuppressWarnings("unused")
 public class KruemelmonsterConsole implements Observer {
 
     private final Automaton automaton;

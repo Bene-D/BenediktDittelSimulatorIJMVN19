@@ -9,5 +9,4 @@ public class Observable extends ArrayList<Observer> {
 			obs.update();
 		}
 	}
-
 }

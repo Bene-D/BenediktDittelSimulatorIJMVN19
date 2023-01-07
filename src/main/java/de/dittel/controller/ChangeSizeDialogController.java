@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 /**
  * Controller-Klasse für das changeSize-Dialogfenster
  */
-public class DialogController {
+public class ChangeSizeDialogController {
 
     @FXML
     private TextField rowTextField;
@@ -33,7 +33,8 @@ public class DialogController {
     }
 
     /**
-     * Fügt den FXML-Elementen der dialog.fxml die Werte und Listener hinzü
+     * Fügt den FXML-Elementen der changeSizeDialog.fxml die Werte und Listener hinzu
+     *
      * @param automaton wird benötigt, um die aktuelle Reihen- und Spaltenanzahl des Automaten darszustellen
      */
     public void initialize(Automaton automaton) {

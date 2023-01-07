@@ -1,4 +1,6 @@
-package de.dittel.model;
+import de.dittel.model.Automaton;
+import de.dittel.model.Cell;
+import de.dittel.model.Callable;
 
 import java.util.List;
 
@@ -16,14 +18,6 @@ public class KruemelmonsterAutomaton extends Automaton {
      */
     public KruemelmonsterAutomaton(int rows, int columns, int numberOfStates, boolean isTorus) {
         super(rows, columns, numberOfStates, false, isTorus);
-        setState(7, 6, 7);
-        setState(0, 6, 3);
-        setState(8, 7, 5);
-        setState(8, 5, 2);
-        setState(7, 1, 4);
-        setState(9, 9, 8);
-        setState(1, 1, 1);
-        setState(0, 0, 6);
     }
 
     /**
@@ -49,5 +43,21 @@ public class KruemelmonsterAutomaton extends Automaton {
                 return new Cell(stateToCheck);
 
         return cell;
+    }
+
+    @Callable
+    public void kruemelmonsterTest(int row, int column)  throws IllegalAccessException{
+        if (row + 9 < getNumberOfRows() && column + 9 < getNumberOfColumns()) {
+            setState(row, column, 6);
+            setState(row, column + 6, 3);
+            setState(row + 1, column + 1, 1);
+            setState(row + 7, column + 6, 7);
+            setState(row + 7, column + 1, 4);
+            setState(row + 8, column + 7, 5);
+            setState(row + 8, column + 5, 2);
+            setState(row + 9, column + 9, 8);
+        } else {
+            throw new IllegalAccessException();
+        }
     }
 }

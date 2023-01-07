@@ -1,9 +1,8 @@
 package de.dittel.view;
 
 import de.dittel.controller.MainController;
-import de.dittel.model.Automaton;
-import de.dittel.util.Observer;
 import de.dittel.util.Pair;
+import de.dittel.util.ReferenceHandler;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
@@ -16,7 +15,7 @@ import java.util.Optional;
 /**
  * Klasse zur Darstellung der Population eines Automaten in der View
  */
-public class PopulationPanel extends Region implements Observer {
+public class PopulationPanel extends Region {
 
     private static final double BORDER_WIDTH = 2;
     private static final double BORDER_HEIGHT = 2;
@@ -29,18 +28,17 @@ public class PopulationPanel extends Region implements Observer {
 
     private final Canvas canvas;
 
-    private final Automaton automaton;
+    private final ReferenceHandler referenceHandler;
     private final MainController mainController;
 
     /**
      * Konstruktor
      *
-     * @param automaton Automat, der abgebildet werden soll
+     * @param referenceHandler verwaltet die verwendeten Referenzen
      * @param mainController Hauptcontroller der View, zum Verwalten der FXML-Elemente
      */
-    public PopulationPanel(Automaton automaton, MainController mainController) {
-        this.automaton = automaton;
-        automaton.add(this);
+    public PopulationPanel(ReferenceHandler referenceHandler, MainController mainController) {
+        this.referenceHandler = referenceHandler;
         this.mainController = mainController;
         this.canvas = new Canvas(calcCanvasWidth(), calcCanvasHeight());
         this.getChildren().add(canvas);
@@ -60,7 +58,7 @@ public class PopulationPanel extends Region implements Observer {
      * @return Breite, die der Automat benötigt (inkl. Kanten)
      */
     private double calcCanvasWidth() {
-        return 2 * BORDER_WIDTH + populationWidth * automaton.getNumberOfColumns();
+        return 2 * BORDER_WIDTH + populationWidth * referenceHandler.getAutomaton().getNumberOfColumns();
     }
 
     /**
@@ -69,7 +67,7 @@ public class PopulationPanel extends Region implements Observer {
      * @return Höhe, die der Automat benötigt (inkl. Kanten)
      */
     private double calcCanvasHeight() {
-        return 2 * BORDER_HEIGHT + populationHeight * automaton.getNumberOfRows();
+        return 2 * BORDER_HEIGHT + populationHeight * referenceHandler.getAutomaton().getNumberOfRows();
     }
 
     /**
@@ -85,9 +83,10 @@ public class PopulationPanel extends Region implements Observer {
         gc.setLineWidth(1);
         gc.setStroke(Color.GRAY);
 
-        for (int r = 0; r < automaton.getNumberOfRows(); r++) {
-            for (int c = 0; c < automaton.getNumberOfColumns(); c++) {
-                gc.setFill(mainController.getColorPickerList().get(automaton.getCell(r, c).getState()).getValue());
+        for (int r = 0; r < referenceHandler.getAutomaton().getNumberOfRows(); r++) {
+            for (int c = 0; c < referenceHandler.getAutomaton().getNumberOfColumns(); c++) {
+                gc.setFill(mainController.getColorPickerList().get(referenceHandler.getAutomaton().
+                        getCell(r, c).getState()).getValue());
                 gc.fillRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,
                         populationWidth, populationHeight);
                 gc.strokeRect(BORDER_WIDTH + c * populationWidth, BORDER_HEIGHT + r * populationHeight,
@@ -119,7 +118,7 @@ public class PopulationPanel extends Region implements Observer {
     /**
      * Vergrößert die Breite und Höhe der Population
      *
-     * @return boolean, ob die maximalen Werte erreicht wurden.
+     * @return boolean, ob die maximalen Werte erreicht wurden
      */
     public boolean zoomIn() {
         if (populationWidth < MAX_POPULATION_WIDTH && populationHeight < MAX_POPULATION_HEIGHT) {
@@ -132,7 +131,7 @@ public class PopulationPanel extends Region implements Observer {
     /**
      * Verkleinert die Breite und Höhe der Population
      *
-     * @return boolean, ob die minimalen Werte erreicht wurden.
+     * @return boolean, ob die minimalen Werte erreicht wurden
      */
     public boolean zoomOut() {
         if (populationWidth > MIN_POPULATION_WIDTH && populationHeight > MIN_POPULATION_HEIGHT) {
@@ -151,8 +150,8 @@ public class PopulationPanel extends Region implements Observer {
      */
     public Optional<Pair<Integer>> getRowAndCol(double x, double y) {
         if (x < BORDER_WIDTH || y < BORDER_HEIGHT
-                || x > BORDER_WIDTH + automaton.getNumberOfColumns() * populationWidth
-                || y > BORDER_HEIGHT + automaton.getNumberOfRows() * populationHeight) {
+                || x > BORDER_WIDTH + referenceHandler.getAutomaton().getNumberOfColumns() * populationWidth
+                || y > BORDER_HEIGHT + referenceHandler.getAutomaton().getNumberOfRows() * populationHeight) {
             return Optional.empty();
         }
         int row = (int) ((y - BORDER_HEIGHT) / populationHeight);
@@ -161,9 +160,8 @@ public class PopulationPanel extends Region implements Observer {
     }
 
     /**
-     * Updated das PopulationPanel nach Benachrichtigung des Observable und zeichnet und zentriert das Canvas neu
+     * Zeichnet das Canvas neu und zentriert es
      */
-    @Override
     public void update() {
         if(Platform.isFxApplicationThread()) {
             paintCanvas();
@@ -172,7 +170,7 @@ public class PopulationPanel extends Region implements Observer {
             Platform.runLater(() -> {
                 paintCanvas();
                 center(mainController.getPopulationScrollPane().getViewportBounds());
-            } );
+            });
         }
     }
 }

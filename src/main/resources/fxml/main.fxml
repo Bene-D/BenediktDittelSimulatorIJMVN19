@@ -5,27 +5,27 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.Color?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="825.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-    <MenuBar VBox.vgrow="NEVER">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+    <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
         <Menu text="_Automat">
-            <MenuItem styleClass="newAutomaton" text="_Neu...">
+            <MenuItem onAction="#createNewAutomaton" styleClass="newAutomaton" text="_Neu...">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem styleClass="loadAutomaton" text="_Laden...">
+            <MenuItem onAction="#loadAutomaton" styleClass="loadAutomaton" text="_Laden...">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem text="_Editor">
+            <MenuItem onAction="#openEditor" text="_Editor">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem text="_Beenden">
+            <MenuItem onAction="#closeWindow" text="_Beenden">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -98,7 +98,7 @@
                     <KeyCodeCombination alt="DOWN" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem fx:id="stopSimulationMenuItem" disable="true" styleClass="stop" text="S_topp">
+            <MenuItem fx:id="stopSimulationMenuItem" disable="true" styleClass="stop" text="S_top">
                 <accelerator>
                     <KeyCodeCombination alt="DOWN" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -106,11 +106,11 @@
         </Menu>
     </MenuBar>
     <ToolBar>
-        <Button mnemonicParsing="false" style="-fx-graphic: url(/icons/New24.gif)">
+        <Button onAction="#createNewAutomaton" mnemonicParsing="false" style="-fx-graphic: url(/icons/New24.gif)">
             <tooltip>
                 <Tooltip text="Neuen Automaten erzeugen und laden" />
             </tooltip></Button>
-        <Button mnemonicParsing="false" style="-fx-graphic: url(/icons/Load24.gif)">
+        <Button onAction="#loadAutomaton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Load24.gif)">
             <tooltip>
                 <Tooltip text="Existierenden Automaten laden" />
             </tooltip></Button>
@@ -181,12 +181,6 @@
                     <fx:define>
                         <ToggleGroup fx:id="radioButtonToggleGroup" />
                     </fx:define>
-                    <RadioButton fx:id="radioButtonZero" mnemonicParsing="false" selected="true" text="0">
-                        <VBox.margin>
-                            <Insets />
-                        </VBox.margin>
-                    </RadioButton>
-                    <RadioButton fx:id="radioButtonOne" mnemonicParsing="false" text="1" />
                     <padding>
                         <Insets left="5.0" />
                     </padding>
@@ -195,16 +189,6 @@
                     <HBox.margin>
                         <Insets top="5.0" />
                     </HBox.margin>
-                    <ColorPicker onAction="#changeColor">
-                        <VBox.margin>
-                            <Insets />
-                        </VBox.margin>
-                    </ColorPicker>
-                    <ColorPicker id="1" onAction="#changeColor">
-                        <value>
-                            <Color />
-                        </value>
-                    </ColorPicker>
                     <padding>
                         <Insets left="4.0" />
                     </padding>

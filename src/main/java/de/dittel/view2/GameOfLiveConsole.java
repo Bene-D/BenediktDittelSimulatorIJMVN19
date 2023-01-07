@@ -4,8 +4,9 @@ import de.dittel.model.Automaton;
 import de.dittel.util.Observer;
 
 /**
- * View-Klasse eines Game-Of-Live-Automaten für die Konsole
+ * View-Klasse eines GameOfLife-Automaten für die Konsole
  */
+@SuppressWarnings("unused")
 public class GameOfLiveConsole implements Observer {
 
     private final Automaton automaton;

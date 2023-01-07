@@ -134,6 +134,7 @@ public abstract class Automaton extends Observable {
      * @return true, falls der Automat die Moore-Nachbarschaft berücksicht;
      * false, falls er die von-Neumann-Nachbarschaft berücksichtigt
      */
+    @SuppressWarnings("unused")
     public synchronized boolean isMooreNeighborHood() {
         return isMooreNeighborHood;
     }

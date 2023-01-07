@@ -18,6 +18,7 @@ public class Cell {
      *
      * @param state Zustand der neuen Zelle
      */
+    @SuppressWarnings("unused")
     public Cell(int state) {
         this.state = state;
     }
@@ -27,6 +28,7 @@ public class Cell {
      *
      * @param cell Zelle die verändert wird
      */
+    @SuppressWarnings("unused")
     public Cell(Cell cell) {
         state = cell.getState();
     }

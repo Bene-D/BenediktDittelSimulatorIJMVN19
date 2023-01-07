@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<DialogPane fx:id="dialogPane" headerText="Neue Größe eingeben (3-100):" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dittel.controller.DialogController">
+<DialogPane fx:id="dialogPane" headerText="Neue Größe eingeben (3-100):" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dittel.controller.ChangeSizeDialogController">
     <content>
         <GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="119.0" prefWidth="351.0">
             <columnConstraints>

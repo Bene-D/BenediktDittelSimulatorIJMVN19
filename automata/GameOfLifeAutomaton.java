@@ -1,4 +1,6 @@
-package de.dittel.model;
+import de.dittel.model.Automaton;
+import de.dittel.model.Cell;
+import de.dittel.model.Callable;
 
 import java.util.List;
 
@@ -16,19 +18,13 @@ public class GameOfLifeAutomaton extends Automaton {
      */
     public GameOfLifeAutomaton(int rows, int columns, boolean isTorus) {
         super(rows, columns, 2, true, isTorus);
-//        setState(0, 0, 0, 2, 1);
-        setState(1, 3, 1);
-        setState(3, 2, 1);
-        setState(3, 3, 1);
-        setState(3, 4, 1);
-        setState(2, 4, 1);
     }
 
     /**
      * Default-Konstruktor
      */
     public GameOfLifeAutomaton() {
-        this(50, 50, true);
+        this(100, 100, true);
     }
 
     /**
@@ -50,9 +46,29 @@ public class GameOfLifeAutomaton extends Automaton {
             if (neighborsAlive == 3)
                 return new Cell(1);
         } else
-            if (neighborsAlive < 2 || neighborsAlive > 3)
-                return new Cell(0);
+        if (neighborsAlive < 2 || neighborsAlive > 3)
+            return new Cell(0);
 
         return cell;
+    }
+
+    @Callable
+    public void setGlider(int row, int column) throws IllegalAccessException {
+        if (row + 2 < getNumberOfRows() && column - 1 >= 0 && column + 1 < getNumberOfColumns()) {
+            setState(row, column, 1);
+            setState(row + 1, column + 1, 1);
+            setState(row + 2, column - 1, row + 2, column + 1, 1);
+        } else {
+            throw new IllegalAccessException();
+        }
+    }
+
+    @Callable
+    public void setOscillator(int row, int column) throws IllegalAccessException {
+        if (column + 2 < getNumberOfColumns()) {
+            setState(row, column, row, column + 2, 1);
+        } else {
+            throw new IllegalAccessException();
+        }
     }
 }

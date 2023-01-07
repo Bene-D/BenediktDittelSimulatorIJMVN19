@@ -1,6 +1,7 @@
 package de.dittel.controller;
 
-import de.dittel.model.Automaton;
+import de.dittel.util.ReferenceHandler;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.util.StringConverter;
@@ -12,17 +13,17 @@ public class SimulationController {
 
     private volatile int speed;
     private SimulationThread simulationThread;
-    private final Automaton automaton;
+    private final ReferenceHandler referenceHandler;
     private final MainController mainController;
 
     /**
      * Konstruktor
      *
-     * @param automaton Model des Controllers
+     * @param referenceHandler verwaltet die verwendeten Referenzen (Model)
      * @param mainController Hauptcontroller der View, zum Verwalten der FXML-Elemente
      */
-    public SimulationController(Automaton automaton, MainController mainController) {
-        this.automaton = automaton;
+    public SimulationController(ReferenceHandler referenceHandler, MainController mainController) {
+        this.referenceHandler = referenceHandler;
         this.mainController = mainController;
         this.speed = 1400;
 
@@ -66,6 +67,7 @@ public class SimulationController {
     /**
      * Startet einen neuen Simulationsthread und passt die Sichtbarkeit der Buttons in der View an
      */
+    @FXML
     private void startSimulation() {
         mainController.getStartSimulationButton().setDisable(true);
         mainController.getStopSimulationButton().setDisable(false);
@@ -83,6 +85,7 @@ public class SimulationController {
     /**
      * Stoppt den aktuellen Simulationsthread und passt die Sichtbarkeit der Buttons in der View an
      */
+    @FXML
     private void stopSimulation() {
         if (simulationThread != null) {
             simulationThread.interrupt();
@@ -113,7 +116,7 @@ public class SimulationController {
         public void run() {
             while (!isInterrupted()) {
                 try {
-                    automaton.nextGeneration();
+                    referenceHandler.getAutomaton().nextGeneration();
                     Thread.sleep((long) (speed*0.75));
                 } catch (InterruptedException e) {
                     interrupt();

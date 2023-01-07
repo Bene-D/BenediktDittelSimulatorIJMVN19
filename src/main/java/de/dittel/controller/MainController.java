@@ -1,23 +1,38 @@
 package de.dittel.controller;
 
+import de.dittel.Main;
 import de.dittel.model.Automaton;
+import de.dittel.util.FileManager;
+import de.dittel.util.ReferenceHandler;
 import de.dittel.view.PopulationPanel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Controller-Klasse für die Verbindung zwischen mainView und Automaton
+ * Controller-Klasse für die mainView des Programms
  */
+@SuppressWarnings("unused")
 public class MainController {
 
-    private final Automaton automaton;
+    private ReferenceHandler referenceHandler;
     private final List<ColorPicker> colorPickerList;
 
     @FXML
@@ -31,7 +46,11 @@ public class MainController {
     @FXML
     private ToggleButton changeTorusToggleButton;
     @FXML
+    private MenuBar menuBar;
+    @FXML
     private CheckMenuItem changeTorusCheckMenuItem;
+    @FXML
+    private MenuItem editorMenuItem;
     @FXML
     private MenuItem singleStepSimulationMenuItem;
     @FXML
@@ -52,28 +71,14 @@ public class MainController {
     private Slider simulationSpeedSlider;
     @FXML
     private ToggleGroup radioButtonToggleGroup;
-    @FXML
-    private RadioButton radioButtonZero;
-    @FXML
-    private RadioButton radioButtonOne;
 
     /**
      * Konstruktor
-     *
-     * @param automaton Model des Controllers
      */
-    public MainController(Automaton automaton) {
-        this.automaton = automaton;
+    public MainController() {
         colorPickerList = new ArrayList<>(Arrays.asList(new ColorPicker(), new ColorPicker(Color.BLACK)));
         colorPickerList.get(1).setId(String.valueOf(1));
-
-    }
-
-    /**
-     * Getter für automaton
-     */
-    public Automaton getAutomaton() {
-        return automaton;
+        FileManager.loadAutomaton(new File("automata/DefaultAutomaton.java"));
     }
 
     /**
@@ -182,18 +187,22 @@ public class MainController {
     }
 
     /**
-     * Initialisiert die View mit den aktuellen Werten des Automaten
+     * Initialisiert die View mit den benötigten Attributen
      */
-    public void init() {
-        radioButtonZero.setUserData(0);
-        radioButtonOne.setUserData(1);
-        radioButtonZero.setToggleGroup(radioButtonToggleGroup);
-        radioButtonOne.setToggleGroup(radioButtonToggleGroup);
-        changeTorusCheckMenuItem.setSelected(automaton.isTorus());
-        changeTorusToggleButton.setSelected(automaton.isTorus());
+    public void init(ReferenceHandler referenceHandler) {
+        this.referenceHandler = referenceHandler;
+        setTorus();
         for (ColorPicker colorPicker : colorPickerList) {
             colorPicker.setOnAction(this::changeColor);
         }
+    }
+
+    /**
+     * Setzt den aktuellen Torus-Status des Automaten
+     */
+    public void setTorus() {
+        changeTorusCheckMenuItem.setSelected(referenceHandler.getAutomaton().isTorus());
+        changeTorusToggleButton.setSelected(referenceHandler.getAutomaton().isTorus());
     }
 
     /**
@@ -201,31 +210,35 @@ public class MainController {
      *
      * @throws Throwable möglicherweise wirft die Methode eine Exception
      */
+    @FXML
     public void singleStep() throws Throwable {
-        automaton.nextGeneration();
+        referenceHandler.getAutomaton().nextGeneration();
     }
 
     /**
      * Ändert die Torus-Einstellung des Automaten und aktualisiert den Button in der View
      */
+    @FXML
     public void changeTorus() {
-        automaton.setTorus(!automaton.isTorus());
-        changeTorusToggleButton.setSelected(automaton.isTorus());
-        changeTorusCheckMenuItem.setSelected(automaton.isTorus());
+        referenceHandler.getAutomaton().setTorus(!referenceHandler.getAutomaton().isTorus());
+        changeTorusToggleButton.setSelected(referenceHandler.getAutomaton().isTorus());
+        changeTorusCheckMenuItem.setSelected(referenceHandler.getAutomaton().isTorus());
     }
 
     /**
      * Erzeugt eine Random-Population des Automaten
      */
+    @FXML
     public void randomPopulation() {
-        automaton.randomPopulation();
+        referenceHandler.getAutomaton().randomPopulation();
     }
 
     /**
      * Setzt den Zustand aller Zellen des Automaten auf den Wert 0
      */
+    @FXML
     public void resetPopulation() {
-        automaton.clearPopulation();
+        referenceHandler.getAutomaton().clearPopulation();
     }
 
     /**
@@ -234,20 +247,21 @@ public class MainController {
      * Erstellt ein DialogPane, welches die neue Anzahl der Reihen und Spalten abfragt.
      * Die Eingaben werden benutzt, um die Attribute des Automaten zu aktualisieren.
      */
+    @FXML
     public void changePopulationSize() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/changeSizeDialog.fxml"));
             DialogPane dialogPane = loader.load();
-            DialogController dialogController = loader.getController();
+            ChangeSizeDialogController changeSizeDialogController = loader.getController();
             Dialog<ButtonType> dialog = new Dialog<>();
-            dialogController.initialize(automaton);
+            changeSizeDialogController.initialize(referenceHandler.getAutomaton());
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Größe der Population ändern");
             Optional<ButtonType> clickedButton = dialog.showAndWait();
 
             if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
-                automaton.changeSize(Integer.parseInt(dialogController.getRowTextField().getText()),
-                        Integer.parseInt(dialogController.getColumnTextField().getText()));
+                referenceHandler.getAutomaton().changeSize(Integer.parseInt(changeSizeDialogController.getRowTextField().getText()),
+                        Integer.parseInt(changeSizeDialogController.getColumnTextField().getText()));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -261,6 +275,7 @@ public class MainController {
      *
      * @param actionEvent wird benötigt, um den ColorPicker zu wählen, der das Event ausgelöst hat.
      */
+    @FXML
     public void changeColor(ActionEvent actionEvent) {
         ColorPicker colorPicker = (ColorPicker) actionEvent.getSource();
         int id;
@@ -274,5 +289,107 @@ public class MainController {
         colorPickerList.get(id).setValue(color);
         populationPanel.paintCanvas();
         populationPanel.center(populationScrollPane.getViewportBounds());
+    }
+
+    /**
+     * Erzeugt einen neuen Automaten und legt eine Datei für diesen im Ordner "automata" an
+     * <p>
+     * Für das Erzeugen wird eine Dummy-Datei verwendet und der Name an den notwendigen Stellen durch den neuen ersetzt.
+     */
+    @FXML
+    public void createNewAutomaton() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newAutomatonDialog.fxml"));
+            DialogPane dialogPane = loader.load();
+            NewAutomatonDialogController newAutomatonDialogController = loader.getController();
+            Dialog<ButtonType> dialog = new Dialog<>();
+            newAutomatonDialogController.initialize();
+            dialog.setDialogPane(dialogPane);
+            dialog.setTitle("Neuen Automaten erzeugen");
+            Optional<ButtonType> clickedButton = dialog.showAndWait();
+
+            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
+                String newAutomaton = newAutomatonDialogController.getNewAutomatonTextField().getText();
+                newAutomaton = newAutomaton.substring(0,1).toUpperCase() +
+                        newAutomaton.substring(1).toLowerCase();
+                File newAutomatonFile = FileManager.createNewAutomatonFile(newAutomaton);
+                if (FileManager.compile(newAutomatonFile)) {
+                    Automaton automaton = FileManager.loadAutomaton(newAutomatonFile);
+                    assert automaton != null;
+                    Main.newAutomaton(null, automaton, automaton.getClass().getName());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Lädt und compiliert eine Automaten-Datei und öffnet diese in einem neuen Fenster
+     * <p>
+     * Zum Auswählen der Datei wird ein FileChooser verwendet, welcher alle ".java" Dateien im Ordner "automata" anzeigt.
+     */
+    @FXML
+    public void loadAndCompileAutomaton() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Automaten auswählen");
+        fileChooser.setInitialDirectory(new File("automata"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Java-Datei (*.java)", "*.java"));
+
+        File automatonFile = fileChooser.showOpenDialog(new Stage());
+
+        if (automatonFile != null) {
+            String automatonClass = String.valueOf(Path.of(automatonFile.getPath()));
+            File file = new File(automatonClass.replace(".java", ".class"));
+            if (!file.exists()) {
+                FileManager.compile(automatonFile);
+            }
+                try {
+                    // Klasse laden
+                    URL classUrl = automatonFile.getParentFile().toURI().toURL();
+                    URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{classUrl});
+                    Class<?> newAutomatonClass = Class.forName(automatonFile.getName().replace(".java", ""),
+                            true, classLoader);
+                    Automaton automaton1 = (Automaton) newAutomatonClass.getDeclaredConstructor().newInstance();
+                    Main.newAutomaton(null, automaton1, automaton1.getClass().getName());
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Ups, da ist was schief gelaufen:\n" + e);
+                    alert.show();
+                    e.printStackTrace();
+                }
+            }
+    }
+
+    /**
+     * Öffnet einen Editor für die Automaton-Datei in einem neuen Fenster
+     */
+    @FXML
+    public void openEditor() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editor.fxml"));
+            EditorController editorController = new EditorController();
+            loader.setController(editorController);
+            Parent root = loader.load();
+            editorController.init(referenceHandler);
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Editor - " + referenceHandler.getAutomaton().getClass().getName());
+            stage.initOwner(menuBar.getScene().getWindow());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Schließt das aktuelle Fenster
+     */
+    @FXML
+    public void closeWindow() {
+        stopSimulationButton.fire();
+        Stage stageToClose = (Stage) menuBar.getScene().getWindow();
+        stageToClose.close();
     }
 }
