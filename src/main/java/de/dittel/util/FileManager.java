@@ -37,10 +37,10 @@ public class FileManager {
      */
     public static File createNewAutomatonFile(String newAutomaton) throws IOException {
         File newAutomatonFile = new File("automata/" + newAutomaton + ".java");
-        Path dummyData = Paths.get("automata/DefaultAutomaton.java");
+        Path defaultAutomaton = Paths.get("src", "main", "resources", "DefaultAutomaton.txt");
         Charset charset = StandardCharsets.UTF_8;
 
-        String content = Files.readString(dummyData, charset);
+        String content = Files.readString(defaultAutomaton, charset);
         content = content.replace("DefaultAutomaton", newAutomaton);
         Files.writeString(Path.of(newAutomatonFile.getPath()), content, charset);
         return newAutomatonFile;
@@ -61,7 +61,7 @@ public class FileManager {
             return (Automaton) newAutomatonClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             Alert alert = new  Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Ups, da ist was schief gelaufen:\n" + e);
+            alert.setContentText("Ups, da ist etwas schief gelaufen:\n" + e);
             alert.show();
             e.printStackTrace();
             return null;

@@ -7,6 +7,7 @@ import javafx.scene.control.MenuItem;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +26,18 @@ public class PopulationPanelContextMenu extends ContextMenu {
     public PopulationPanelContextMenu(ReferenceHandler referenceHandler) {
         methods = getValidMethods(referenceHandler);
 
+
         for (Method method : methods) {
-            MenuItem item = new MenuItem(method.getName());
+            method.setAccessible(true);
+            String functionType = method.getReturnType().getName();
+            String functionName = method.getName();
+            String functionParameter = "";
+
+            for (Parameter parameter : method.getParameters()) {
+                functionParameter += parameter.getType().getName() + parameter.getName();
+            }
+
+            MenuItem item = new MenuItem(functionType + " " + functionName + "(" + functionParameter + ")");
             getItems().add(item);
         }
     }

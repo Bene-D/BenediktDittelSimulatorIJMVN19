@@ -350,11 +350,12 @@ public class MainController {
                     URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{classUrl});
                     Class<?> newAutomatonClass = Class.forName(automatonFile.getName().replace(".java", ""),
                             true, classLoader);
-                    Automaton automaton1 = (Automaton) newAutomatonClass.getDeclaredConstructor().newInstance();
-                    Main.newAutomaton(null, automaton1, automaton1.getClass().getName());
+                    Automaton automaton = (Automaton) newAutomatonClass.getDeclaredConstructor().newInstance();
+                    System.out.println(automaton.getClass().getName());
+                    Main.newAutomaton(null, automaton, automaton.getClass().getName());
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Ups, da ist was schief gelaufen:\n" + e);
+                    alert.setContentText("Ups, da ist etwas schief gelaufen:\n" + e);
                     alert.show();
                     e.printStackTrace();
                 }

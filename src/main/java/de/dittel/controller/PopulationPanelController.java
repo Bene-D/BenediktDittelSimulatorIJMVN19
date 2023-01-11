@@ -71,8 +71,8 @@ public class PopulationPanelController {
                     alert.showAndWait();
                 }
             });
-            contextMenu.show(referenceHandler.getPopulationPanel().getScene().getWindow(), event.getScreenX(), event.getScreenY());
         }
+        contextMenu.show(referenceHandler.getPopulationPanel().getScene().getWindow(), event.getScreenX(), event.getScreenY());
     }
 
     /**

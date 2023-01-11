@@ -13,7 +13,7 @@
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem onAction="#loadAutomaton" styleClass="loadAutomaton" text="_Laden...">
+            <MenuItem onAction="#loadAndCompileAutomaton" styleClass="loadAutomaton" text="_Laden...">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -110,7 +110,7 @@
             <tooltip>
                 <Tooltip text="Neuen Automaten erzeugen und laden" />
             </tooltip></Button>
-        <Button onAction="#loadAutomaton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Load24.gif)">
+        <Button onAction="#loadAndCompileAutomaton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Load24.gif)">
             <tooltip>
                 <Tooltip text="Existierenden Automaten laden" />
             </tooltip></Button>

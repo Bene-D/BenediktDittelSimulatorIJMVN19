@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -40,11 +41,18 @@ public class Main extends Application {
         }
 
         if (automaton == null) {
+            FileManager.compile(FileManager.createNewAutomatonFile("DefaultAutomaton"));
             automaton = FileManager.loadAutomaton(new File("automata/DefaultAutomaton.java"));
         }
 
         if (name == null) {
-            name = automaton.getClass().getName(); //TODO DiBo fragen warum evtl NullPointerException
+            if (automaton != null) {
+                name = automaton.getClass().getName();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Ups, da ist etwas schief gelaufen.");
+                alert.show();
+                return;
+            }
         }
         ReferenceHandler referenceHandler = new ReferenceHandler();
         referenceHandler.setAutomaton(automaton);

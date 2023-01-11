@@ -30,7 +30,7 @@
                      </accelerator>
                   </MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem onAction="#closeWindow" text="Schli_eßen">
+                  <MenuItem onAction="#closeWindow" text="Sch_ließen">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
@@ -43,12 +43,12 @@
          <items>
             <Button mnemonicParsing="false" onAction="#saveFileChanges" style="-fx-graphic: url(/icons/Save24.gif)">
                <tooltip>
-                  <Tooltip text="Änderungen speichern" />
+                  <Tooltip text="Neuen Automaten erzeugen und laden" />
                </tooltip>
             </Button>
              <Button mnemonicParsing="false" onAction="#compileFile" style="-fx-graphic: url(/icons/Compile24.gif)">
                <tooltip>
-                  <Tooltip text="File compilieren" />
+                  <Tooltip text="Neuen Automaten erzeugen und laden" />
                </tooltip>
             </Button>
          </items>
