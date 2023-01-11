@@ -7,7 +7,6 @@ import javafx.scene.control.MenuItem;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +30,14 @@ public class PopulationPanelContextMenu extends ContextMenu {
             method.setAccessible(true);
             String functionType = method.getReturnType().getName();
             String functionName = method.getName();
-            String functionParameter = "";
+            //String functionParameter = "";
 
-            for (Parameter parameter : method.getParameters()) {
-                functionParameter += parameter.getType().getName() + parameter.getName();
-            }
+            //TODO mit DiBo -parameter besprechen
+//            for (Parameter parameter : method.getParameters()) {
+//                functionParameter += parameter.getType().getName() + parameter.getName();
+//            }
 
-            MenuItem item = new MenuItem(functionType + " " + functionName + "(" + functionParameter + ")");
+            MenuItem item = new MenuItem(functionType + " " + functionName + "(int row, int column)");
             getItems().add(item);
         }
     }

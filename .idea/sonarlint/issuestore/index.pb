@@ -38,7 +38,5 @@ a
 1src/main/java/de/dittel/view/PopulationPanel.java,e\1\e1cd5c87b7006b32386f06a3a6c4ace8cf7bd08a
 \
 ,src/main/java/de/dittel/view/StatePanel.java,e\c\ecab346bfb07251e8b7689f420a5852c7acb1402
-U
-%automata/KruemelmonsterAutomaton.java,7\a\7aaefd2f41b4cdef90b2c1002bd56110273538fe
 r
 Bsrc/main/java/de/dittel/controller/ChangeSizeDialogController.java,6\e\6e13b80e12c27659248704e0f8137c89895e8d05
