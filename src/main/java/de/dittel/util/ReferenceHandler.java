@@ -4,6 +4,7 @@ import de.dittel.controller.MainController;
 import de.dittel.model.Automaton;
 import de.dittel.view.PopulationPanel;
 import de.dittel.view.StatePanel;
+import javafx.stage.Stage;
 
 /**
  * Klasse die alle wichtigen Ressourcen im Projekt verwaltet
@@ -14,6 +15,7 @@ public class ReferenceHandler implements Observer {
     private StatePanel statePanel = null;
     private PopulationPanel populationPanel = null;
     private MainController mainController = null;
+    private Stage mainStage = null;
     private boolean automatonHasChanged;
 
     /**
@@ -60,10 +62,31 @@ public class ReferenceHandler implements Observer {
     }
 
     /**
+     * Getter für den mainController
+     */
+    public MainController getMainController() {
+        return mainController;
+    }
+
+    /**
      * Setter für den mainController
      */
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    /**
+     * Getter für die mainStage
+     */
+    public Stage getMainStage() {
+        return mainStage;
+    }
+
+    /**
+     * Setter für die mainStage
+     */
+    public void setMainStage(Stage mainStage) {
+        this.mainStage = mainStage;
     }
 
     /**

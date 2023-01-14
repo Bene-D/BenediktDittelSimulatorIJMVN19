@@ -1,9 +1,11 @@
 package de.dittel.model;
 
+import java.io.Serializable;
+
 /**
  * Klasse zur Repräsentation einer Zelle eines zellulären Automaten
  */
-public class Cell {
+public class Cell implements Serializable {
     private int state;
 
     /**

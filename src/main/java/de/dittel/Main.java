@@ -1,8 +1,6 @@
 package de.dittel;
 
-import de.dittel.controller.MainController;
-import de.dittel.controller.PopulationPanelController;
-import de.dittel.controller.SimulationController;
+import de.dittel.controller.*;
 import de.dittel.model.Automaton;
 import de.dittel.util.FileManager;
 import de.dittel.util.ReferenceHandler;
@@ -55,8 +53,9 @@ public class Main extends Application {
             }
         }
         ReferenceHandler referenceHandler = new ReferenceHandler();
+        referenceHandler.setMainStage(stage);
         referenceHandler.setAutomaton(automaton);
-        MainController mainController = new MainController();
+        MainController mainController = new MainController();             // controller
         FXMLLoader mainLoader = new FXMLLoader(Main.class.getResource("/fxml/main.fxml")); // view
         mainLoader.setController(mainController);
         Parent root = mainLoader.load();
@@ -65,8 +64,13 @@ public class Main extends Application {
         referenceHandler.setStatePanel(statePanel);
         PopulationPanel populationPanel = new PopulationPanel(referenceHandler, mainController);
         referenceHandler.setPopulationPanel(populationPanel);
-        new PopulationPanelController(referenceHandler, mainController);
-        new SimulationController(referenceHandler, mainController);
+        new PopulationPanelController(referenceHandler, mainController);  // controller
+        new SimulationController(referenceHandler, mainController);       // controller
+        new SerializationController(referenceHandler);                    // controller
+        new XMLSerializationController(referenceHandler);                 // controller
+        new EditorController(referenceHandler);                           // controller
+        new NewAutomatonDialogController(referenceHandler);               // controller
+        new ChangeSizeDialogController(referenceHandler);                 // controller
         mainController.init(referenceHandler);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("css/style.css");

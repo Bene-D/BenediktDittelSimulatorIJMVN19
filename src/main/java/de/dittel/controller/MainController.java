@@ -7,9 +7,6 @@ import de.dittel.util.ReferenceHandler;
 import de.dittel.view.PopulationPanel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -17,14 +14,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller-Klasse für die mainView des Programms
@@ -48,7 +43,21 @@ public class MainController {
     @FXML
     private MenuBar menuBar;
     @FXML
+    private MenuItem createNewAutomatonMenuItem;
+    @FXML
+    private MenuItem changePopulationSizeMenuItem;
+    @FXML
+    private MenuItem openEditorMenuItem;
+    @FXML
     private CheckMenuItem changeTorusCheckMenuItem;
+    @FXML
+    private MenuItem xmlSerializationMenuItem;
+    @FXML
+    private MenuItem serializationMenuItem;
+    @FXML
+    private MenuItem xmlDeserializationMenuItem;
+    @FXML
+    private MenuItem deserializationMenuItem;
     @FXML
     private MenuItem editorMenuItem;
     @FXML
@@ -57,6 +66,10 @@ public class MainController {
     private MenuItem startSimulationMenuItem;
     @FXML
     private MenuItem stopSimulationMenuItem;
+    @FXML
+    private Button createNewAutomatonButton;
+    @FXML
+    private Button changePopulationSizeButton;
     @FXML
     private Button zoomInButton;
     @FXML
@@ -110,6 +123,55 @@ public class MainController {
     }
 
     /**
+     * Getter für createNewAutomatonMenuItem
+     */
+    public MenuItem getCreateNewAutomatonMenuItem() {
+        return createNewAutomatonMenuItem;
+    }
+
+    /**
+     * Getter für changePopulationSizeMenuItem
+     */
+    public MenuItem getChangePopulationSizeMenuItem() {
+        return changePopulationSizeMenuItem;
+    }
+
+    /**
+     * Getter für openEditorMenuItem
+     */
+    public MenuItem getOpenEditorMenuItem() {
+        return openEditorMenuItem;
+    }
+
+    /**
+     * Getter für xmlSerializationMenuItem
+     */
+    public MenuItem getXmlSerializationMenuItem() {
+        return xmlSerializationMenuItem;
+    }
+
+    /**
+     * Getter für serializationMenuItem
+     */
+    public MenuItem getSerializationMenuItem() {
+        return serializationMenuItem;
+    }
+
+    /**
+     * Getter für xmlDeserializationMenuItem
+     */
+    public MenuItem getXmlDeserializationMenuItem() {
+        return xmlDeserializationMenuItem;
+    }
+
+    /**
+     * Getter für deserializationMenuItem
+     */
+    public MenuItem getDeserializationMenuItem() {
+        return deserializationMenuItem;
+    }
+
+    /**
      * Getter für singleStepSimulationMenuItem
      */
     public MenuItem getSingleStepSimulationMenuItem() {
@@ -128,6 +190,20 @@ public class MainController {
      */
     public MenuItem getStopSimulationMenuItem() {
         return stopSimulationMenuItem;
+    }
+
+    /**
+     * Getter für createNewAutomatonButton
+     */
+    public Button getCreateNewAutomatonButton() {
+        return createNewAutomatonButton;
+    }
+
+    /**
+     * Getter für changePopulationSizeButton
+     */
+    public Button getChangePopulationSizeButton() {
+        return changePopulationSizeButton;
     }
 
     /**
@@ -242,33 +318,6 @@ public class MainController {
     }
 
     /**
-     * Ändert die Größe der Population
-     * <p>
-     * Erstellt ein DialogPane, welches die neue Anzahl der Reihen und Spalten abfragt.
-     * Die Eingaben werden benutzt, um die Attribute des Automaten zu aktualisieren.
-     */
-    @FXML
-    public void changePopulationSize() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/changeSizeDialog.fxml"));
-            DialogPane dialogPane = loader.load();
-            ChangeSizeDialogController changeSizeDialogController = loader.getController();
-            Dialog<ButtonType> dialog = new Dialog<>();
-            changeSizeDialogController.initialize(referenceHandler.getAutomaton());
-            dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Größe der Population ändern");
-            Optional<ButtonType> clickedButton = dialog.showAndWait();
-
-            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
-                referenceHandler.getAutomaton().changeSize(Integer.parseInt(changeSizeDialogController.getRowTextField().getText()),
-                        Integer.parseInt(changeSizeDialogController.getColumnTextField().getText()));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Ändert die Farbe eines Zustands des Automaten
      * <p>
      * Es ändert sich die Farbe aller Zellen, die sich in diesem Zustand befinden.
@@ -289,39 +338,6 @@ public class MainController {
         colorPickerList.get(id).setValue(color);
         populationPanel.paintCanvas();
         populationPanel.center(populationScrollPane.getViewportBounds());
-    }
-
-    /**
-     * Erzeugt einen neuen Automaten und legt eine Datei für diesen im Ordner "automata" an
-     * <p>
-     * Für das Erzeugen wird eine Dummy-Datei verwendet und der Name an den notwendigen Stellen durch den neuen ersetzt.
-     */
-    @FXML
-    public void createNewAutomaton() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newAutomatonDialog.fxml"));
-            DialogPane dialogPane = loader.load();
-            NewAutomatonDialogController newAutomatonDialogController = loader.getController();
-            Dialog<ButtonType> dialog = new Dialog<>();
-            newAutomatonDialogController.initialize();
-            dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Neuen Automaten erzeugen");
-            Optional<ButtonType> clickedButton = dialog.showAndWait();
-
-            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
-                String newAutomaton = newAutomatonDialogController.getNewAutomatonTextField().getText();
-                newAutomaton = newAutomaton.substring(0,1).toUpperCase() +
-                        newAutomaton.substring(1).toLowerCase();
-                File newAutomatonFile = FileManager.createNewAutomatonFile(newAutomaton);
-                if (FileManager.compile(newAutomatonFile)) {
-                    Automaton automaton = FileManager.loadAutomaton(newAutomatonFile);
-                    assert automaton != null;
-                    Main.newAutomaton(null, automaton, automaton.getClass().getName());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -351,7 +367,6 @@ public class MainController {
                     Class<?> newAutomatonClass = Class.forName(automatonFile.getName().replace(".java", ""),
                             true, classLoader);
                     Automaton automaton = (Automaton) newAutomatonClass.getDeclaredConstructor().newInstance();
-                    System.out.println(automaton.getClass().getName());
                     Main.newAutomaton(null, automaton, automaton.getClass().getName());
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -360,28 +375,6 @@ public class MainController {
                     e.printStackTrace();
                 }
             }
-    }
-
-    /**
-     * Öffnet einen Editor für die Automaton-Datei in einem neuen Fenster
-     */
-    @FXML
-    public void openEditor() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editor.fxml"));
-            EditorController editorController = new EditorController();
-            loader.setController(editorController);
-            Parent root = loader.load();
-            editorController.init(referenceHandler);
-            Stage stage = new Stage();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Editor - " + referenceHandler.getAutomaton().getClass().getName());
-            stage.initOwner(menuBar.getScene().getWindow());
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

@@ -44,17 +44,6 @@ public abstract class Automaton extends Observable {
     }
 
     /**
-     * Implementierung der Transformationsregel
-     *
-     * @param cell      die betroffene Zelle (darf nicht verändert werden!!!)
-     * @param neighbors die Nachbarn der betroffenen Zelle (dürfen nicht verändert werden!!!)
-     * @return eine neu erzeugte Zelle, die gemäß der Transformationsregel aus der betroffenen Zelle hervorgeht
-     * @throws Throwable moeglicherweise wirft die Methode eine Exception
-     */
-    protected abstract Cell transform(Cell cell, List<Cell> neighbors)
-            throws Throwable;
-
-    /**
      * Liefert die Anzahl an Zuständen des Automaten; gültige Zustände sind int-Werte zwischen 0 und Anzahl -1
      *
      * @return die Anzahl an Zuständen des Automaten
@@ -80,6 +69,24 @@ public abstract class Automaton extends Observable {
     public synchronized int getNumberOfColumns() {
         return columns;
     }
+
+    /**
+     * Getter für population
+     */
+    public Cell[][] getPopulation() {
+        return population;
+    }
+
+    /**
+     * Implementierung der Transformationsregel
+     *
+     * @param cell      die betroffene Zelle (darf nicht verändert werden!!!)
+     * @param neighbors die Nachbarn der betroffenen Zelle (dürfen nicht verändert werden!!!)
+     * @return eine neu erzeugte Zelle, die gemäß der Transformationsregel aus der betroffenen Zelle hervorgeht
+     * @throws Throwable moeglicherweise wirft die Methode eine Exception
+     */
+    protected abstract Cell transform(Cell cell, List<Cell> neighbors)
+    throws Throwable;
 
     /**
      * Ändert die Größe des Automaten; Achtung: aktuelle Belegungen nicht gelöschter Zellen sollen beibehalten werden;
@@ -314,6 +321,15 @@ public abstract class Automaton extends Observable {
                 neighbors.add(getCell(neighborCoord[0], neighborCoord[1]));
         }
         return neighbors;
+    }
+
+    public synchronized boolean changeCells(Cell[][] population) {
+        if (population == null || population.length != rows || population[0].length != columns) {
+            return false;
+        }
+        this.population = population;
+        notifyObserver();
+        return true;
     }
 
     @Override

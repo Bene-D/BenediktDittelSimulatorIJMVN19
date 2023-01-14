@@ -8,7 +8,7 @@
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
         <Menu text="_Automat">
-            <MenuItem onAction="#createNewAutomaton" styleClass="newAutomaton" text="_Neu...">
+            <MenuItem fx:id="createNewAutomatonMenuItem" styleClass="newAutomaton" text="_Neu...">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -19,7 +19,7 @@
                 </accelerator>
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem onAction="#openEditor" text="_Editor">
+            <MenuItem fx:id="openEditorMenuItem" text="_Editor">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -32,7 +32,7 @@
             </MenuItem>
         </Menu>
         <Menu text="_Population">
-            <MenuItem onAction="#changePopulationSize" text="Größe _ändern...">
+            <MenuItem fx:id="changePopulationSizeMenuItem" text="Größe _ändern...">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
@@ -65,20 +65,20 @@
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
             <Menu styleClass="save" text="Spei_chern">
-                <MenuItem text="_XML">
+                <MenuItem fx:id="xmlSerializationMenuItem" text="_XML">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                     </accelerator>
                 </MenuItem>
-                <MenuItem text="Ser_ialisieren">
+                <MenuItem fx:id="serializationMenuItem" text="Ser_ialisieren">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                     </accelerator>
                 </MenuItem>
             </Menu>
             <Menu text="_Laden">
-                <MenuItem text="_XML" />
-                <MenuItem text="Dese_rialisieren" />
+                <MenuItem fx:id="xmlDeserializationMenuItem" text="_XML" />
+                <MenuItem fx:id="deserializationMenuItem" text="Dese_rialisieren" />
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem styleClass="print" text="_Drucken">
@@ -106,7 +106,7 @@
         </Menu>
     </MenuBar>
     <ToolBar>
-        <Button onAction="#createNewAutomaton" mnemonicParsing="false" style="-fx-graphic: url(/icons/New24.gif)">
+        <Button fx:id="createNewAutomatonButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/New24.gif)">
             <tooltip>
                 <Tooltip text="Neuen Automaten erzeugen und laden" />
             </tooltip></Button>
@@ -116,7 +116,7 @@
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
-        <Button mnemonicParsing="false" onAction="#changePopulationSize" style="-fx-graphic: url(/icons/Size24.gif)">
+        <Button mnemonicParsing="false" fx:id="changePopulationSizeButton" style="-fx-graphic: url(/icons/Size24.gif)">
             <tooltip>
                 <Tooltip text="Größe der Population ändern" />
             </tooltip></Button>

@@ -3,6 +3,9 @@ package de.dittel.controller;
 import de.dittel.util.FileManager;
 import de.dittel.util.ReferenceHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextArea;
@@ -21,22 +24,47 @@ import java.nio.file.Paths;
 @SuppressWarnings("unused")
 public class EditorController {
 
-    private ReferenceHandler referenceHandler;
-    private String automatonPath;
+    private final ReferenceHandler referenceHandler;
+    private final String automatonPath;
+    private boolean editorOpen = false;
     @FXML
     private MenuBar menuBar;
     @FXML
     private TextArea automatonClassTextArea;
 
     /**
-     * Initialisiert den Controller mit den benötigten Attributen
+     * Konstruktor
      *
-     * @param referenceHandler verwaltet alle verwendeten Referenzen
+     * @param referenceHandler verwaltet die verwendeten Referenzen
      */
-    public void init(ReferenceHandler referenceHandler) {
+    public EditorController(ReferenceHandler referenceHandler) {
         this.referenceHandler = referenceHandler;
         automatonPath = "automata/" + referenceHandler.getAutomaton().getClass().getName() + ".java";
-        loadAutomatonClassText();
+        referenceHandler.getMainController().getOpenEditorMenuItem().setOnAction(event -> newEditor());
+    }
+
+    /**
+     * Öffnet einen Editor für die Automaton-Datei in einem neuen Fenster
+     */
+    public void newEditor() {
+        if (!editorOpen) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editor.fxml"));
+                loader.setController(this);
+                Parent root = loader.load();
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                loadAutomatonClassText();
+                stage.setTitle("Editor - " + referenceHandler.getAutomaton().getClass().getName());
+                stage.initOwner(referenceHandler.getMainStage());
+                stage.setOnCloseRequest(event ->  closeWindow());
+                stage.show();
+                editorOpen = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -92,5 +120,6 @@ public class EditorController {
     public void closeWindow() {
         Stage stageToClose = (Stage) menuBar.getScene().getWindow();
         stageToClose.close();
+        editorOpen = false;
     }
 }
