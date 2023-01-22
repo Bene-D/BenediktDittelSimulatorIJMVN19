@@ -104,6 +104,11 @@
                 </accelerator>
             </MenuItem>
         </Menu>
+        <Menu text="_Einstellungen">
+            <MenuItem fx:id="jdbcSaveConfigMenuItem" text="_Speichern..."/>
+            <MenuItem fx:id="jdbcLoadConfigMenuItem" text="_Wiederherstellen..."/>
+            <MenuItem fx:id="jdbcDeleteConfigMenuItem" text="_Löschen..."/>
+        </Menu>
     </MenuBar>
     <ToolBar>
         <Button fx:id="createNewAutomatonButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/New24.gif)">

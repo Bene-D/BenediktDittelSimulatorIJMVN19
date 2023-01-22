@@ -10,8 +10,6 @@ P
 :
 
 .classpath,3\5\354079a72b91a4280407c16a36f47d1986fd85a5
-R
-"BenediktDittelSimulatorIJMVN19.eml,c\0\c095aef6a9f20711c995b4ec2ae7b70fb913d588
 9
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 \
@@ -32,3 +30,5 @@ h
 8src/main/java/de/dittel/view2/KruemelmonsterConsole.java,9\5\95df87d7164d59d01143ce8de3fa4883916795da
 U
 %automata/KruemelmonsterAutomaton.java,7\a\7aaefd2f41b4cdef90b2c1002bd56110273538fe
+W
+'src/main/java/de/dittel/model/Cell.java,b\7\b72f5eb553721e967d1a420f7cc76b613c32217c

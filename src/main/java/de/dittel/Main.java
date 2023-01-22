@@ -71,6 +71,7 @@ public class Main extends Application {
         new EditorController(referenceHandler);                           // controller
         new NewAutomatonDialogController(referenceHandler);               // controller
         new ChangeSizeDialogController(referenceHandler);                 // controller
+        new DatabaseController(referenceHandler);                         // controller
         mainController.init(referenceHandler);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("css/style.css");
@@ -78,7 +79,10 @@ public class Main extends Application {
         stage.setMinWidth(600);
         stage.setMinHeight(400);
         stage.setTitle(name);
-        stage.setOnCloseRequest(event -> mainController.getStopSimulationButton().fire());
+        stage.setOnCloseRequest(event -> {
+            mainController.getStopSimulationButton().fire();
+            referenceHandler.getDatabaseController().shutdown();
+        });
         stage.show();
     }
 }

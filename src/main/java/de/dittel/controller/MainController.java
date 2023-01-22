@@ -67,6 +67,12 @@ public class MainController {
     @FXML
     private MenuItem stopSimulationMenuItem;
     @FXML
+    private MenuItem jdbcSaveConfigMenuItem;
+    @FXML
+    private MenuItem jdbcLoadConfigMenuItem;
+    @FXML
+    private MenuItem jdbcDeleteConfigMenuItem;
+    @FXML
     private Button createNewAutomatonButton;
     @FXML
     private Button changePopulationSizeButton;
@@ -190,6 +196,27 @@ public class MainController {
      */
     public MenuItem getStopSimulationMenuItem() {
         return stopSimulationMenuItem;
+    }
+
+    /**
+     * Getter für jdbcSaveConfigMenuItem
+     */
+    public MenuItem getJdbcSaveConfigMenuItem() {
+        return jdbcSaveConfigMenuItem;
+    }
+
+    /**
+     * Getter für jdbcLoadConfigMenuItem
+     */
+    public MenuItem getJdbcLoadConfigMenuItem() {
+        return jdbcLoadConfigMenuItem;
+    }
+
+    /**
+     * Getter für jdbcDeleteConfigMenuItem
+     */
+    public MenuItem getJdbcDeleteConfigMenuItem() {
+        return jdbcDeleteConfigMenuItem;
     }
 
     /**
@@ -383,6 +410,7 @@ public class MainController {
     @FXML
     public void closeWindow() {
         stopSimulationButton.fire();
+        referenceHandler.getDatabaseController().shutdown();
         Stage stageToClose = (Stage) menuBar.getScene().getWindow();
         stageToClose.close();
     }

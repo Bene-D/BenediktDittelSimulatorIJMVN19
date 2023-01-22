@@ -53,6 +53,20 @@ public class PopulationPanel extends Region {
     }
 
     /**
+     * Getter für das populationWidth
+     */
+    public double getPopulationWidth() {
+        return populationWidth;
+    }
+
+    /**
+     * Getter für das populationHeight
+     */
+    public double getPopulationHeight() {
+        return populationHeight;
+    }
+
+    /**
      * Helfermethode zur Berechnung der Canvas-Breite
      *
      * @return Breite, die der Automat benötigt (inkl. Kanten)
@@ -157,6 +171,12 @@ public class PopulationPanel extends Region {
         int row = (int) ((y - BORDER_HEIGHT) / populationHeight);
         int col = (int) ((x - BORDER_WIDTH) / populationWidth);
         return Optional.of(new Pair<>(row, col));
+    }
+
+    public void setPopulationSize(double width, double height) {
+        populationWidth = width;
+        populationHeight = height;
+        update();
     }
 
     /**
