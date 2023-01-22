@@ -18,8 +18,6 @@ Q
 !automata/GameOfLifeAutomaton.java,8\5\850107859935c04cdd978d6af542ac34ec5d574d
 [
 +src/main/java/de/dittel/model/Callable.java,d\1\d14dbbd6d761f54b967a794f5395d362f02b2f0b
-Z
-*src/main/java/de/dittel/util/Observer.java,7\9\7954262dda427f0fe55b969aff8edab22a2699e6
 V
 &src/main/java/de/dittel/util/Pair.java,3\0\305002f9069a885dd321190d15f43ae874f6e807
 \

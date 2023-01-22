@@ -73,7 +73,7 @@ public abstract class Automaton extends Observable {
     /**
      * Getter für population
      */
-    public Cell[][] getPopulation() {
+    public synchronized Cell[][] getPopulation() {
         return population;
     }
 
@@ -323,10 +323,23 @@ public abstract class Automaton extends Observable {
         return neighbors;
     }
 
+    /**
+     * Tauscht die Population aus und benachrichtigt die Observer
+     * <p>
+     * Falls die neue Population größer als die alte ist, wird changeSize() aufgerufen.
+     *
+     * @param population neue Population
+     * @return true bei Erfolg; sonst false
+     */
     public synchronized boolean changeCells(Cell[][] population) {
-        if (population == null || population.length != rows || population[0].length != columns) {
+        if (population == null) {
             return false;
         }
+
+        if (population.length != rows || population[0].length != columns) {
+            changeSize(population.length, population[0].length);
+        }
+
         this.population = population;
         notifyObserver();
         return true;

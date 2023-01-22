@@ -151,7 +151,7 @@ public class XMLSerializationController {
                     if ("automaton".equals(element)) {
                         int numberOfStates = Integer.parseInt(parser.getAttributeValue(null, "numberOfStates"));
 
-                        if (numberOfStates < automaton.getNumberOfStates()) {
+                        if (numberOfStates > automaton.getNumberOfStates()) {
                             throw new Exception();
                         }
 
