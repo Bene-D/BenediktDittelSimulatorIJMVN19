@@ -31,7 +31,7 @@ public class NewAutomatonDialogController {
      * @param referenceHandler verwaltet die verwendeten Referenzen
      */
     public NewAutomatonDialogController(ReferenceHandler referenceHandler) {
-        referenceHandler.getMainController().getCreateNewAutomatonMenuItem().setOnAction(event -> createNewAutomaton());
+        referenceHandler.getMainController().getNewAutomatonMenuItem().setOnAction(event -> createNewAutomaton());
         referenceHandler.getMainController().getCreateNewAutomatonButton().setOnAction(event -> createNewAutomaton());
     }
 

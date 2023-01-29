@@ -22,7 +22,6 @@ import java.io.IOException;
 public class Main extends Application {
 
     // VM Args: --module-path "\path\to\javafx-sdk-19\lib" --add-modules javafx.controls,javafx.fxml
-
     @Override
     public void start(Stage stage) throws Exception {
         newAutomaton(stage, null, null);
@@ -30,6 +29,11 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+        Thread dbShutdown = new Thread(() -> {
+            DatabaseController databaseController = new DatabaseController(new ReferenceHandler());
+            databaseController.shutdown();
+        });
+        Runtime.getRuntime().addShutdownHook(dbShutdown);
     }
 
 
@@ -70,8 +74,10 @@ public class Main extends Application {
         new XMLSerializationController(referenceHandler);                 // controller
         new EditorController(referenceHandler);                           // controller
         new NewAutomatonDialogController(referenceHandler);               // controller
+        new LanguageController(referenceHandler);                         // controller
         new ChangeSizeDialogController(referenceHandler);                 // controller
-        new DatabaseController(referenceHandler);                         // controller
+        DatabaseController databaseController = new DatabaseController(referenceHandler); // controller
+        databaseController.init();
         mainController.init(referenceHandler);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("css/style.css");
@@ -79,10 +85,7 @@ public class Main extends Application {
         stage.setMinWidth(600);
         stage.setMinHeight(400);
         stage.setTitle(name);
-        stage.setOnCloseRequest(event -> {
-            mainController.getStopSimulationButton().fire();
-            referenceHandler.getDatabaseController().shutdown();
-        });
+        stage.setOnCloseRequest(event -> mainController.getStopSimulationButton().fire());
         stage.show();
     }
 }

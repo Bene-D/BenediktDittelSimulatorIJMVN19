@@ -11,6 +11,9 @@ import javafx.util.StringConverter;
  */
 public class SimulationController {
 
+    public static final int DEF_SPEED = 1400;
+    public static final int MIN_SPEED = 500;
+    public static final int MAX_SPEED = 2600;
     private volatile int speed;
     private SimulationThread simulationThread;
     private final ReferenceHandler referenceHandler;
@@ -25,17 +28,24 @@ public class SimulationController {
     public SimulationController(ReferenceHandler referenceHandler, MainController mainController) {
         this.referenceHandler = referenceHandler;
         this.mainController = mainController;
-        this.speed = 1400;
+        this.speed = DEF_SPEED;
 
         mainController.getStartSimulationButton().setOnAction(e -> startSimulation());
         mainController.getStopSimulationButton().setOnAction(e -> stopSimulation());
         mainController.getStartSimulationMenuItem().setOnAction(e -> startSimulation());
         mainController.getStopSimulationMenuItem().setOnAction(e -> stopSimulation());
 
+        int userSpeed = PropertiesController.getPropertiesController().getSpeed();
+        if (MIN_SPEED <= userSpeed && userSpeed <= MAX_SPEED) {
+            mainController.getSimulationSpeedSlider().setValue(userSpeed);
+        } else {
+            mainController.getSimulationSpeedSlider().setValue(DEF_SPEED);
+        }
+
         mainController.getSimulationSpeedSlider().setLabelFormatter(new StringConverter<>() {
             @Override
             public String toString(Double sliderSpeed) {
-                if (sliderSpeed < 500) {
+                if (sliderSpeed < MIN_SPEED) {
                     return "Schnell";
                 } else if (sliderSpeed < 1100) {
                     return "Schneller";
@@ -71,10 +81,10 @@ public class SimulationController {
     private void startSimulation() {
         mainController.getStartSimulationButton().setDisable(true);
         mainController.getStopSimulationButton().setDisable(false);
-        mainController.getSingleStepSimulationButton().setDisable(true);
+        mainController.getSimulationStepButton().setDisable(true);
         mainController.getStartSimulationMenuItem().setDisable(true);
         mainController.getStopSimulationMenuItem().setDisable(false);
-        mainController.getSingleStepSimulationMenuItem().setDisable(true);
+        mainController.getSimulationStepMenuItem().setDisable(true);
         if (simulationThread == null) {
             simulationThread = new SimulationThread();
             simulationThread.setDaemon(true);
@@ -97,10 +107,10 @@ public class SimulationController {
         }
         mainController.getStartSimulationButton().setDisable(false);
         mainController.getStopSimulationButton().setDisable(true);
-        mainController.getSingleStepSimulationButton().setDisable(false);
+        mainController.getSimulationStepButton().setDisable(false);
         mainController.getStartSimulationMenuItem().setDisable(false);
         mainController.getStopSimulationMenuItem().setDisable(true);
-        mainController.getSingleStepSimulationMenuItem().setDisable(false);
+        mainController.getSimulationStepMenuItem().setDisable(false);
         simulationThread = null;
     }
 

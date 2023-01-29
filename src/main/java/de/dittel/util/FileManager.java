@@ -5,8 +5,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -16,6 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Klasse zum Erzeugen/Compilieren/Speichern von Files
@@ -76,8 +81,14 @@ public class FileManager {
      */
     public static boolean compile(File automaton) {
         JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
-        ByteArrayOutputStream err = new ByteArrayOutputStream();
-        boolean success = javac.run(null, null, err, automaton.getPath()) == 0;
+        CharArrayWriter err = new CharArrayWriter();
+        try (StandardJavaFileManager manager = javac.getStandardFileManager(null, null, null)) {
+            Iterable<? extends JavaFileObject> units = manager.getJavaFileObjectsFromFiles(Collections.singletonList(automaton));
+            List<String> options = new ArrayList<>();
+            options.add("-parameters");
+            JavaCompiler.CompilationTask task = javac.getTask(err, manager, null, options, null, units);
+
+        boolean success = task.call();
 
         if (!success) {
             String msg = err.toString();
@@ -87,6 +98,9 @@ public class FileManager {
             return false;
         } else {
             return true;
+        }
+        } catch (IOException exc) {
+            return false;
         }
     }
 }

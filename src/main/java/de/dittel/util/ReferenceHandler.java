@@ -1,6 +1,5 @@
 package de.dittel.util;
 
-import de.dittel.controller.DatabaseController;
 import de.dittel.controller.MainController;
 import de.dittel.model.Automaton;
 import de.dittel.view.PopulationPanel;
@@ -16,7 +15,6 @@ public class ReferenceHandler implements Observer {
     private StatePanel statePanel = null;
     private PopulationPanel populationPanel = null;
     private MainController mainController = null;
-    private DatabaseController databaseController = null;
     private Stage mainStage = null;
     private boolean automatonHasChanged;
 
@@ -75,20 +73,6 @@ public class ReferenceHandler implements Observer {
      */
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-    }
-
-    /**
-     * Getter für den databaseController
-     */
-    public DatabaseController getDatabaseController() {
-        return databaseController;
-    }
-
-    /**
-     * Setter für den databaseController
-     */
-    public void setDatabaseController(DatabaseController databaseController) {
-        this.databaseController = databaseController;
     }
 
     /**

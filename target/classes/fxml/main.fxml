@@ -7,169 +7,176 @@
 <?import javafx.scene.paint.Color?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
-        <Menu text="_Automat">
-            <MenuItem fx:id="createNewAutomatonMenuItem" styleClass="newAutomaton" text="_Neu...">
+        <Menu fx:id="automatonMenu">
+            <MenuItem fx:id="newAutomatonMenuItem" styleClass="newAutomaton">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem onAction="#loadAndCompileAutomaton" styleClass="loadAutomaton" text="_Laden...">
+            <MenuItem fx:id="loadAutomatonMenuItem" onAction="#loadAndCompileAutomaton" styleClass="loadAutomaton">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="openEditorMenuItem" text="_Editor">
+            <MenuItem fx:id="openEditorMenuItem">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem onAction="#closeWindow" text="_Beenden">
+            <MenuItem fx:id="quitMenuItem" onAction="#closeWindow">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
         </Menu>
-        <Menu text="_Population">
-            <MenuItem fx:id="changePopulationSizeMenuItem" text="Größe _ändern...">
+        <Menu fx:id="populationMenu">
+            <MenuItem fx:id="changePopulationSizeMenuItem">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem onAction="#resetPopulation" text="L_öschen">
+            <MenuItem fx:id="clearPopulationMenuItem" onAction="#resetPopulation">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem onAction="#randomPopulation" text="_Erzeugen">
+            <MenuItem fx:id="randomPopulationMenuItem" onAction="#randomPopulation">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <CheckMenuItem fx:id="changeTorusCheckMenuItem" onAction="#changeTorus" text="_Torus">
+            <CheckMenuItem fx:id="changeTorusCheckMenuItem" onAction="#changeTorus">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </CheckMenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem text="Ver_größern">
+            <MenuItem fx:id="zoomInMenuItem">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem text="Ver_kleinern">
+            <MenuItem fx:id="zoomOutMenuItem">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu styleClass="save" text="Spei_chern">
+            <Menu fx:id="savePopulationMenu" styleClass="save">
                 <MenuItem fx:id="xmlSerializationMenuItem" text="_XML">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                     </accelerator>
                 </MenuItem>
-                <MenuItem fx:id="serializationMenuItem" text="Ser_ialisieren">
+                <MenuItem fx:id="serializationMenuItem">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                     </accelerator>
                 </MenuItem>
             </Menu>
-            <Menu text="_Laden">
-                <MenuItem fx:id="xmlDeserializationMenuItem" text="_XML" />
-                <MenuItem fx:id="deserializationMenuItem" text="Dese_rialisieren" />
+            <Menu fx:id="loadPopulationMenu">
+                <MenuItem fx:id="xmlDeserializationMenuItem"/>
+                <MenuItem fx:id="deserializationMenuItem"/>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem styleClass="print" text="_Drucken">
+            <MenuItem fx:id="printPopulationMenuItem" styleClass="print">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
         </Menu>
-        <Menu text="_Simulation">
-            <MenuItem fx:id="singleStepSimulationMenuItem" onAction="#singleStep" text="S_chritt">
+        <Menu fx:id="simulationMenu">
+            <MenuItem fx:id="simulationStepMenuItem" onAction="#singleStep">
                 <accelerator>
                     <KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem fx:id="startSimulationMenuItem" styleClass="start" text="Sta_rt">
+            <MenuItem fx:id="startSimulationMenuItem" styleClass="start">
                 <accelerator>
                     <KeyCodeCombination alt="DOWN" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem fx:id="stopSimulationMenuItem" disable="true" styleClass="stop" text="S_top">
+            <MenuItem fx:id="stopSimulationMenuItem" disable="true" styleClass="stop">
                 <accelerator>
                     <KeyCodeCombination alt="DOWN" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
         </Menu>
-        <Menu text="_Einstellungen">
-            <MenuItem fx:id="jdbcSaveConfigMenuItem" text="_Speichern..."/>
-            <MenuItem fx:id="jdbcLoadConfigMenuItem" text="_Wiederherstellen..."/>
-            <MenuItem fx:id="jdbcDeleteConfigMenuItem" text="_Löschen..."/>
+        <Menu fx:id="settingsMenu">
+            <MenuItem fx:id="saveSettingsMenuItem"/>
+            <MenuItem fx:id="loadSettingsMenuItem"/>
+            <MenuItem fx:id="deleteSettingsMenuItem"/>
+        </Menu>
+        <Menu fx:id="languageMenu">
+            <fx:define>
+                <ToggleGroup fx:id="languageToggleGroup"/>
+            </fx:define>
+            <RadioMenuItem fx:id="languageEnglishMenuItem"/>
+            <RadioMenuItem fx:id="languageGermanMenuItem"/>
         </Menu>
     </MenuBar>
     <ToolBar>
         <Button fx:id="createNewAutomatonButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/New24.gif)">
             <tooltip>
-                <Tooltip text="Neuen Automaten erzeugen und laden" />
+                <Tooltip fx:id="createAutomatonTooltip"/>
             </tooltip></Button>
         <Button onAction="#loadAndCompileAutomaton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Load24.gif)">
             <tooltip>
-                <Tooltip text="Existierenden Automaten laden" />
+                <Tooltip fx:id="loadAutomatonTooltip"/>
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
         <Button mnemonicParsing="false" fx:id="changePopulationSizeButton" style="-fx-graphic: url(/icons/Size24.gif)">
             <tooltip>
-                <Tooltip text="Größe der Population ändern" />
+                <Tooltip fx:id="changePopulationSizeTooltip"/>
             </tooltip></Button>
         <Button mnemonicParsing="false" onAction="#resetPopulation" style="-fx-graphic: url(/icons/Delete24.gif)">
             <tooltip>
-                <Tooltip text="Alle Zellen in Zustand 0 versetzen" />
+                <Tooltip fx:id="clearPopulationTooltip"/>
             </tooltip></Button>
         <Button mnemonicParsing="false" onAction="#randomPopulation" style="-fx-graphic: url(/icons/Random24.gif)">
             <tooltip>
-                <Tooltip text="Zufällige Population erzeugen" />
+                <Tooltip fx:id="randomPopulationTooltip"/>
             </tooltip></Button>
         <ToggleButton fx:id="changeTorusToggleButton" mnemonicParsing="false" onAction="#changeTorus" style="-fx-graphic: url(/icons/Torus24.gif)">
             <tooltip>
-                <Tooltip text="Population als Torus betrachten (an/aus)" />
+                <Tooltip fx:id="changeTorusTooltip"/>
             </tooltip></ToggleButton>
         <Button mnemonicParsing="false" style="-fx-graphic: url(/icons/Print24.gif)">
             <tooltip>
-                <Tooltip text="Population drucken" />
+                <Tooltip fx:id="printPopulationTooltip"/>
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
         <Button fx:id="zoomInButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/ZoomIn24.gif)">
             <tooltip>
-                <Tooltip text="Zoom In" />
+                <Tooltip fx:id="zoomInTooltip"/>
             </tooltip></Button>
         <Button fx:id="zoomOutButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/ZoomOut24.gif)">
             <tooltip>
-                <Tooltip text="Zoom Out" />
+                <Tooltip fx:id="zoomOutTooltip"/>
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
         <Button fx:id="singleStepSimulationButton" mnemonicParsing="false" onAction="#singleStep" style="-fx-graphic: url(/icons/Step24.gif)">
             <tooltip>
-                <Tooltip text="Einzelnen Simulationszyklus ausführen" />
+                <Tooltip fx:id="simulationStepTooltip"/>
             </tooltip></Button>
         <Button fx:id="startSimulationButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Start24.gif)">
             <tooltip>
-                <Tooltip text="Simulation starten" />
+                <Tooltip fx:id="startSimulationTooltip"/>
             </tooltip></Button>
         <Button fx:id="stopSimulationButton" disable="true" mnemonicParsing="false" style="-fx-graphic: url(/icons/Stop24.gif)">
             <tooltip>
-                <Tooltip text="Simulation anhalten" />
+                <Tooltip fx:id="stopSimulationTooltip"/>
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
         <Slider fx:id="simulationSpeedSlider" majorTickUnit="600" min="200" max="2600" minorTickCount="0" prefHeight="38.0" prefWidth="225.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1400">
             <tooltip>
-                <Tooltip text="Simulationsgeschwindigkeit anpassen" />
+                <Tooltip fx:id="sliderTooltip"/>
             </tooltip></Slider>
 
     </ToolBar>
@@ -208,7 +215,7 @@
             <Insets left="10.0" />
          </HBox.margin></ScrollPane>
     </HBox>
-    <Label prefHeight="25.0" prefWidth="780.0" text="Herzlich Willkommen!" VBox.vgrow="NEVER">
+    <Label fx:id="welcomeLabel" prefHeight="25.0" prefWidth="780.0" text="Herzlich Willkommen!" VBox.vgrow="NEVER">
         <VBox.margin>
             <Insets left="5.0" />
         </VBox.margin>

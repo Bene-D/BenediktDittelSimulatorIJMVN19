@@ -20,8 +20,6 @@ Q
 +src/main/java/de/dittel/model/Callable.java,d\1\d14dbbd6d761f54b967a794f5395d362f02b2f0b
 V
 &src/main/java/de/dittel/util/Pair.java,3\0\305002f9069a885dd321190d15f43ae874f6e807
-\
-,src/main/java/de/dittel/view/StatePanel.java,e\c\ecab346bfb07251e8b7689f420a5852c7acb1402
 d
 4src/main/java/de/dittel/view2/GameOfLiveConsole.java,d\d\ddcd8fad971f44151c0c1a11fe76fcb44d9d94b2
 h

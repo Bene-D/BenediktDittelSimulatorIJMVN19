@@ -45,28 +45,19 @@ public class DatabaseController {
      */
     public DatabaseController(ReferenceHandler referenceHandler) {
         this.referenceHandler = referenceHandler;
-        referenceHandler.setDatabaseController(this);
-        if (init()) {
-            referenceHandler.getMainController().getJdbcSaveConfigMenuItem().setOnAction(e -> saveStageConfig());
-            referenceHandler.getMainController().getJdbcLoadConfigMenuItem().setOnAction(e -> loadStageConfig());
-            referenceHandler.getMainController().getJdbcDeleteConfigMenuItem().setOnAction(e -> deleteStageConfig());
-        }
     }
 
     /**
      * Initialisiert den Controller und de-/aktviert die MenuItems
-     *
-     * @return true bei Erfolg; sonst false
      */
-    private boolean init() {
+    public void init() {
         try {
             Class.forName(DRIVER);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            referenceHandler.getMainController().getJdbcSaveConfigMenuItem().setDisable(true);
-            referenceHandler.getMainController().getJdbcLoadConfigMenuItem().setDisable(true);
-            referenceHandler.getMainController().getJdbcDeleteConfigMenuItem().setDisable(true);
-            return false;
+            referenceHandler.getMainController().getSaveSettingsMenuItem().setDisable(true);
+            referenceHandler.getMainController().getLoadSettingsMenuItem().setDisable(true);
+            referenceHandler.getMainController().getDeleteSettingsMenuItem().setDisable(true);
         }
 
         try (Connection conn = DriverManager.getConnection(DB_URL_CREATE);
@@ -76,12 +67,14 @@ public class DatabaseController {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            referenceHandler.getMainController().getJdbcSaveConfigMenuItem().setDisable(true);
-            referenceHandler.getMainController().getJdbcLoadConfigMenuItem().setDisable(true);
-            referenceHandler.getMainController().getJdbcDeleteConfigMenuItem().setDisable(true);
-            return false;
+            referenceHandler.getMainController().getSaveSettingsMenuItem().setDisable(true);
+            referenceHandler.getMainController().getLoadSettingsMenuItem().setDisable(true);
+            referenceHandler.getMainController().getDeleteSettingsMenuItem().setDisable(true);
         }
-        return true;
+
+        referenceHandler.getMainController().getSaveSettingsMenuItem().setOnAction(e -> saveStageConfig());
+        referenceHandler.getMainController().getLoadSettingsMenuItem().setOnAction(e -> loadStageConfig());
+        referenceHandler.getMainController().getDeleteSettingsMenuItem().setOnAction(e -> deleteStageConfig());
     }
 
     /**
@@ -95,7 +88,6 @@ public class DatabaseController {
             stmt.execute(CREATE_TABLE_STATEMENT);
         } catch (SQLException exc) {
             exc.printStackTrace();
-            connection.rollback();
             throw exc;
         }
     }
@@ -164,6 +156,9 @@ public class DatabaseController {
         } else {
             updateTableEntry(connection, name);
         }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Einstellungen gespeichert!");
+        alert.showAndWait();
     }
 
     /**

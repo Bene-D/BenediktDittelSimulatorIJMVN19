@@ -28,6 +28,8 @@ import java.util.List;
 public class MainController {
 
     private ReferenceHandler referenceHandler;
+    private final ResourcesController resourcesController = ResourcesController.getResourcesController();
+
     private final List<ColorPicker> colorPickerList;
 
     @FXML
@@ -35,61 +37,121 @@ public class MainController {
     @FXML
     private VBox radioButtonsVBox;
     @FXML
-    private ScrollPane populationScrollPane;
-    @FXML
-    private PopulationPanel populationPanel;
-    @FXML
-    private ToggleButton changeTorusToggleButton;
-    @FXML
     private MenuBar menuBar;
     @FXML
-    private MenuItem createNewAutomatonMenuItem;
+    private Menu automatonMenu;
     @FXML
-    private MenuItem changePopulationSizeMenuItem;
+    private MenuItem newAutomatonMenuItem;
+    @FXML
+    private MenuItem loadAutomatonMenuItem;
     @FXML
     private MenuItem openEditorMenuItem;
     @FXML
+    private MenuItem quitMenuItem;
+    @FXML
+    private Menu populationMenu;
+    @FXML
+    private MenuItem changePopulationSizeMenuItem;
+    @FXML
+    private MenuItem clearPopulationMenuItem;
+    @FXML
+    private MenuItem randomPopulationMenuItem;
+    @FXML
     private CheckMenuItem changeTorusCheckMenuItem;
+    @FXML
+    private MenuItem zoomInMenuItem;
+    @FXML
+    private MenuItem zoomOutMenuItem;
+    @FXML
+    private Menu savePopulationMenu;
     @FXML
     private MenuItem xmlSerializationMenuItem;
     @FXML
     private MenuItem serializationMenuItem;
     @FXML
+    private Menu loadPopulationMenu;
+    @FXML
     private MenuItem xmlDeserializationMenuItem;
     @FXML
     private MenuItem deserializationMenuItem;
     @FXML
-    private MenuItem editorMenuItem;
+    private MenuItem printPopulationMenuItem;
     @FXML
-    private MenuItem singleStepSimulationMenuItem;
+    private Menu simulationMenu;
+    @FXML
+    private MenuItem simulationStepMenuItem;
     @FXML
     private MenuItem startSimulationMenuItem;
     @FXML
     private MenuItem stopSimulationMenuItem;
     @FXML
-    private MenuItem jdbcSaveConfigMenuItem;
+    private Menu settingsMenu;
     @FXML
-    private MenuItem jdbcLoadConfigMenuItem;
+    private MenuItem saveSettingsMenuItem;
     @FXML
-    private MenuItem jdbcDeleteConfigMenuItem;
+    private MenuItem loadSettingsMenuItem;
+    @FXML
+    private MenuItem deleteSettingsMenuItem;
+    @FXML
+    private Menu languageMenu;
+    @FXML
+    private ToggleGroup languageToggleGroup;
+    @FXML
+    private RadioMenuItem languageEnglishMenuItem;
+    @FXML
+    private RadioMenuItem languageGermanMenuItem;
     @FXML
     private Button createNewAutomatonButton;
     @FXML
+    private Tooltip createAutomatonTooltip;
+    @FXML
+    private Tooltip loadAutomatonTooltip;
+    @FXML
     private Button changePopulationSizeButton;
+    @FXML
+    private Tooltip changePopulationSizeTooltip;
+    @FXML
+    private Tooltip clearPopulationTooltip;
+    @FXML
+    private Tooltip randomPopulationTooltip;
+    @FXML
+    private ToggleButton changeTorusToggleButton;
+    @FXML
+    private Tooltip changeTorusTooltip;
+    @FXML
+    private Tooltip printPopulationTooltip;
     @FXML
     private Button zoomInButton;
     @FXML
+    private Tooltip zoomInTooltip;
+    @FXML
     private Button zoomOutButton;
     @FXML
-    private Button singleStepSimulationButton;
+    private Tooltip zoomOutTooltip;
+    @FXML
+    private Button simulationStepButton;
+    @FXML
+    private Tooltip simulationStepTooltip;
     @FXML
     private Button startSimulationButton;
     @FXML
+    private Tooltip startSimulationTooltip;
+    @FXML
     private Button stopSimulationButton;
+    @FXML
+    private Tooltip stopSimulationTooltip;
     @FXML
     private Slider simulationSpeedSlider;
     @FXML
+    private Tooltip sliderTooltip;
+    @FXML
     private ToggleGroup radioButtonToggleGroup;
+    @FXML
+    private ScrollPane populationScrollPane;
+    @FXML
+    private PopulationPanel populationPanel;
+    @FXML
+    private Label welcomeLabel;
 
     /**
      * Konstruktor
@@ -131,8 +193,8 @@ public class MainController {
     /**
      * Getter für createNewAutomatonMenuItem
      */
-    public MenuItem getCreateNewAutomatonMenuItem() {
-        return createNewAutomatonMenuItem;
+    public MenuItem getNewAutomatonMenuItem() {
+        return newAutomatonMenuItem;
     }
 
     /**
@@ -180,8 +242,8 @@ public class MainController {
     /**
      * Getter für singleStepSimulationMenuItem
      */
-    public MenuItem getSingleStepSimulationMenuItem() {
-        return singleStepSimulationMenuItem;
+    public MenuItem getSimulationStepMenuItem() {
+        return simulationStepMenuItem;
     }
 
     /**
@@ -201,22 +263,40 @@ public class MainController {
     /**
      * Getter für jdbcSaveConfigMenuItem
      */
-    public MenuItem getJdbcSaveConfigMenuItem() {
-        return jdbcSaveConfigMenuItem;
+    public MenuItem getSaveSettingsMenuItem() {
+        return saveSettingsMenuItem;
     }
 
     /**
      * Getter für jdbcLoadConfigMenuItem
      */
-    public MenuItem getJdbcLoadConfigMenuItem() {
-        return jdbcLoadConfigMenuItem;
+    public MenuItem getLoadSettingsMenuItem() {
+        return loadSettingsMenuItem;
     }
 
     /**
      * Getter für jdbcDeleteConfigMenuItem
      */
-    public MenuItem getJdbcDeleteConfigMenuItem() {
-        return jdbcDeleteConfigMenuItem;
+    public MenuItem getDeleteSettingsMenuItem() {
+        return deleteSettingsMenuItem;
+    }
+
+    public ToggleGroup getLanguageToggleGroup() {
+        return languageToggleGroup;
+    }
+
+    /**
+     * Getter für languageEnglishMenuItem
+     */
+    public RadioMenuItem getLanguageEnglishMenuItem() {
+        return languageEnglishMenuItem;
+    }
+
+    /**
+     * Getter für languageGermanMenuItem
+     */
+    public RadioMenuItem getLanguageGermanMenuItem() {
+        return languageGermanMenuItem;
     }
 
     /**
@@ -250,8 +330,8 @@ public class MainController {
     /**
      * Getter für singleStepSimulationButton
      */
-    public Button getSingleStepSimulationButton() {
-        return singleStepSimulationButton;
+    public Button getSimulationStepButton() {
+        return simulationStepButton;
     }
 
     /**
@@ -298,6 +378,71 @@ public class MainController {
         for (ColorPicker colorPicker : colorPickerList) {
             colorPicker.setOnAction(this::changeColor);
         }
+        initLanguageMenuItems();
+        bindLanguageProperties();
+    }
+
+    private void bindLanguageProperties() {
+        // Automat
+        automatonMenu.textProperty().bind(resourcesController.i18n("automatonMenu"));
+        newAutomatonMenuItem.textProperty().bind(resourcesController.i18n("newAutomatonMenuItem"));
+        loadAutomatonMenuItem.textProperty().bind(resourcesController.i18n("loadAutomatonMenuItem"));
+        openEditorMenuItem.textProperty().bind(resourcesController.i18n("openEditorMenuItem"));
+        quitMenuItem.textProperty().bind(resourcesController.i18n("quitMenuItem"));
+        // Population
+        populationMenu.textProperty().bind(resourcesController.i18n("populationMenu"));
+        changePopulationSizeMenuItem.textProperty().bind(resourcesController.i18n("changePopulationSizeMenuItem"));
+        clearPopulationMenuItem.textProperty().bind(resourcesController.i18n("clearPopulationMenuItem"));
+        randomPopulationMenuItem.textProperty().bind(resourcesController.i18n("randomPopulationMenuItem"));
+        changeTorusCheckMenuItem.textProperty().bind(resourcesController.i18n("changeTorusCheckMenuItem"));
+        zoomInMenuItem.textProperty().bind(resourcesController.i18n("zoomInMenuItem"));
+        zoomOutMenuItem.textProperty().bind(resourcesController.i18n("zoomOutMenuItem"));
+        savePopulationMenu.textProperty().bind(resourcesController.i18n("savePopulationMenu"));
+        xmlSerializationMenuItem.textProperty().bind(resourcesController.i18n("xmlSerializationMenuItem"));
+        serializationMenuItem.textProperty().bind(resourcesController.i18n("serializationMenuItem"));
+        loadPopulationMenu.textProperty().bind(resourcesController.i18n("loadPopulationMenu"));
+        xmlDeserializationMenuItem.textProperty().bind(resourcesController.i18n("xmlDeserializationMenuItem"));
+        deserializationMenuItem.textProperty().bind(resourcesController.i18n("deserializationMenuItem"));
+        printPopulationMenuItem.textProperty().bind(resourcesController.i18n("printPopulationMenuItem"));
+        // Simulation
+        simulationMenu.textProperty().bind(resourcesController.i18n("simulationMenu"));
+        simulationStepMenuItem.textProperty().bind(resourcesController.i18n("simulationStepMenuItem"));
+        startSimulationMenuItem.textProperty().bind(resourcesController.i18n("startSimulationMenuItem"));
+        stopSimulationMenuItem.textProperty().bind(resourcesController.i18n("stopSimulationMenuItem"));
+        // Einstellungen
+        settingsMenu.textProperty().bind(resourcesController.i18n("settingsMenu"));
+        saveSettingsMenuItem.textProperty().bind(resourcesController.i18n("saveSettingsMenuItem"));
+        loadSettingsMenuItem.textProperty().bind(resourcesController.i18n("loadSettingsMenuItem"));
+        deleteSettingsMenuItem.textProperty().bind(resourcesController.i18n("deleteSettingsMenuItem"));
+        // Sprache
+        languageMenu.textProperty().bind(resourcesController.i18n("languageMenu"));
+        languageEnglishMenuItem.textProperty().bind(resourcesController.i18n("languageEnglishMenuItem"));
+        languageGermanMenuItem.textProperty().bind(resourcesController.i18n("languageGermanMenuItem"));
+        // Tooltips
+        createAutomatonTooltip.textProperty().bind(resourcesController.i18n("createAutomatonTooltip"));
+        loadAutomatonTooltip.textProperty().bind(resourcesController.i18n("loadAutomatonTooltip"));
+        changePopulationSizeTooltip.textProperty().bind(resourcesController.i18n("changePopulationSizeTooltip"));
+        clearPopulationTooltip.textProperty().bind(resourcesController.i18n("clearPopulationTooltip"));
+        randomPopulationTooltip.textProperty().bind(resourcesController.i18n("randomPopulationTooltip"));
+        changeTorusTooltip.textProperty().bind(resourcesController.i18n("changeTorusTooltip"));
+        printPopulationTooltip.textProperty().bind(resourcesController.i18n("printPopulationTooltip"));
+        zoomInTooltip.textProperty().bind(resourcesController.i18n("zoomInTooltip"));
+        zoomOutTooltip.textProperty().bind(resourcesController.i18n("zoomOutTooltip"));
+        simulationStepTooltip.textProperty().bind(resourcesController.i18n("simulationStepTooltip"));
+        startSimulationTooltip.textProperty().bind(resourcesController.i18n("startSimulationTooltip"));
+        stopSimulationTooltip.textProperty().bind(resourcesController.i18n("stopSimulationTooltip"));
+        sliderTooltip.textProperty().bind(resourcesController.i18n("sliderTooltip"));
+        // Gruß Label
+        welcomeLabel.textProperty().bind(resourcesController.i18n("welcomeLabel"));
+    }
+
+    private void initLanguageMenuItems() {
+        languageEnglishMenuItem
+                .setSelected(ResourcesController.getResourcesController().getLocale().getLanguage().equals("en"));
+        languageGermanMenuItem
+                .setSelected(ResourcesController.getResourcesController().getLocale().getLanguage().equals("de"));
+        languageEnglishMenuItem.setToggleGroup(languageToggleGroup);
+        languageGermanMenuItem.setToggleGroup(languageToggleGroup);
     }
 
     /**
@@ -410,7 +555,6 @@ public class MainController {
     @FXML
     public void closeWindow() {
         stopSimulationButton.fire();
-        referenceHandler.getDatabaseController().shutdown();
         Stage stageToClose = (Stage) menuBar.getScene().getWindow();
         stageToClose.close();
     }
