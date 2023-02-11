@@ -16,6 +16,8 @@ import java.io.*;
 public class XMLSerializationController {
 
     private static final FileChooser fileChooser;
+    private final ResourcesController resourcesController = ResourcesController.getResourcesController();
+
 
     static {
         fileChooser = new FileChooser();
@@ -40,8 +42,8 @@ public class XMLSerializationController {
      *
      * @param referenceHandler verwaltet die verwendeten Referenzen
      */
-    public void savePopulation(ReferenceHandler referenceHandler) {
-        fileChooser.setTitle("Population im XML-Format speichern");
+    private void savePopulation(ReferenceHandler referenceHandler) {
+        fileChooser.setTitle(resourcesController.getI18nValue("xmlSerializationFileChooserTitle"));
         File file = fileChooser.showSaveDialog(referenceHandler.getMainStage());
 
         if (file == null) {
@@ -56,7 +58,8 @@ public class XMLSerializationController {
             writeXML(referenceHandler, os);
         } catch (Exception exc) {
             exc.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Fehler beim Speichern!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("xmlSerializationError"), ButtonType.OK);
             alert.showAndWait();
         }
     }
@@ -115,8 +118,8 @@ public class XMLSerializationController {
      *
      * @param referenceHandler verwaltet die verwendeten Referenzen
      */
-    public void loadPopulation(ReferenceHandler referenceHandler) {
-        fileChooser.setTitle("XML-serialisierte Population laden");
+    private void loadPopulation(ReferenceHandler referenceHandler) {
+        fileChooser.setTitle(resourcesController.getI18nValue("xmlDeserializationFileChooserTitle"));
         File file = fileChooser.showOpenDialog(referenceHandler.getMainStage());
 
         if (file != null) {
@@ -124,7 +127,8 @@ public class XMLSerializationController {
                 loadXML(referenceHandler, is);
             } catch (Exception exc) {
                 exc.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Ungültige XML-Populationsdatei!", ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.ERROR,
+                        resourcesController.getI18nValue("xmlDeserializationError"), ButtonType.OK);
                 alert.showAndWait();
             }
         }
@@ -139,6 +143,7 @@ public class XMLSerializationController {
     private void loadXML(ReferenceHandler referenceHandler, InputStream is) throws Exception {
         Automaton automaton = referenceHandler.getAutomaton();
         XMLStreamReader parser = null;
+
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
@@ -149,14 +154,17 @@ public class XMLSerializationController {
                 if (parser.getEventType() == XMLStreamConstants.START_ELEMENT) {
                     String element = parser.getLocalName();
                     if ("automaton".equals(element)) {
-                        int numberOfStates = Integer.parseInt(parser.getAttributeValue(null, "numberOfStates"));
+                        int numberOfStates = Integer.parseInt(parser.getAttributeValue(null,
+                                "numberOfStates"));
 
                         if (numberOfStates > automaton.getNumberOfStates()) {
                             throw new Exception();
                         }
 
-                        int numberOfRows = Integer.parseInt(parser.getAttributeValue(null, "numberOfRows"));
-                        int numberOfColumns = Integer.parseInt(parser.getAttributeValue(null, "numberOfColumns"));
+                        int numberOfRows = Integer.parseInt(parser.getAttributeValue(null,
+                                "numberOfRows"));
+                        int numberOfColumns = Integer.parseInt(parser.getAttributeValue(null,
+                                "numberOfColumns"));
                         population = new Cell[numberOfRows][numberOfColumns];
                     } else if ("cell".equals(element)) {
                         if (population == null) {

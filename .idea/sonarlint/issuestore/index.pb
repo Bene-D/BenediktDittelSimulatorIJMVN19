@@ -3,28 +3,7 @@ S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 R
 "BenediktDittelSimulatorIJMVN19.iml,3\e\3ea575176de961a9fc857bc2f8af9a362daf80ca
-P
- src/main/resources/css/style.css,a\a\aaa3c690310c5fcc0e7172e8e57664b5291ae9d3
-8
-.project,f\8\f8b41ce76d7b80d2b47e91b5f92c15f00eccf187
-:
-
-.classpath,3\5\354079a72b91a4280407c16a36f47d1986fd85a5
-9
-	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
-\
-,BenediktDittelSimulatorIJMVN19.userlibraries,9\1\9173f779862dd1636e601a4d35c41f0a4e399bcb
-Q
-!automata/GameOfLifeAutomaton.java,8\5\850107859935c04cdd978d6af542ac34ec5d574d
-[
-+src/main/java/de/dittel/model/Callable.java,d\1\d14dbbd6d761f54b967a794f5395d362f02b2f0b
-V
-&src/main/java/de/dittel/util/Pair.java,3\0\305002f9069a885dd321190d15f43ae874f6e807
 d
 4src/main/java/de/dittel/view2/GameOfLiveConsole.java,d\d\ddcd8fad971f44151c0c1a11fe76fcb44d9d94b2
 h
 8src/main/java/de/dittel/view2/KruemelmonsterConsole.java,9\5\95df87d7164d59d01143ce8de3fa4883916795da
-U
-%automata/KruemelmonsterAutomaton.java,7\a\7aaefd2f41b4cdef90b2c1002bd56110273538fe
-W
-'src/main/java/de/dittel/model/Cell.java,b\7\b72f5eb553721e967d1a420f7cc76b613c32217c

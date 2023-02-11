@@ -1,6 +1,7 @@
 package de.dittel.util;
 
 import de.dittel.controller.MainController;
+import de.dittel.controller.SimulationController;
 import de.dittel.model.Automaton;
 import de.dittel.view.PopulationPanel;
 import de.dittel.view.StatePanel;
@@ -14,8 +15,9 @@ public class ReferenceHandler implements Observer {
     private Automaton automaton = null;
     private StatePanel statePanel = null;
     private PopulationPanel populationPanel = null;
-    private MainController mainController = null;
-    private Stage mainStage = null;
+    private MainController mainController;
+    private SimulationController simulationController;
+    private Stage mainStage;
     private boolean automatonHasChanged;
 
     /**
@@ -38,6 +40,13 @@ public class ReferenceHandler implements Observer {
         this.automaton = automaton;
         this.automaton.add(this);
         this.automaton.notifyObserver();
+    }
+
+    /**
+     * Getter für das statePanel
+     */
+    public StatePanel getStatePanel() {
+        return statePanel;
     }
 
     /**
@@ -76,6 +85,20 @@ public class ReferenceHandler implements Observer {
     }
 
     /**
+     * Getter für den simulationController
+     */
+    public SimulationController getSimulationController() {
+        return simulationController;
+    }
+
+    /**
+     * Setter für den simulationController
+     */
+    public void setSimulationController(SimulationController simulationController) {
+        this.simulationController = simulationController;
+    }
+
+    /**
      * Getter für die mainStage
      */
     public Stage getMainStage() {
@@ -97,6 +120,7 @@ public class ReferenceHandler implements Observer {
         if (populationPanel != null) {
             populationPanel.update();
         }
+
         if (automatonHasChanged && statePanel != null) {
             statePanel.update();
             mainController.setTorus();

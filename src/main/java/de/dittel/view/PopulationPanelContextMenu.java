@@ -28,7 +28,6 @@ public class PopulationPanelContextMenu extends ContextMenu {
     public PopulationPanelContextMenu(ReferenceHandler referenceHandler) {
         methods = getValidMethods(referenceHandler);
 
-
         for (Method method : methods) {
             method.setAccessible(true);
             String functionType = method.getReturnType().getName();

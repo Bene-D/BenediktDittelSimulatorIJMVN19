@@ -36,10 +36,12 @@ public class ResourcesController {
 			String localeStr = PropertiesController.getPropertiesController().getLanguage();
 			if (localeStr == null) {
 				this.locale = Locale.getDefault();
+			} else if (!localeStr.equals("de") && !localeStr.equals("en")) {
+				this.locale = Locale.getDefault();
 			} else {
 				this.locale = new Locale(localeStr);
 			}
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			this.locale = Locale.getDefault();
 		}
 		Locale.setDefault(this.locale);

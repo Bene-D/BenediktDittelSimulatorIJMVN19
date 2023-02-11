@@ -1,17 +1,15 @@
 package de.dittel.controller;
 
-import javafx.scene.control.Alert;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Controller-Klasse zum Laden der benutzerdefinierten Einstellungen
+ * Controller-Klasse zum Laden von benutzerdefinierten Einstellungen
  */
 public class PropertiesController {
 
-	private static final String PROPFILE = "casimulator.properties";
+	private static final String PROP_FILE = "casimulator.properties";
 	private static final String PROP_LANGUAGE = "language";
 	private static final String DEF_LANGUAGE = "de";
 	private static PropertiesController propertiesController = null;
@@ -34,11 +32,9 @@ public class PropertiesController {
 	 */
 	private PropertiesController() {
 		this.properties = new Properties();
-		try (FileInputStream propertiesFile = new FileInputStream(PropertiesController.PROPFILE)) {
+		try (FileInputStream propertiesFile = new FileInputStream(PropertiesController.PROP_FILE)) {
 			this.properties.load(propertiesFile);
-		} catch (IOException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Fehler beim Laden der casimulator.properties Datei!");
-			alert.showAndWait();
+		} catch (IOException ignored) {
 		}
 	}
 

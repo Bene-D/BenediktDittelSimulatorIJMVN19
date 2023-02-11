@@ -16,25 +16,27 @@ import java.util.Optional;
  */
 public class DatabaseController {
 
+    private final ResourcesController resourcesController = ResourcesController.getResourcesController();
+
     private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
     private static final String DB_NAME = "stageDB";
     private static final String DB_URL_PREFIX = "jdbc:derby:" + DB_NAME;
     private static final String DB_URL = DB_URL_PREFIX + ";create=false";
     private static final String DB_URL_CREATE = DB_URL_PREFIX + ";create=true";
 
-    private static final String TABLENAME = "STAGE";
-    private static final String CREATE_TABLE_STATEMENT = "CREATE TABLE " + TABLENAME + " (" +
+    private static final String TABLE_NAME = "STAGE";
+    private static final String CREATE_TABLE_STATEMENT = "CREATE TABLE " + TABLE_NAME + " (" +
             "name VARCHAR(20) PRIMARY KEY, stageX DOUBLE NOT NULL, stageY DOUBLE NOT NULL, stageWidth DOUBLE NOT NULL, " +
             "stageHeight DOUBLE NOT NULL, populationWidth DOUBLE NOT NULL, " +
             "populationHeight DOUBLE NOT NULL NOT NULL, slider DOUBLE NOT NULL) ";
-    private static final String INSERT_STATEMENT = "INSERT INTO " + TABLENAME + " (name, stageX, stageY, stageWidth, " +
+    private static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (name, stageX, stageY, stageWidth, " +
             "stageHeight, populationWidth, populationHeight, slider) values (?, ?, ?, ?, ?, ?, ?, ?) ";
-    private static final String UPDATE_STATEMENT = "UPDATE " + TABLENAME + " SET stageX = ?, stageY = ?, " +
+    private static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET stageX = ?, stageY = ?, " +
             "stageWidth = ?, stageHeight = ?, populationWidth = ?, populationHeight = ?, slider = ? WHERE name = ? ";
     private static final String SELECT_STATEMENT = "SELECT stageX, stageY, stageWidth, stageHeight, populationWidth, " +
-            "populationHeight, slider FROM " + TABLENAME + " WHERE name = ?";
-    private static final String SELECT_NAMES_STATEMENT = "SELECT name FROM " + TABLENAME;
-    private static final String DELETE_STATEMENT = "DELETE FROM " + TABLENAME + " WHERE name = ?";
+            "populationHeight, slider FROM " + TABLE_NAME + " WHERE name = ?";
+    private static final String SELECT_NAMES_STATEMENT = "SELECT name FROM " + TABLE_NAME;
+    private static final String DELETE_STATEMENT = "DELETE FROM " + TABLE_NAME + " WHERE name = ?";
     private Connection connection = null;
     private final ReferenceHandler referenceHandler;
 
@@ -61,7 +63,7 @@ public class DatabaseController {
         }
 
         try (Connection conn = DriverManager.getConnection(DB_URL_CREATE);
-             ResultSet resultSet = conn.getMetaData().getTables(null, null, TABLENAME, null)) {
+             ResultSet resultSet = conn.getMetaData().getTables(null, null, TABLE_NAME, null)) {
             if (!resultSet.next()) {
                 createTable(conn);
             }
@@ -119,6 +121,8 @@ public class DatabaseController {
             try {
                 this.connection.close();
             } catch (SQLException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, resourcesController.getI18nValue("shutdownError"));
+                alert.showAndWait();
                 e.printStackTrace();
             }
         }
@@ -133,9 +137,10 @@ public class DatabaseController {
      * Speichert die aktuellen Einstellungen des Fensters in der Datenbank
      */
     private void saveStageConfig() {
-        TextInputDialog textInputDialog = new TextInputDialog("Name...");
-        textInputDialog.setTitle("Einstellung speichern");
-        textInputDialog.setHeaderText("Name auswählen");
+        TextInputDialog textInputDialog = new TextInputDialog
+                (resourcesController.getI18nValue("saveSettingsDialogContext"));
+        textInputDialog.setTitle(resourcesController.getI18nValue("saveSettingsDialogTitle"));
+        textInputDialog.setHeaderText(resourcesController.getI18nValue("saveSettingsDialogHeader"));
         Optional<String> stringOptional = textInputDialog.showAndWait();
 
         if (stringOptional.isEmpty()) {
@@ -146,7 +151,8 @@ public class DatabaseController {
 
         Connection connection = getConnection();
         if (connection == null || name.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Datenbankfehler!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("connectionError"), ButtonType.OK);
             alert.showAndWait();
             return;
         }
@@ -157,7 +163,7 @@ public class DatabaseController {
             updateTableEntry(connection, name);
         }
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Einstellungen gespeichert!");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, resourcesController.getI18nValue("saveSettingsInfo"));
         alert.showAndWait();
     }
 
@@ -188,15 +194,19 @@ public class DatabaseController {
             insertStatement.setDouble(3, stage.getY());
             insertStatement.setDouble(4, stage.getWidth());
             insertStatement.setDouble(5, stage.getHeight());
-            insertStatement.setDouble(6, referenceHandler.getPopulationPanel().getPopulationWidth());
-            insertStatement.setDouble(7, referenceHandler.getPopulationPanel().getPopulationHeight());
-            insertStatement.setDouble(8, referenceHandler.getMainController().getSimulationSpeedSlider().getValue());
+            insertStatement.setDouble(6, referenceHandler
+                    .getPopulationPanel().getPopulationWidth());
+            insertStatement.setDouble(7, referenceHandler
+                    .getPopulationPanel().getPopulationHeight());
+            insertStatement.setDouble(8, referenceHandler
+                    .getMainController().getSimulationSpeedSlider().getValue());
 
             insertStatement.execute();
             connection.commit();
         } catch (SQLException exc) {
             try {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Datenbankfehler beim Speichern!", ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.ERROR,
+                        resourcesController.getI18nValue("saveDbEntryError"), ButtonType.OK);
                 alert.showAndWait();
                 connection.rollback();
                 exc.printStackTrace();
@@ -229,14 +239,16 @@ public class DatabaseController {
             updateStmt.setDouble(4, stage.getHeight());
             updateStmt.setDouble(5, referenceHandler.getPopulationPanel().getPopulationWidth());
             updateStmt.setDouble(6, referenceHandler.getPopulationPanel().getPopulationHeight());
-            updateStmt.setDouble(7, referenceHandler.getMainController().getSimulationSpeedSlider().getValue());
+            updateStmt.setDouble(7, referenceHandler.getMainController()
+                    .getSimulationSpeedSlider().getValue());
             updateStmt.setString(8, name);
 
             updateStmt.execute();
             connection.commit();
         } catch (SQLException exc) {
             try {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Datenbankfehler beim Speichern!", ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.ERROR,
+                        resourcesController.getI18nValue("saveDbEntryError"), ButtonType.OK);
                 alert.showAndWait();
                 connection.rollback();
                 exc.printStackTrace();
@@ -258,19 +270,21 @@ public class DatabaseController {
     private void loadStageConfig() {
         ArrayList<String> allNames = selectAllNames();
         if (allNames.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, keine Einstellungen vorhanden!");
+            Alert alert = new Alert(Alert.AlertType.ERROR, resourcesController.getI18nValue("noConfigToLoadError"));
             alert.showAndWait();
             return;
         }
 
-        Optional<String> name = generateChoiceBox(allNames, "Einstellung laden");
+        Optional<String> name = generateChoiceBox(allNames,
+                resourcesController.getI18nValue("loadSettingsChoiceBoxTitle"));
         if (name.isEmpty()) {
             return;
         }
 
         Connection connection = getConnection();
         if (connection == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Datenbankfehler!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("connectionError"), ButtonType.OK);
             alert.showAndWait();
             return;
         }
@@ -295,13 +309,11 @@ public class DatabaseController {
                 referenceHandler.getPopulationPanel().setPopulationSize(populationWidth, populationHeight);
                 referenceHandler.getMainController().getSimulationSpeedSlider().setValue(slider);
             }
-            synchronized (referenceHandler) {
-                referenceHandler.notifyAll();
-            }
         } catch (Exception exc) {
             try {
                 exc.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Datenbankfehler beim Lesen!", ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.ERROR,
+                        resourcesController.getI18nValue("readDbError"), ButtonType.OK);
                 alert.showAndWait();
                 connection.rollback();
             } catch (SQLException e) {
@@ -326,7 +338,7 @@ public class DatabaseController {
     private Optional<String> generateChoiceBox(ArrayList<String> allNames, String title) {
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>();
         choiceDialog.setTitle(title);
-        choiceDialog.setHeaderText("Einstellung wählen: ");
+        choiceDialog.setHeaderText(resourcesController.getI18nValue("settingsChoiceBoxHeader"));
         choiceDialog.setSelectedItem(allNames.get(0));
         allNames.forEach(config -> choiceDialog.getItems().add(config));
         return choiceDialog.showAndWait();
@@ -338,19 +350,22 @@ public class DatabaseController {
     private void deleteStageConfig() {
         ArrayList<String> allNames = selectAllNames();
         if (allNames.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, keine Einstellungen vorhanden!");
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("noConfigToDeleteError"));
             alert.showAndWait();
             return;
         }
 
-        Optional<String> name = generateChoiceBox(allNames, "Einstellung löschen");
+        Optional<String> name = generateChoiceBox(allNames,
+                resourcesController.getI18nValue("deleteSettingsChoiceBoxTitle"));
         if (name.isEmpty()) {
             return;
         }
 
         Connection connection = getConnection();
         if (connection == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Datenbankfehler!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("connectionError"), ButtonType.OK);
             alert.showAndWait();
             return;
         }
@@ -358,13 +373,15 @@ public class DatabaseController {
             connection.setAutoCommit(false);
             deleteStmt.setString(1, name.get());
             deleteStmt.execute();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Löschen erfolgreich!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                    resourcesController.getI18nValue("deleteSettingsInfo"));
             alert.showAndWait();
 
         } catch (Exception exc) {
             try {
                 exc.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Datenbankfehler beim Löschen!", ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.ERROR,
+                        resourcesController.getI18nValue("deleteDbEntryError"), ButtonType.OK);
                 alert.showAndWait();
                 connection.rollback();
             } catch (SQLException e) {
@@ -389,7 +406,8 @@ public class DatabaseController {
         ArrayList<String> result = new ArrayList<>();
 
         if (connection == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Datenbankfehler!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("connectionError"), ButtonType.OK);
             alert.showAndWait();
             return result;
         }
@@ -401,7 +419,8 @@ public class DatabaseController {
                 result.add(resultSet.getString("name"));
             }
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, Datenbankfehler beim Lesen!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("readDbError"), ButtonType.OK);
             alert.showAndWait();
         }
         return result;

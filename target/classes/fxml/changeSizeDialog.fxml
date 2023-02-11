@@ -19,10 +19,10 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <TextField fx:id="rowTextField" alignment="CENTER" maxWidth="50.0" text="Hier könnte Ihre Zeile stehen" GridPane.columnIndex="1" GridPane.hgrow="NEVER" />
-            <TextField fx:id="columnTextField" alignment="CENTER" maxWidth="50.0" text="Hier könnte Ihre Spalte stehen" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="406.0" text="Zeilen:" textAlignment="CENTER" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="378.0" text="Spalten:" textAlignment="CENTER" GridPane.rowIndex="1" />
+            <TextField fx:id="rowTextField" alignment="CENTER" maxWidth="50.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" />
+            <TextField fx:id="columnTextField" alignment="CENTER" maxWidth="50.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
+            <Label fx:id="rowLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="406.0" textAlignment="CENTER" />
+            <Label fx:id="columnLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="378.0" textAlignment="CENTER" GridPane.rowIndex="1" />
         </GridPane>
     </content>
     <ButtonType fx:constant="OK" />

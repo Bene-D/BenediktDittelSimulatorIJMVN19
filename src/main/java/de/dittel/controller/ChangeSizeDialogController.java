@@ -4,10 +4,7 @@ import de.dittel.model.Automaton;
 import de.dittel.util.ReferenceHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -18,7 +15,12 @@ import java.util.Optional;
 public class ChangeSizeDialogController {
 
     private final ReferenceHandler referenceHandler;
+    private final ResourcesController resourcesController = ResourcesController.getResourcesController();
 
+    @FXML @SuppressWarnings("unused")
+    private Label rowLabel;
+    @FXML @SuppressWarnings("unused")
+    private Label columnLabel;
     @FXML @SuppressWarnings("unused")
     private TextField rowTextField;
     @FXML @SuppressWarnings("unused")
@@ -33,8 +35,10 @@ public class ChangeSizeDialogController {
      */
     public ChangeSizeDialogController(ReferenceHandler referenceHandler) {
         this.referenceHandler = referenceHandler;
-        referenceHandler.getMainController().getChangePopulationSizeMenuItem().setOnAction(event -> changePopulationSize());
-        referenceHandler.getMainController().getChangePopulationSizeButton().setOnAction(event -> changePopulationSize());
+        referenceHandler.getMainController().getChangePopulationSizeMenuItem()
+                .setOnAction(event -> changePopulationSize());
+        referenceHandler.getMainController().getChangePopulationSizeButton()
+                .setOnAction(event -> changePopulationSize());
     }
 
     /**
@@ -57,7 +61,7 @@ public class ChangeSizeDialogController {
      * Erstellt ein DialogPane, welches die neue Anzahl der Reihen und Spalten abfragt.
      * Die Eingaben werden benutzt, um die Attribute des Automaten zu aktualisieren.
      */
-    public void changePopulationSize() {
+    private void changePopulationSize() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/changeSizeDialog.fxml"));
             loader.setController(this);
@@ -65,7 +69,10 @@ public class ChangeSizeDialogController {
             Dialog<ButtonType> dialog = new Dialog<>();
             init(referenceHandler.getAutomaton());
             dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Größe der Population ändern");
+            dialog.setTitle(resourcesController.getI18nValue("changeSizeDialogTitle"));
+            dialog.setHeaderText(resourcesController.getI18nValue("changeSizeDialogHeader"));
+            rowLabel.setText(resourcesController.getI18nValue("changeSizeDialogLabelRowText"));
+            columnLabel.setText(resourcesController.getI18nValue("changeSizeDialogLabelColumnText"));
             Optional<ButtonType> clickedButton = dialog.showAndWait();
 
             if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
@@ -73,6 +80,9 @@ public class ChangeSizeDialogController {
                         Integer.parseInt(columnTextField.getText()));
             }
         } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("changeSizeDialogError"));
+            alert.showAndWait();
             e.printStackTrace();
         }
     }

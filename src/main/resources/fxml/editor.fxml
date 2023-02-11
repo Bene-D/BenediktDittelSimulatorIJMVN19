@@ -19,18 +19,18 @@
         <menus>
           <Menu text="_Editor">
             <items>
-              <MenuItem onAction="#saveFileChanges" text="_Speichern">
+              <MenuItem fx:id="saveFileMenuItem">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem onAction="#compileFile" text="_Compilieren">
+                  <MenuItem fx:id="compileFileMenuItem">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="K" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem onAction="#closeWindow" text="Sch_ließen">
+                  <MenuItem fx:id="quitEditorMenuItem">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
@@ -41,19 +41,19 @@
       </MenuBar>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
          <items>
-            <Button mnemonicParsing="false" onAction="#saveFileChanges" style="-fx-graphic: url(/icons/Save24.gif)">
+            <Button mnemonicParsing="false" fx:id="saveFileButton" style="-fx-graphic: url(/icons/Save24.gif)">
                <tooltip>
-                  <Tooltip text="Neuen Automaten erzeugen und laden" />
+                  <Tooltip fx:id="editorSaveFileTooltip"/>
                </tooltip>
             </Button>
-             <Button mnemonicParsing="false" onAction="#compileFile" style="-fx-graphic: url(/icons/Compile24.gif)">
+             <Button mnemonicParsing="false" fx:id="compileFileButton" style="-fx-graphic: url(/icons/Compile24.gif)">
                <tooltip>
-                  <Tooltip text="Neuen Automaten erzeugen und laden" />
+                  <Tooltip fx:id="editorCompileFileTooltip"/>
                </tooltip>
             </Button>
          </items>
       </ToolBar>
       <TextArea fx:id="automatonClassTextArea" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-      <Label prefHeight="17.0" prefWidth="758.0" text="Herzlich Willkommen!" />
+      <Label fx:id="editorWelcomeLabel" prefHeight="17.0" prefWidth="758.0"/>
    </children>
 </VBox>

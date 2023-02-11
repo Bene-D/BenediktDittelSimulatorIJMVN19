@@ -1,4 +1,4 @@
-package de.dittel.view2;
+package de.dittel.view_console;
 
 import de.dittel.model.Automaton;
 import de.dittel.util.Observer;
@@ -25,7 +25,7 @@ public class GameOfLiveConsole implements Observer {
     /**
      * Zeichnet die Population des Automaten in der Konsole
      */
-    public void print() {
+    private void print() {
         for (int r = 0; r < automaton.getNumberOfRows(); r++) {
             for (int c = 0; c < automaton.getNumberOfColumns(); c++) {
                 if (automaton.getCell(r, c).getState() == 0) {

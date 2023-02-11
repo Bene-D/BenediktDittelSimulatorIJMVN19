@@ -36,18 +36,14 @@ public class Cell implements Serializable {
     }
 
     /**
-     * Liefert den Zustand der Zelle
-     *
-     * @return Zustand der Zelle
+     * Getter für state
      */
     public int getState() {
         return state;
     }
 
     /**
-     * Ändert den Zustand der Zelle
-     *
-     * @param state der neue Zustand der Zelle
+     * Setter für state
      */
     void setState(int state) {
         this.state = state;

@@ -14,7 +14,6 @@ public abstract class Automaton extends Observable {
     private final int numberOfStates;
     private final boolean isMooreNeighborHood;
     private boolean isTorus;
-
     private transient Cell[][] population;
     Random random = new Random();
 
@@ -36,6 +35,7 @@ public abstract class Automaton extends Observable {
         this.isMooreNeighborHood = isMooreNeighborHood;
         this.isTorus = isTorus;
         population = new Cell[rows][columns];
+
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < columns; c++) {
                 population[r][c] = new Cell();
@@ -44,30 +44,38 @@ public abstract class Automaton extends Observable {
     }
 
     /**
-     * Liefert die Anzahl an Zuständen des Automaten; gültige Zustände sind int-Werte zwischen 0 und Anzahl -1
-     *
-     * @return die Anzahl an Zuständen des Automaten
-     */
-    public synchronized int getNumberOfStates() {
-        return numberOfStates;
-    }
-
-    /**
-     * Liefert die Anzahl an Reihen
-     *
-     * @return die Anzahl an Reihen
+     * Getter für rows
      */
     public synchronized int getNumberOfRows() {
         return rows;
     }
 
     /**
-     * Liefert die Anzahl an Spalten
-     *
-     * @return die Anzahl an Spalten
+     * Getter für columns
      */
     public synchronized int getNumberOfColumns() {
         return columns;
+    }
+
+    /**
+     * Getter für numberOfStates
+     */
+    public synchronized int getNumberOfStates() {
+        return numberOfStates;
+    }
+
+    /**
+     * Getter für isTorus
+     */
+    public synchronized boolean isTorus() {
+        return isTorus;
+    }
+
+    /**
+     * Setter für isTorus
+     */
+    public synchronized void setTorus(boolean isTorus) {
+        this.isTorus = isTorus;
     }
 
     /**
@@ -114,24 +122,6 @@ public abstract class Automaton extends Observable {
             this.columns = columns;
         }
         notifyObserver();
-    }
-
-    /**
-     * Liefert Informationen, ob der Automat als Torus betrachtet wird
-     *
-     * @return true, falls der Automat als Torus betrachtet wird; false sonst
-     */
-    public synchronized boolean isTorus() {
-        return isTorus;
-    }
-
-    /**
-     * Ändert die Torus-Eigenschaft des Automaten
-     *
-     * @param isTorus true, falls der Automat als Torus betrachtet wird; false sonst
-     */
-    public synchronized void setTorus(boolean isTorus) {
-        this.isTorus = isTorus;
     }
 
     /**

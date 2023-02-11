@@ -29,7 +29,6 @@ public class MainController {
 
     private ReferenceHandler referenceHandler;
     private final ResourcesController resourcesController = ResourcesController.getResourcesController();
-
     private final List<ColorPicker> colorPickerList;
 
     @FXML
@@ -101,9 +100,13 @@ public class MainController {
     @FXML
     private RadioMenuItem languageGermanMenuItem;
     @FXML
+    private ToolBar toolBar;
+    @FXML
     private Button createNewAutomatonButton;
     @FXML
     private Tooltip createAutomatonTooltip;
+    @FXML
+    private Button loadAutomatonButton;
     @FXML
     private Tooltip loadAutomatonTooltip;
     @FXML
@@ -111,7 +114,11 @@ public class MainController {
     @FXML
     private Tooltip changePopulationSizeTooltip;
     @FXML
+    private Button clearPopulationButton;
+    @FXML
     private Tooltip clearPopulationTooltip;
+    @FXML
+    private Button randomPopulationButton;
     @FXML
     private Tooltip randomPopulationTooltip;
     @FXML
@@ -142,8 +149,6 @@ public class MainController {
     private Tooltip stopSimulationTooltip;
     @FXML
     private Slider simulationSpeedSlider;
-    @FXML
-    private Tooltip sliderTooltip;
     @FXML
     private ToggleGroup radioButtonToggleGroup;
     @FXML
@@ -191,7 +196,7 @@ public class MainController {
     }
 
     /**
-     * Getter für createNewAutomatonMenuItem
+     * Getter für newAutomatonMenuItem
      */
     public MenuItem getNewAutomatonMenuItem() {
         return newAutomatonMenuItem;
@@ -202,6 +207,20 @@ public class MainController {
      */
     public MenuItem getChangePopulationSizeMenuItem() {
         return changePopulationSizeMenuItem;
+    }
+
+    /**
+     * Getter für zoomInMenuItem
+     */
+    public MenuItem getZoomInMenuItem() {
+        return zoomInMenuItem;
+    }
+
+    /**
+     * Getter für zoomOutMenuItem
+     */
+    public MenuItem getZoomOutMenuItem() {
+        return zoomOutMenuItem;
     }
 
     /**
@@ -240,7 +259,7 @@ public class MainController {
     }
 
     /**
-     * Getter für singleStepSimulationMenuItem
+     * Getter für simulationStepMenuItem
      */
     public MenuItem getSimulationStepMenuItem() {
         return simulationStepMenuItem;
@@ -261,26 +280,29 @@ public class MainController {
     }
 
     /**
-     * Getter für jdbcSaveConfigMenuItem
+     * Getter für saveSettingsMenuItem
      */
     public MenuItem getSaveSettingsMenuItem() {
         return saveSettingsMenuItem;
     }
 
     /**
-     * Getter für jdbcLoadConfigMenuItem
+     * Getter für loadSettingsMenuItem
      */
     public MenuItem getLoadSettingsMenuItem() {
         return loadSettingsMenuItem;
     }
 
     /**
-     * Getter für jdbcDeleteConfigMenuItem
+     * Getter für deleteSettingsMenuItem
      */
     public MenuItem getDeleteSettingsMenuItem() {
         return deleteSettingsMenuItem;
     }
 
+    /**
+     * Getter für languageToggleGroup
+     */
     public ToggleGroup getLanguageToggleGroup() {
         return languageToggleGroup;
     }
@@ -297,6 +319,13 @@ public class MainController {
      */
     public RadioMenuItem getLanguageGermanMenuItem() {
         return languageGermanMenuItem;
+    }
+
+    /**
+     * Getter für toolBar
+     */
+    public ToolBar getToolBar() {
+        return toolBar;
     }
 
     /**
@@ -328,7 +357,7 @@ public class MainController {
     }
 
     /**
-     * Getter für singleStepSimulationButton
+     * Getter für simulationStepButton
      */
     public Button getSimulationStepButton() {
         return simulationStepButton;
@@ -380,8 +409,31 @@ public class MainController {
         }
         initLanguageMenuItems();
         bindLanguageProperties();
+        bindFxmlMethods();
     }
 
+    /**
+     * Helfermethode zum Binden der FXML-Elemente an die entsprechenden Methoden
+     */
+    private void bindFxmlMethods() {
+        loadAutomatonMenuItem.setOnAction(event -> loadAndCompileAutomaton());
+        loadAutomatonButton.setOnAction(event -> loadAndCompileAutomaton());
+        clearPopulationMenuItem.setOnAction(event -> resetPopulation());
+        clearPopulationButton.setOnAction(event -> resetPopulation());
+        randomPopulationMenuItem.setOnAction(event -> randomPopulation());
+        randomPopulationButton.setOnAction(event -> randomPopulation());
+        changeTorusCheckMenuItem.setOnAction(event -> changeTorus());
+        changeTorusToggleButton.setOnAction(event -> changeTorus());
+        simulationStepMenuItem.setOnAction(event -> singleStep());
+        simulationStepButton.setOnAction(event -> singleStep());
+        quitMenuItem.setOnAction(event -> closeWindow());
+    }
+
+    /**
+     * Bindet die Properties der GUI-Elemente an die i18n-Ressourcen
+     * <p>
+     * Erlaubt ein einfaches Wechseln der Sprache aller gebundenen Elemente.
+     */
     private void bindLanguageProperties() {
         // Automat
         automatonMenu.textProperty().bind(resourcesController.i18n("automatonMenu"));
@@ -431,12 +483,11 @@ public class MainController {
         simulationStepTooltip.textProperty().bind(resourcesController.i18n("simulationStepTooltip"));
         startSimulationTooltip.textProperty().bind(resourcesController.i18n("startSimulationTooltip"));
         stopSimulationTooltip.textProperty().bind(resourcesController.i18n("stopSimulationTooltip"));
-        sliderTooltip.textProperty().bind(resourcesController.i18n("sliderTooltip"));
         // Gruß Label
         welcomeLabel.textProperty().bind(resourcesController.i18n("welcomeLabel"));
     }
 
-    private void initLanguageMenuItems() {
+    public void initLanguageMenuItems() {
         languageEnglishMenuItem
                 .setSelected(ResourcesController.getResourcesController().getLocale().getLanguage().equals("en"));
         languageGermanMenuItem
@@ -455,19 +506,22 @@ public class MainController {
 
     /**
      * Generiert EINE neue Population
-     *
-     * @throws Throwable möglicherweise wirft die Methode eine Exception
      */
-    @FXML
-    public void singleStep() throws Throwable {
-        referenceHandler.getAutomaton().nextGeneration();
+    private void singleStep() {
+        try {
+            referenceHandler.getAutomaton().nextGeneration();
+        } catch (Throwable e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("singleStepError") + " " + e,
+                    ButtonType.OK);
+            alert.showAndWait();
+        }
     }
 
     /**
      * Ändert die Torus-Einstellung des Automaten und aktualisiert den Button in der View
      */
-    @FXML
-    public void changeTorus() {
+    private void changeTorus() {
         referenceHandler.getAutomaton().setTorus(!referenceHandler.getAutomaton().isTorus());
         changeTorusToggleButton.setSelected(referenceHandler.getAutomaton().isTorus());
         changeTorusCheckMenuItem.setSelected(referenceHandler.getAutomaton().isTorus());
@@ -476,16 +530,14 @@ public class MainController {
     /**
      * Erzeugt eine Random-Population des Automaten
      */
-    @FXML
-    public void randomPopulation() {
+    private void randomPopulation() {
         referenceHandler.getAutomaton().randomPopulation();
     }
 
     /**
      * Setzt den Zustand aller Zellen des Automaten auf den Wert 0
      */
-    @FXML
-    public void resetPopulation() {
+    private void resetPopulation() {
         referenceHandler.getAutomaton().clearPopulation();
     }
 
@@ -496,8 +548,7 @@ public class MainController {
      *
      * @param actionEvent wird benötigt, um den ColorPicker zu wählen, der das Event ausgelöst hat.
      */
-    @FXML
-    public void changeColor(ActionEvent actionEvent) {
+    private void changeColor(ActionEvent actionEvent) {
         ColorPicker colorPicker = (ColorPicker) actionEvent.getSource();
         int id;
 
@@ -517,10 +568,9 @@ public class MainController {
      * <p>
      * Zum Auswählen der Datei wird ein FileChooser verwendet, welcher alle ".java" Dateien im Ordner "automata" anzeigt.
      */
-    @FXML
-    public void loadAndCompileAutomaton() {
+    private void loadAndCompileAutomaton() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Automaten auswählen");
+        fileChooser.setTitle(resourcesController.getI18nValue("loadAutomatonFileChooserTitle"));
         fileChooser.setInitialDirectory(new File("automata"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Java-Datei (*.java)", "*.java"));
 
@@ -542,7 +592,7 @@ public class MainController {
                     Main.newAutomaton(null, automaton, automaton.getClass().getName());
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Ups, da ist etwas schief gelaufen:\n" + e);
+                    alert.setContentText(resourcesController.getI18nValue("loadAutomatonError") + "\n" + e);
                     alert.show();
                     e.printStackTrace();
                 }
@@ -552,10 +602,10 @@ public class MainController {
     /**
      * Schließt das aktuelle Fenster
      */
-    @FXML
     public void closeWindow() {
         stopSimulationButton.fire();
         Stage stageToClose = (Stage) menuBar.getScene().getWindow();
         stageToClose.close();
+        Main.getReferenceHandlers().remove(referenceHandler);
     }
 }

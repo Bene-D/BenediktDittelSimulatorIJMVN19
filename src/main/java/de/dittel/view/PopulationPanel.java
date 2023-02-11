@@ -35,11 +35,10 @@ public class PopulationPanel extends Region {
      * Konstruktor
      *
      * @param referenceHandler verwaltet die verwendeten Referenzen
-     * @param mainController Hauptcontroller der View, zum Verwalten der FXML-Elemente
      */
-    public PopulationPanel(ReferenceHandler referenceHandler, MainController mainController) {
+    public PopulationPanel(ReferenceHandler referenceHandler) {
         this.referenceHandler = referenceHandler;
-        this.mainController = mainController;
+        this.mainController = referenceHandler.getMainController();
         this.canvas = new Canvas(calcCanvasWidth(), calcCanvasHeight());
         this.getChildren().add(canvas);
         paintCanvas();

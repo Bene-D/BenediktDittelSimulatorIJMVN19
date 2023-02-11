@@ -6,10 +6,7 @@ import de.dittel.util.FileManager;
 import de.dittel.util.ReferenceHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +16,8 @@ import java.util.Optional;
  * Controller-Klasse für das NewAutomaton-Fenster
  */
 public class NewAutomatonDialogController {
+
+    private final ResourcesController resourcesController = ResourcesController.getResourcesController();
 
     @FXML
     private DialogPane dialogPane;
@@ -40,7 +39,7 @@ public class NewAutomatonDialogController {
      * <p>
      * Für das Erzeugen wird eine Dummy-Datei verwendet und der Name an den notwendigen Stellen durch den neuen ersetzt.
      */
-    public void createNewAutomaton() {
+    private void createNewAutomaton() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newAutomatonDialog.fxml"));
             loader.setController(this);
@@ -49,7 +48,10 @@ public class NewAutomatonDialogController {
             newAutomatonTextField.textProperty().addListener(observable ->
                     dialogPane.lookupButton(ButtonType.OK).setDisable(!validate()));
             dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Neuen Automaten erzeugen");
+            dialog.setTitle(resourcesController.getI18nValue("createNewAutomatonDialogTitle"));
+            dialog.setHeaderText(resourcesController.getI18nValue("createNewAutomatonDialogHeader"));
+            newAutomatonTextField.setPromptText
+                    (resourcesController.getI18nValue("createNewAutomatonDialogPromptText"));
             Optional<ButtonType> clickedButton = dialog.showAndWait();
 
             if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
@@ -65,6 +67,9 @@ public class NewAutomatonDialogController {
                 }
             }
         } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    resourcesController.getI18nValue("createNewAutomatonDialogError"));
+            alert.showAndWait();
             e.printStackTrace();
         }
     }

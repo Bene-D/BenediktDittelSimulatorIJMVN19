@@ -4,7 +4,6 @@ import de.dittel.util.Pair;
 import de.dittel.util.ReferenceHandler;
 import de.dittel.view.PopulationPanelContextMenu;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.ContextMenuEvent;
@@ -24,6 +23,7 @@ public class PopulationPanelController {
     private final MainController mainController;
     private final ReferenceHandler referenceHandler;
     private Pair<Integer> rowColStart;
+    private final ResourcesController resourcesController = ResourcesController.getResourcesController();
 
     /**
      * Konstruktor
@@ -40,6 +40,8 @@ public class PopulationPanelController {
         referenceHandler.getPopulationPanel().getCanvas().addEventHandler(MouseEvent.MOUSE_DRAGGED, this::canvasMouseDragged);
         referenceHandler.getPopulationPanel().addEventHandler(ScrollEvent.SCROLL, this::zoom);
         referenceHandler.getPopulationPanel().getCanvas().setOnContextMenuRequested(this::contextMenu);
+        mainController.getZoomInMenuItem().setOnAction(this::zoomIn);
+        mainController.getZoomOutMenuItem().setOnAction(this::zoomOut);
         mainController.getZoomOutButton().setOnAction(this::zoomOut);
         mainController.getZoomInButton().setOnAction(this::zoomIn);
         mainController.getPopulationScrollPane().setContent(referenceHandler.getPopulationPanel());
@@ -54,7 +56,6 @@ public class PopulationPanelController {
      *
      * @param event zum Bestimmen der X- und Y-Koordinaten
      */
-    @FXML
     private void contextMenu(ContextMenuEvent event) {
         PopulationPanelContextMenu contextMenu = new PopulationPanelContextMenu(referenceHandler);
         List<Method> contextMenuItems = contextMenu.getValidMethods();
@@ -67,7 +68,7 @@ public class PopulationPanelController {
                     method.invoke(referenceHandler.getAutomaton(), rowColStart.value1(), rowColStart.value2());
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR,
-                            "Beim Ausführen der Methode ist ein Fehler aufgetreten!", ButtonType.OK);
+                            resourcesController.getI18nValue("contextMenuError"), ButtonType.OK);
                     alert.showAndWait();
                 }
             });
@@ -80,14 +81,14 @@ public class PopulationPanelController {
      * <p>
      * Das neugezeichnete Canvas ist somit größer und suggeriert einen optischen Zoom.
      */
-    @FXML
-    public void zoomIn(ActionEvent actionEvent) {
+    private void zoomIn(ActionEvent actionEvent) {
+        mainController.getZoomOutMenuItem().setDisable(false);
         mainController.getZoomOutButton().setDisable(false);
         if (referenceHandler.getPopulationPanel().zoomIn()) {
+            mainController.getZoomInMenuItem().setDisable(true);
             mainController.getZoomInButton().setDisable(true);
         }
         referenceHandler.getPopulationPanel().update();
-
     }
 
     /**
@@ -95,10 +96,11 @@ public class PopulationPanelController {
      * <p>
      * Das neugezeichnete Canvas ist somit kleiner und suggeriert einen optischen Zoom.
      */
-    @FXML
-    public void zoomOut(ActionEvent actionEvent) {
+    private void zoomOut(ActionEvent actionEvent) {
+        mainController.getZoomInMenuItem().setDisable(false);
         mainController.getZoomInButton().setDisable(false);
         if (referenceHandler.getPopulationPanel().zoomOut()) {
+            mainController.getZoomOutMenuItem().setDisable(true);
             mainController.getZoomOutButton().setDisable(true);
         }
         referenceHandler.getPopulationPanel().update();
@@ -111,8 +113,7 @@ public class PopulationPanelController {
      *
      * @param scrollEvent wird benötigt, um die Scrollrichtung zu bestimmen
      */
-    @FXML
-    public void zoom(ScrollEvent scrollEvent) {
+    private void zoom(ScrollEvent scrollEvent) {
         double deltaY = scrollEvent.getDeltaY();
 
         if (scrollEvent.isControlDown()) {
@@ -132,8 +133,7 @@ public class PopulationPanelController {
      *
      * @param mouseEvent zum Bestimmen der X- und Y-Koordinaten
      */
-    @FXML
-    public void canvasPressed(MouseEvent mouseEvent) {
+    private void canvasPressed(MouseEvent mouseEvent) {
         referenceHandler.getPopulationPanel().getRowAndCol(mouseEvent.getX(), mouseEvent.getY()).ifPresent(rowCol -> {
             rowColStart = rowCol;
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
@@ -148,8 +148,7 @@ public class PopulationPanelController {
      *
      * @param mouseEvent zum Bestimmen der X- und Y-Koordinaten
      */
-    @FXML
-    public void canvasMouseDragged(MouseEvent mouseEvent) {
+    private void canvasMouseDragged(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             referenceHandler.getPopulationPanel().getRowAndCol(mouseEvent.getX(), mouseEvent.getY()).ifPresent(rowColEnd -> {
                 int fromRow = rowColStart.value1();
@@ -161,6 +160,7 @@ public class PopulationPanelController {
                 if (toRow >= referenceHandler.getAutomaton().getNumberOfRows()) {
                     toRow = referenceHandler.getAutomaton().getNumberOfRows() - 1;
                 }
+
                 if (toColumn >= referenceHandler.getAutomaton().getNumberOfColumns()) {
                     toColumn = referenceHandler.getAutomaton().getNumberOfColumns() - 1;
                 }

@@ -4,7 +4,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.Color?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
         <Menu fx:id="automatonMenu">
@@ -13,7 +12,7 @@
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem fx:id="loadAutomatonMenuItem" onAction="#loadAndCompileAutomaton" styleClass="loadAutomaton">
+            <MenuItem fx:id="loadAutomatonMenuItem" styleClass="loadAutomaton">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -25,7 +24,7 @@
                 </accelerator>
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="quitMenuItem" onAction="#closeWindow">
+            <MenuItem fx:id="quitMenuItem">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -37,17 +36,17 @@
                     <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem fx:id="clearPopulationMenuItem" onAction="#resetPopulation">
+            <MenuItem fx:id="clearPopulationMenuItem">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem fx:id="randomPopulationMenuItem" onAction="#randomPopulation">
+            <MenuItem fx:id="randomPopulationMenuItem">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <CheckMenuItem fx:id="changeTorusCheckMenuItem" onAction="#changeTorus">
+            <CheckMenuItem fx:id="changeTorusCheckMenuItem">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
@@ -81,14 +80,14 @@
                 <MenuItem fx:id="deserializationMenuItem"/>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="printPopulationMenuItem" styleClass="print">
+            <MenuItem disable="true" fx:id="printPopulationMenuItem" styleClass="print">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
         </Menu>
         <Menu fx:id="simulationMenu">
-            <MenuItem fx:id="simulationStepMenuItem" onAction="#singleStep">
+            <MenuItem fx:id="simulationStepMenuItem">
                 <accelerator>
                     <KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -117,12 +116,12 @@
             <RadioMenuItem fx:id="languageGermanMenuItem"/>
         </Menu>
     </MenuBar>
-    <ToolBar>
+    <ToolBar fx:id="toolBar">
         <Button fx:id="createNewAutomatonButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/New24.gif)">
             <tooltip>
                 <Tooltip fx:id="createAutomatonTooltip"/>
             </tooltip></Button>
-        <Button onAction="#loadAndCompileAutomaton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Load24.gif)">
+        <Button fx:id="loadAutomatonButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Load24.gif)">
             <tooltip>
                 <Tooltip fx:id="loadAutomatonTooltip"/>
             </tooltip></Button>
@@ -132,19 +131,19 @@
             <tooltip>
                 <Tooltip fx:id="changePopulationSizeTooltip"/>
             </tooltip></Button>
-        <Button mnemonicParsing="false" onAction="#resetPopulation" style="-fx-graphic: url(/icons/Delete24.gif)">
+        <Button fx:id="clearPopulationButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Delete24.gif)">
             <tooltip>
                 <Tooltip fx:id="clearPopulationTooltip"/>
             </tooltip></Button>
-        <Button mnemonicParsing="false" onAction="#randomPopulation" style="-fx-graphic: url(/icons/Random24.gif)">
+        <Button fx:id="randomPopulationButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Random24.gif)">
             <tooltip>
                 <Tooltip fx:id="randomPopulationTooltip"/>
             </tooltip></Button>
-        <ToggleButton fx:id="changeTorusToggleButton" mnemonicParsing="false" onAction="#changeTorus" style="-fx-graphic: url(/icons/Torus24.gif)">
+        <ToggleButton fx:id="changeTorusToggleButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Torus24.gif)">
             <tooltip>
                 <Tooltip fx:id="changeTorusTooltip"/>
             </tooltip></ToggleButton>
-        <Button mnemonicParsing="false" style="-fx-graphic: url(/icons/Print24.gif)">
+        <Button disable="true" mnemonicParsing="false" style="-fx-graphic: url(/icons/Print24.gif)">
             <tooltip>
                 <Tooltip fx:id="printPopulationTooltip"/>
             </tooltip></Button>
@@ -160,7 +159,7 @@
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
-        <Button fx:id="singleStepSimulationButton" mnemonicParsing="false" onAction="#singleStep" style="-fx-graphic: url(/icons/Step24.gif)">
+        <Button fx:id="simulationStepButton" mnemonicParsing="false" style="-fx-graphic: url(/icons/Step24.gif)">
             <tooltip>
                 <Tooltip fx:id="simulationStepTooltip"/>
             </tooltip></Button>
@@ -174,10 +173,8 @@
             </tooltip></Button>
         <Separator orientation="VERTICAL">
         </Separator>
-        <Slider fx:id="simulationSpeedSlider" majorTickUnit="600" min="200" max="2600" minorTickCount="0" prefHeight="38.0" prefWidth="225.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1400">
-            <tooltip>
-                <Tooltip fx:id="sliderTooltip"/>
-            </tooltip></Slider>
+        <Slider fx:id="simulationSpeedSlider" majorTickUnit="800" min="200" max="3400" minorTickCount="0" prefHeight="38.0" prefWidth="245.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1800">
+           </Slider>
 
     </ToolBar>
     <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">

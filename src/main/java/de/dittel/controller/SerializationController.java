@@ -15,6 +15,7 @@ import java.io.*;
 public class SerializationController {
 
     private final ReferenceHandler referenceHandler;
+    private final ResourcesController resourcesController = ResourcesController.getResourcesController();
     private static final FileChooser fileChooser;
 
     static {
@@ -39,8 +40,8 @@ public class SerializationController {
     /**
      * Speichert die aktuelle Population als Serialisierung ab
      */
-    public void savePopulation() {
-        fileChooser.setTitle("Population serialisiert speichern");
+    private void savePopulation() {
+        fileChooser.setTitle(resourcesController.getI18nValue("serializationFileChooserTitle"));
         File file = fileChooser.showSaveDialog(referenceHandler.getMainStage());
 
         if (file == null) {
@@ -58,7 +59,7 @@ public class SerializationController {
             }
         } catch (Exception exc) {
 			exc.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Fehler beim Speichern!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR, resourcesController.getI18nValue("serializationError"), ButtonType.OK);
             alert.showAndWait();
         }
     }
@@ -66,20 +67,21 @@ public class SerializationController {
     /**
      * Lädt eine serialisierte Populationsdatei und erzeugt daraus eine neue Population
      */
-    public void loadPopulation() {
+    private void loadPopulation() {
         Automaton automaton = referenceHandler.getAutomaton();
-        fileChooser.setTitle("Serialisierte Population laden");
+        fileChooser.setTitle(resourcesController.getI18nValue("deserializationFileChooserTitle"));
         File file = fileChooser.showOpenDialog(referenceHandler.getMainStage());
 
         if (file != null) {
             try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(file))) {
                 if (automaton.getNumberOfStates() < is.readInt()) {
-                    throw new Exception("Ungültige Anzahl an Zuständen!");
+                    throw new Exception(resourcesController.getI18nValue("invalidNumberOfStatesError"));
                 }
                 automaton.changeCells((Cell[][]) is.readObject());
             } catch (Exception exc) {
 				exc.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Ungültige Populationsdatei!", ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.ERROR,
+                        resourcesController.getI18nValue("deserializationError"), ButtonType.OK);
                 alert.showAndWait();
             }
         }
